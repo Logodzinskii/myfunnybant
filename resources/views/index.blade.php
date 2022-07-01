@@ -30,6 +30,12 @@
                     <p>Выбрать товар и сделать заказ вы можете в моем магазине на <a href="https://www.ozon.ru/seller/myfunnybant-302542/">Ozon</a></p>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+        </section>
+
+
+>>>>>>> e2172bd (Откорректирован файл index.blade.php)
         </section>
     </body>
 </html>
