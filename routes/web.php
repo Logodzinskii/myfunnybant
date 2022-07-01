@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('index', ['webTitle' => 'Myfunnybant аксессуары для волос ручной работы', 'meta'=>'ручная работа']);
 });
