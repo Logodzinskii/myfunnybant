@@ -17,17 +17,21 @@
         <header >
 
         </header>
-        <section class="d-flex align-content-center justify-content-center row bg-light w-100" style="min-height: 100vh">
-            <div style="min-height: 30vh" class="w-75 d-flex justify-content-center">
-                <img src="{{asset('images/logo/img.png')}}" width="750" height="350" alt="myfunnybant">
+        <section class="container-md">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <img src="{{asset('images/logo/img.png')}}" alt="myfunnybant" class="img-fluid" style="max-width: 100%; height: auto;">
+                </div>
             </div>
-            <div class="card w-50">
-
-
-                <h1>Аксессуары для волос ручной работы</h1>
-                <p>Сайт находится в стадии разработки, скоро мы все настроим!</p>
-                <p>Выбрать товар и сделать заказ вы можете в моем магазине на <a href="https://www.ozon.ru/seller/myfunnybant-302542/">Ozon</a></p>
+            <div class="row justify-content-center">
+                <div class="col-md-5 card">
+                    <h1>Аксессуары для волос ручной работы</h1>
+                    <p>Сайт находится в стадии разработки, скоро мы все настроим!</p>
+                    <p>Выбрать товар и сделать заказ вы можете в моем магазине на <a href="https://www.ozon.ru/seller/myfunnybant-302542/">Ozon</a></p>
+                </div>
             </div>
+        </section>
+
 
         </section>
     </body>
