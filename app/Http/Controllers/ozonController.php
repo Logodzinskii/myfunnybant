@@ -2,32 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OzonShop;
-use App\Models\OzonShopItem;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 
-class ozonController extends Controller
+class ozonController
 {
+    public $responseOzonArray = [];
 
-    public function index()
+    protected function curl_request_ozon($data, $method)
     {
-        return view('main.index', ['data'=>[OzonShopItem::all()]]);
+        $clientId = config('ozon.CLIENT_ID'); //айди шопа
+        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+        $url = 'http://api-seller.ozon.ru'.$method;
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $headers
+        );
+
+        curl_setopt_array($ch, $options);
+
+        $html = curl_exec($ch);
+
+        curl_close($ch);
+
+        return (json_decode($html, true));
+    }
+    public function showItem($offer_id)
+    {
+
+        $data = '{
+            "offer_id": "'.$offer_id.'" ,
+            "sku":0
+        }';
+        $method = '/v2/product/info';
+
+        $arrOzonItems = self::curl_request_ozon($data, $method);
+
+        $this->responseOzonArray[] = $arrOzonItems['result'];
+
     }
 
-    public function showItem(Request $request, $offer_chpu = null)
+    public function showAllItems()
     {
-        if($offer_chpu == null){
+        $data = '{
+            "limit":7
+        }';
+        $method = '/v2/product/list';
 
-            $offer_id = $request->id;
+        /**
+         * $arrOzonItems список товаров json {"items":[{"product_id":261984365,"offer_id":"br-1-3"},{"product_id":266673018,"offer_id":"b-02-02"}],"total":102,"last_id":"WzI2NjY3MzAxOCwyNjY2NzMwMThd"}
+         */
+
+        $arrOzonItems = self::curl_request_ozon($data, $method);
+
+
+        if (isset($arrOzonItems['result'])){
+
+            foreach ($arrOzonItems['result']['items'] as $item)
+            {
+                self::showItem($item['offer_id']);
+            }
+
+            file_put_contents('log.txt', json_encode($this->getResponseOzonArray()));
+            $view = view('shop')->with(['items'=>$this->getResponseOzonArray()]);
+
+            return new Response($view);
 
         }else{
-            $offer_id = OzonShop::where('url_chpu', '=', $offer_chpu)->first();
-            $offer_id = $offer_id->ozon_id;
-
+            return 'error';
         }
-
-        return view('item', ['res'=>OzonShopItem::where('ozon_id', '=', $offer_id)->first()]);
     }
 
-
+    /**
+     * @return array
+     */
+    public function getResponseOzonArray(): array
+    {
+        return $this->responseOzonArray;
+    }
 }
