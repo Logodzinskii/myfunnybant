@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ozonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index', ['webTitle' => 'Myfunnybant аксессуары для волос ручной работы', 'meta'=>'ручная работа']);
 });
+Route::get('/shop', [ozonController::class, 'showAllItems']);
