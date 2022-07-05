@@ -143,8 +143,9 @@ class Report extends Exception
         $str = '';
         $params = [
             'date'=> $today,
+            'year'=> '2022',
         ];
-        $query = 'SELECT MONTH(date_sale) as month_sale, (count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date';
+        $query = 'SELECT MONTH(date_sale) as month_sale, (count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
         $stmt = $this->dbh->prepare($query);
         $stmt->execute($params);
         if($stmt->rowCount() > 0){
