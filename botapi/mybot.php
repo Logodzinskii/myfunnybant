@@ -69,12 +69,12 @@ $bot = new Bot();
 //}
 
 if(!empty($arr['callback_query']['data'])){
-    
+
     $metodParametrs = explode('#', $arr['callback_query']['data']);//разделим дату на части в первой название метода, после # параметры для вызова метода
     $writeLog = new LogWiriter();
     $writeLog->writeLog($arr['callback_query']['data'] . 'mybot.php str-73');
     $writeLog->writeLog($metodParametrs[0] . 'mybot.php str-74');
-    
+
     switch ($metodParametrs[0]){
         case('updatestatus'):
             $parametrForMetod = explode('|', $metodParametrs[1]);
@@ -116,7 +116,7 @@ if(!empty($arr['callback_query']['data'])){
             try {
                 //$user->verifyUser();
                 $parametrForMetod = explode('|', $metodParametrs[1]);
-                
+
                      $bot->delSaleItems($parametrForMetod[1], $arr['callback_query']['message']['chat']['id']);
                      //$arr['callback_query']['message']['message_id']
                      //$bot->reply('asdas', 645879928);
@@ -125,7 +125,7 @@ if(!empty($arr['callback_query']['data'])){
                      }else{
                          $writeLog->writeLog('No Bot - '.$parametrForMetod[1]);
                      }
-                     
+
             }catch (Exception $e){
                 trigger_error('CallBackQuery 45' . $e->getMessage());
             }
@@ -134,7 +134,7 @@ if(!empty($arr['callback_query']['data'])){
             //$user->verifyUser();
                 $parametrForMetod = explode('|', $metodParametrs[1]);
             $bot->updateCat($parametrForMetod[0],$parametrForMetod[1], $arr['callback_query']['message']['chat']['id']);
-            
+
             break;
         case('addSaleToAnotherSeller'):
             //$user->verifyUser();
@@ -152,7 +152,12 @@ if(!empty($arr['callback_query']['data'])){
                     $report = new Report();
                     $bot->reply($report->sumAllSeller($arr['callback_query']['message']['chat']['id'], $metodParametrs[1]),$arr['callback_query']['message']['chat']['id']);
                     break;
-            
+        case('sumAllSellerByMonth'):
+            $parametrForMetod = explode('|', $metodParametrs[0]);
+            $report = new Report();
+            $bot->reply($report->sumAllSellerByMonth($metodParametrs[0]),$arr['callback_query']['message']['chat']['id']);
+            break;
+
     }
     exit();
 
@@ -165,23 +170,23 @@ if(!empty($arr['callback_query']['data'])){
     }catch (Exception $e){
         trigger_error('myBot: 134' . $e->getMessage());
     }
-    
+
     exit();
 }elseif (!empty($arr['message']['photo'])){
     try{
         //$user->verifyUser();
-        
+
         $image = new ProcessingImage($arr['message']['photo'], $arr['message']['caption'], $bot);
         $image->writeAndSaveImageSalesToDb();
-        
+
         //$bot->sendButtons($arr['message']['chat']['id'], $image->writeAndSaveImageSalesToDb(), 'Запись внесена');
-        
+
         $writeLog = new LogWiriter();
         $writeLog->writeLog($arr['message']['caption']);
     }catch (Exception $e){
         trigger_error('myBot: 151' . $e->getMessage());
     }
-    
+
     }else{
 
     $writeLog = new LogWiriter();

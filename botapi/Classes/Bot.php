@@ -154,7 +154,6 @@ class Bot extends Exception
                 case('Свернуть клавиатуру'):
                    $keyboard =
                             [
-
                                 [
                                     ['text' => '/start'],
                                 ],
@@ -186,8 +185,6 @@ class Bot extends Exception
                         ],
                     ]
                 ];
-
-
 
                     $reply_markup = json_encode($keyboard);
 
@@ -271,8 +268,40 @@ class Bot extends Exception
 
                 break;
             case ('За месяц'):
+                $keyboard = [
+                    'inline_keyboard' =>
+                        [
+                            [
+                                ['text'=> 'Январь', 'callback_data' => 'sumAllSellerByMonth#'.'1|0'],
+                                ['text'=> 'Февраль', 'callback_data' => 'sumAllSellerByMonth#'.'2|0'],
+                                ['text'=> 'Март', 'callback_data' => 'sumAllSellerByMonth#'.'3|0'],
+                            ],
+                            [
+                                ['text'=> 'Апрель', 'callback_data' => 'sumAllSellerByMonth#'.'4|0'],
+                                ['text'=> 'Май', 'callback_data' => 'sumAllSellerByMonth#'.'5|0'],
+                                ['text'=> 'Июнь', 'callback_data' => 'sumAllSellerByMonth#'.'6|0'],
+                            ],
+                            [
+                                ['text'=> 'Июль', 'callback_data' => 'sumAllSellerByMonth#'.'7|0'],
+                                ['text'=> 'Август', 'callback_data' => 'sumAllSellerByMonth#'.'8|0'],
+                                ['text'=> 'Сентябрь', 'callback_data' => 'sumAllSellerByMonth#'.'9|0'],
+                            ],
+                            [
+                                ['text'=> 'Октябрь', 'callback_data' => 'sumAllSellerByMonth#'.'10|0'],
+                                ['text'=> 'Ноябрь', 'callback_data' => 'sumAllSellerByMonth#'.'11|0'],
+                                ['text'=> 'Декабрь', 'callback_data' => 'sumAllSellerByMonth#'.'12|0'],
+                            ],
+                        ],
+                ];
 
-                $this->reply($this->report->sumAllSellerByMonth($command));
+                $reply_markup = json_encode($keyboard);
+                $this->sendTelegram(
+                    'sendMessage',
+                    array(
+                        'chat_id' => $this->telegramm_id,
+                        'text' => 'Выберите месяц для отчета',
+                        'reply_markup'=>$reply_markup,
+                    ));
                 break;
                 /*
                 case('Внести'):
