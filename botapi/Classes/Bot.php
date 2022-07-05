@@ -54,12 +54,12 @@ class Bot extends Exception
                     'chat_id' => $chatid,
                     'text' => $message,
                 )
-            ); 
+            );
         }catch (PDOException $e){
             trigger_error("Bot.php reply:58 " . $e->getMessage(), E_USER_WARNING);
             die();
         }
-        
+
     }
 
     public function sendPost($arr)
@@ -74,7 +74,7 @@ class Bot extends Exception
             )
         );
     }
-    
+
     public function executeCommandUser($command)
     {
         $shop = new Shop();
@@ -90,7 +90,7 @@ class Bot extends Exception
                                         ['text' => '🙋 Приступить к работе'],
                                     ],
                                 ];
-                       // $this->getKeyBoard($keyboard, 'Запрос направлен, ожидайте'); 
+                       // $this->getKeyBoard($keyboard, 'Запрос направлен, ожидайте');
                         }else {
                         $this->reply('Приём еще не открыт. Дождитесь открытия приема менеджером. Затем нажмите кнопку /start');
                             $keyboard =
@@ -100,7 +100,7 @@ class Bot extends Exception
                                     ],
                                 ];
                         }
-                        //$this->getKeyBoard($keyboard, $subject);  
+                        //$this->getKeyBoard($keyboard, $subject);
                     }elseif($this->status == 'seller'){
                         $keyboard =
                             [
@@ -114,6 +114,7 @@ class Bot extends Exception
                                 ],
                                 [
                                     ['text' => 'Свернуть клавиатуру'],
+                                    ['text'=>'За месяц'],
                                 ],
                             ];
                     }elseif($this->status == 'manager'){
@@ -131,7 +132,7 @@ class Bot extends Exception
                                 ],
                                 [
                                     ['text' => '💰 Продажи всех продавцов'],
-                                    ['text' => 'Чистая прибыль'],
+                                    ['text' => 'За месяц'],
                                 ],
                                 [
                                     ['text' => 'Продажи за другие даты'],
@@ -158,7 +159,7 @@ class Bot extends Exception
                                     ['text' => '/start'],
                                 ],
                             ];
-                    
+
 
                     $this->getKeyBoard($keyboard);
                     break;
@@ -168,9 +169,9 @@ class Bot extends Exception
                 }
                 break;
             case('Посмотреть запрос'):
-                
+
                 $array= $shop->showNewSeller();
-                
+
                 if (count($array) > 0){
                 foreach ($array as $k => $row){
 
@@ -185,11 +186,11 @@ class Bot extends Exception
                         ],
                     ]
                 ];
-                
-                
-                
+
+
+
                     $reply_markup = json_encode($keyboard);
-        
+
                     $this->sendTelegram(
                         'sendMessage',
                         array(
@@ -204,43 +205,43 @@ class Bot extends Exception
                     }else{
                     $this->reply('no');
                 }
-                
+
                 break;
                 case("🙋 Приступить к работе"):
-                    
+
                     $this->reply('Запрос принят');
                     $this->reply('Поступил запрос на прием - '. $this->userName, $this->managerId);
-                    
+
                     //parent :: updateStatusUser('newseller', $this->telegramm_id);
                     break;
                 case("💵 Продажи за сегодня по артикулу"):
-                    
+
                 $this->reply($this->report->toDay($this->telegramm_id));
-                
+
                 break;
                 case("💰 Продажи за сегодня всего"):
-                    
+
                 $this->reply($this->report->sumToDay($this->telegramm_id));
-                    
+
                     break;
                      case("💰 Продажи всех продавцов"):
-                    
+
                 $this->reply($this->report->sumAllSeller($this->telegramm_id));
-                    
+
                     break;
                     case("Продажи за другие даты"):
 
                 $arrDate = json_decode($this->report->enotherDay());
-                
+
                 $keyboard = [
                     'inline_keyboard' =>
-                        
+
                             $arrDate,
-                        
+
                 ];
-        
+
                 $reply_markup = json_encode($keyboard);
-        
+
                     $this->sendTelegram(
                         'sendMessage',
                         array(
@@ -251,7 +252,7 @@ class Bot extends Exception
 
                 break;
                 case ("Пост из VK"):
-                    
+
                 $url = 'https://myfunnybant.ru/VK/postcreater.php';
                 $headers = 'Content-Type: application/json';
                 $curl = curl_init($url);
@@ -260,16 +261,19 @@ class Bot extends Exception
                 curl_setopt($curl, CURLOPT_HEADER, $headers);
                 $res = json_decode(curl_exec($curl), true);
                 curl_close($curl);
-                
+
                     foreach ($res as $post)
                     {
-                         
+
                         $this->sendPost($post);
                         //$this->reply('asd');
                     }
 
+                break;
+            case ('За месяц'):
 
-                break;     
+                $this->reply($this->report->sumAllSellerByMonth($command));
+                break;
                 /*
                 case('Внести'):
                     $arr = new CreateCsv();
@@ -278,7 +282,7 @@ class Bot extends Exception
                 case("💵 Продажи за сегодня по артикулу"):
                     self :: today();
                     break;
-                
+
                 case("💰 Продажи за этот год"):
                     self :: callReport($this->messageId);
                     break;
@@ -319,12 +323,12 @@ class Bot extends Exception
         $res = curl_exec($ch);
         curl_close($ch);
 
-        return $res; 
+        return $res;
         }catch (Exception $e){
             trigger_error("Bot.php SendTelegram: 323" . $e->getMessage(), E_USER_WARNING);
             die();
         }
-        
+
     }
     public function getKeyBoard($data, $subject='Выберите из категории', $userTelegam_id = null){
         if(is_null($userTelegam_id)){
@@ -336,7 +340,7 @@ class Bot extends Exception
             "keyboard" => $data,
             'one_time_keyboard' => false,
             'resize_keyboard' => true,
-            
+
        ];
         $reply_markup = json_encode($keyboard,true);
         $this->sendTelegram(
@@ -351,7 +355,7 @@ class Bot extends Exception
     }
     public function sendButtons($telegram_id, $keyboard, $textmessage)
     {
-       
+
 
         $reply_markup = json_encode($keyboard);
 
@@ -362,11 +366,11 @@ class Bot extends Exception
                     'text' => $textmessage,
                     'reply_markup'=>$reply_markup,
                 ));
-                
+
     }
     public function delSaleItems($idSaleItems, $chatId)
     {
-        
+
         $params = [
             'id'=> $idSaleItems,
             'user'=>$chatId
@@ -380,26 +384,26 @@ class Bot extends Exception
             while($row = $stmt->fetch(PDO::FETCH_LAZY))
             {
                 try{
-                    
+
                     $id = $idSaleItems;
                     $query = "DELETE FROM `saleitems` WHERE `ind` = ?";
                     $params = [$id];
                     $stmt = $this->connect->prepare($query);
                     $stmt->execute($params);
                     $uploaddir = $_SERVER['DOCUMENT_ROOT'].'/saleitems/';
-                
+
                     unlink($uploaddir . basename($row->sale_file));
                 }catch(Exception $e){
                     trigger_error("Bot.php SendTelegram: 392 стр" . $e->getMessage(), E_USER_WARNING);
                 }
-                
-                
+
+
                 $this->reply('Запись - ' . $idSaleItems . ' - удалена', $chatId);
             }
         }
-        
-        
-        
+
+
+
         //$db = new \Buki\Pdox($this->config);
 
         //$db->table('saleitems')->where('ind', $idSaleItems)->delete();
@@ -409,7 +413,7 @@ class Bot extends Exception
     }
     public function updateCat($idSaleItems, $category, $chatId)
     {
-        
+
         $query = "UPDATE `saleitems` SET `category` =:category WHERE `ind` =:ind";
         $params = [
             ':ind' => $idSaleItems,
@@ -420,12 +424,12 @@ class Bot extends Exception
             $stmt = $this->connect->prepare($query);
             $stmt->execute($params);
             $this->reply('Запись - ' . $idSaleItems . ' - установлена категория: ' . $category , $chatId);
-            
+
         }catch (PDOException $e){
             trigger_error("Bot.php SendTelegram: 424" .$e->getMessage() . $idSaleItems . '|' . $category, E_USER_WARNING);
             die();
         }
-        
+
     }
     public function addSaleToAnotherSeller($idSaleItems, $chatId)
     {
@@ -445,19 +449,19 @@ class Bot extends Exception
                 $arrUser[]=[
                     'text'=> $row->first_name, 'callback_data' => 'insertSalesForSeller#'.$row->telegram_id.'|'.$idSaleItems,
                 ];
-                
+
             }
         }
-        
+
         $keyboard = [
                     'inline_keyboard' =>
                         [
                             $arrUser,
                         ]
                 ];
-        
+
         $reply_markup = json_encode($keyboard);
-        
+
                     $this->sendTelegram(
                         'sendMessage',
                         array(
@@ -465,7 +469,7 @@ class Bot extends Exception
                             'text' => 'Выберите продавца',
                             'reply_markup'=>$reply_markup,
                         ));
-        
+
     }
     public function insertSalesForSeller($telegram_id, $idSaleItems, $chatId)
     {
@@ -479,7 +483,7 @@ class Bot extends Exception
             $stmt = $this->connect->prepare($query);
             $stmt->execute($params);
             $this->reply('Запись - ' . $idSaleItems . ' - отнесена за : ' . $telegram_id , $chatId);
-            
+
         }catch (PDOException $e){
             trigger_error("Bot.php SendTelegram: 483" .$e->getMessage() . $idSaleItems . '|' . $category, E_USER_WARNING);
             die();

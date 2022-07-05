@@ -10,8 +10,8 @@ class Report extends Exception
 
     public function toDay($telegramm_id,$date=null)
     {
-        
-        
+
+
            if(is_null($date)){
             $date = new DateTime('NOW');
             $y = $date->format("Y");
@@ -19,10 +19,10 @@ class Report extends Exception
             $d = $date->format("d");
             $today = $date->format("Y-m-d");
         }else{
-           
+
             $today = $date;
         }
-       
+
             $str = '';
             $params = [
             'telegram_id' => $telegramm_id,
@@ -54,16 +54,16 @@ class Report extends Exception
                while ($row = $stmt->fetch(PDO::FETCH_LAZY))
                {
                    $res[] = [
-                       
+
                            ['text'=> date("d.m.Y", strtotime($row->date)) . '-' . $row->sumSale , 'callback_data' => 'showReportAnonotherDay#'.$row->date.'|0'],
                     ];
                }
             }
-            
+
             return json_encode($res);
         }
-    
-    
+
+
     public function sumToDay($telegramm_id)
     {
             $date = new DateTime('NOW');
@@ -76,23 +76,23 @@ class Report extends Exception
                 'telegram_id' => $telegramm_id,
                 'date'=> $today,
             ];
-            
+
             $query = 'SELECT count_items, sale_price, usr.first_name, SUM(count_items * sale_price) as total FROM `saleitems` as sale INNER JOIN users usr on sale.sale_to_chatID = usr.telegram_id WHERE sale.sale_to_chatID=:telegram_id AND sale.date_sale = :date';
-            
+
             $stmt = $this->dbh->prepare($query);
             $stmt->execute($params);
             $row = $stmt->fetch(PDO::FETCH_LAZY);
 
             if(!is_null($row->total)){
-                
+
                 $unswer = $today . ' ' . $row->first_name . ': ' . ' Продано всего на: ' . $row->total;
-                
+
             }else{
-                
+
                 $unswer = 'Ещё ничего не продано';
-                
+
             }
-                
+
         return $unswer;
     }
     public function sumAllSeller($telegramm_id, $date=null)
@@ -104,11 +104,11 @@ class Report extends Exception
             $d = $date->format("d");
             $today = $date->format("Y-m-d");
         }else{
-           
+
             $today = $date;
         }
-        
-            
+
+
             $str = '';
             $params = [
             'date'=> $today,
@@ -125,6 +125,37 @@ class Report extends Exception
             }else{
                 $unswer = 'Ещё ничего не продано';
             }
+        return $unswer;
+    }
+    public function sumAllSellerByMonth($date=null)
+    {
+        if(is_null($date)){
+            $date = new DateTime('NOW');
+            $y = $date->format("Y");
+            $m = $date->format("m");
+            $d = $date->format("d");
+            $today = $date->format("M");
+        }else{
+            $today = $date;
+        }
+
+
+        $str = '';
+        $params = [
+            'date'=> $today,
+        ];
+        $query = 'SELECT MONTH(date_sale) as month_sale, (count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date';
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute($params);
+        if($stmt->rowCount() > 0){
+            while ($row = $stmt->fetch(PDO::FETCH_LAZY)) {
+                //echo $row->id . ' - ' .$row->total . PHP_EOL;
+                $str = $str.  $row->month_sale .', 💰 - '. $row->total ."\n" ;
+            }
+            $unswer = $str;
+        }else{
+            $unswer = 'Ещё ничего не продано';
+        }
         return $unswer;
     }
 }
