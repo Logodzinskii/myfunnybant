@@ -16,3 +16,4 @@ yarn-error.log
 .htaccess
 index.php
 /config/ozon.php
+/botapi/Configuration
