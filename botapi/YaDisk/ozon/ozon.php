@@ -2,15 +2,20 @@
 
 class Ozon
 {
+    protected $ozonToken;
+    protected $ozonClientId;
+
+    public function __construct($token, $clientId)
+    {
+        $this->ozonToken = $token;
+        $this->ozonClientId = $clientId;
+    }
     public function showItemArticle($data)
     {
-        define("OZONTOKEN", '4eae7b5c-142a-4930-9920-af3866bed6e2');
 
-        define("CLIENT_ID", '302542');
+        $clientId = $this->ozonClientId; //айди шопа
 
-        $clientId = CLIENT_ID; //айди шопа
-
-        $apiKey = OZONTOKEN; // ключ апи
+        $apiKey = $this->ozonToken; // ключ апи
 
         $method = '/v2/product/info/list'; //метод запроса
 
@@ -54,13 +59,9 @@ class Ozon
 
     public function hitToCart($request)
     {
-        define("OZONTOKEN", '4eae7b5c-142a-4930-9920-af3866bed6e2');
+        $clientId = $this->ozonClientId; //айди шопа
 
-        define("CLIENT_ID", '302542');
-
-        $clientId = CLIENT_ID; //айди шопа
-
-        $apiKey = OZONTOKEN; // ключ апи
+        $apiKey = $this->ozonToken; // ключ апи
 
         $method = '/v1/analytics/data'; //метод запроса
 

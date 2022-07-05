@@ -3,11 +3,17 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/Upload.php');
 include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/ozon/ozon.php');
 include($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
-$yaDisk = new YaDisk();
-$yaDisk->setToken();
-$ozon = new Ozon();
 
-$telegram = new Api('5257900253:AAE54--IjcOrTabqa50g3AU7Fa8guiRq1OI'); //Устанавливаем токен, полученный у BotFather
+$botApiConfiguration = TelegramBotHandMadeConfiguration::get_instance();
+$yandexDiscConfiguration = YandexDiscConfiguration::get_instance();
+$ozonConfiguration = OzonConfiguration::get_instance();
+
+$yaDisk = new YaDisk();
+$yaDisk->setToken($yandexDiscConfiguration->getYandexDiscToken());
+
+$ozon = new Ozon($ozonConfiguration->getOzonToken(), $ozonConfiguration->ClientID);
+
+$telegram = new Api($botApiConfiguration->getBotToken()); //Устанавливаем токен, полученный у BotFather
 $result = $telegram -> getWebhookUpdates(); //Передаем в переменную $result полную информацию о сообщении пользователя
 
 $text = $result["message"]["text"]; //Текст сообщения
@@ -17,11 +23,11 @@ $keyboard = [["TOP-корзина"],["TOP-показы на карточке т�
 $photo = $result["message"]['photo'];
 $capture = $result['message']['caption'];
 
-if($chat_id == '645879928' || $chat_id == '1454009127')
+if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->getManagerIdSecond())
 {
     if (!is_null($photo))
     {
-        $token = '5257900253:AAE54--IjcOrTabqa50g3AU7Fa8guiRq1OI';
+        $token = $botApiConfiguration->getBotToken();
 
         if (!empty($result['message']['photo'])) {
             //$photo = array_pop($result['message']['photo']);

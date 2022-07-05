@@ -5,11 +5,11 @@ class YaDisk
     protected $token, $path;
 
     /**
-     * @param mixed $token
+     * @param string $YandexDiscToken
      */
-    public function setToken()
+    public function setToken(string $YandexDiscToken)
     {
-        $this->token = 'AQAAAAAoFeHvAAfsJJpAzjDJ5U1Qi986WqcnMGM';
+        $this->token = $YandexDiscToken;
     }
     /**
      * @return mixed
