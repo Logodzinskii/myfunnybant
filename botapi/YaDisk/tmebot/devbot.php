@@ -26,6 +26,7 @@ $chat_id = $result["message"]["chat"]["id"]; //Уникальный иденти
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $keyboard = [["TOP-корзина"],["TOP-показы на карточке товара"],["TOP-всего показов"]]; //Клавиатура
 $photo = $result["message"]['photo'];
+$file = $result["message"]['document'];
 $capture = $result['message']['caption'];
 
 if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->getManagerIdSecond())
@@ -40,6 +41,36 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             $ch = curl_init('https://api.telegram.org/bot' . $token . '/getFile');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, array('file_id' => $result["message"]['photo'][3]['file_id']));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            $res = curl_exec($ch);
+            curl_close($ch);
+
+            $res = json_decode($res, true);
+            if ($res['ok']) {
+                $src  = 'https://api.telegram.org/file/bot' . $token . '/' . $res['result']['file_path'];
+                $dest = $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/upload/'. basename($src);
+
+                if(!copy($src, $dest))
+                {
+                    $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Файл не записан на сервер']);
+                }
+
+                $res = $yaDisk->saveFile(basename($src));
+                $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $res]);
+            }
+        }
+        return false;
+    }
+    if (!is_null($file))
+    {
+        $token = $botApiConfiguration->getBotToken();
+
+        if (!empty($result['message']['document'])) {
+
+            $ch = curl_init('https://api.telegram.org/bot' . $token . '/getFile');
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, array('file_id' => $result["message"]['document']['file_id']));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HEADER, false);
             $res = curl_exec($ch);
