@@ -1,10 +1,12 @@
 <?php
+
 include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/Upload.php');
 include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/ozon/ozon.php');
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/TelegramBotHandMadeConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/OzonConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/YandexDiscConfiguration.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Report.php';
 
 include($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
@@ -20,17 +22,66 @@ $ozon = new Ozon($ozonConfiguration->getOzonToken(), $ozonConfiguration->ClientI
 
 $telegram = new Api($botApiConfiguration->getBotToken()); //Устанавливаем токен, полученный у BotFather
 $result = $telegram -> getWebhookUpdates(); //Передаем в переменную $result полную информацию о сообщении пользователя
-
+$message_id = $result["message"]["message_id"];
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
-$keyboard = [["TOP-корзина"],["TOP-показы на карточке товара"],["TOP-всего показов"]]; //Клавиатура
+$keyboard =[
+
+    [
+        ['text' => 'TOP-корзина'],
+        ['text' => 'TOP-показы на карточке товара'],
+        ['text' => 'TOP-всего показов'],
+    ],
+    [
+        ['text' => 'Расходы'],
+
+    ],
+]; //Клавиатура
 $photo = $result["message"]['photo'];
 $file = $result["message"]['document'];
 $capture = $result['message']['caption'];
+$callBack = $result['callback_query']['data'];
+
+if(isset($callBack))
+{
+
+    $chat_id = $result['callback_query']['message']['chat']['id'];
+
+    if(strpos($callBack, "th")>0)
+    {
+        $month = explode('|',$callBack);
+
+        file_put_contents('month.txt', $month[1]);
+
+        $keyboard = [
+            'inline_keyboard' =>
+                [
+                    [
+                        ['text'=> 'Материалы', 'callback_data' => 'type|1'],
+                        ['text'=> 'Аренда', 'callback_data' => 'type|2'],
+
+                    ],
+
+                ],
+        ];
+        $encodedKeyboard = json_encode($keyboard);
+
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => 'Выберите тип расходов', 'reply_markup' => $encodedKeyboard ]);
+    }elseif((strpos($callBack, "pe")>0))
+    {
+        $type = explode('|',$callBack);
+
+        file_put_contents('type.txt', $type[1]);
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Сумма расходов']);
+    }
+
+
+}
 
 if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->getManagerIdSecond())
 {
+
     if (!is_null($photo))
     {
         $token = $botApiConfiguration->getBotToken();
@@ -139,7 +190,41 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']]);
         }
 
-    }else{
+    }elseif($text === 'Расходы')
+    {
+        $keyboard = [
+            'inline_keyboard' =>
+                [
+                    [
+                        ['text'=> 'Январь', 'callback_data' => 'month|1'],
+                        ['text'=> 'Февраль', 'callback_data' => 'month|2'],
+                        ['text'=> 'Март', 'callback_data' => 'month|3'],
+                    ],
+                    [
+                        ['text'=> 'Апрель', 'callback_data' => 'month|4'],
+                        ['text'=> 'Май', 'callback_data' => 'month|5'],
+                        ['text'=> 'Июнь', 'callback_data' => 'month|6'],
+                    ],
+                    [
+                        ['text'=> 'Июль', 'callback_data' => 'month|7'],
+                        ['text'=> 'Август', 'callback_data' => 'month|8'],
+                        ['text'=> 'Сентябрь', 'callback_data' => 'month|9'],
+                    ],
+                    [
+                        ['text'=> 'Октябрь', 'callback_data' => 'month|10'],
+                        ['text'=> 'Ноябрь', 'callback_data' => 'month|11'],
+                        ['text'=> 'Декабрь', 'callback_data' => 'month|12'],
+                    ],
+                    [
+                        ['text'=> 'Сегодня', 'callback_data' => 'month|13'],
+                    ]
+                ],
+        ];
+
+        $encodedKeyboard = json_encode($keyboard);
+
+        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => 'Выберите месяц', 'reply_markup' => $encodedKeyboard ]);
+    }elseif(strpos($text,'-')>0){
         $data = '{
                     "offer_id": [
                         "'.strtolower($text).'"
@@ -157,8 +242,11 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         }else{
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'такого товара нет']);
         }
-    }
+    }elseif($text == '1000')
+    {
 
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $text.' занесен']);
+    }
 }else{
 
     $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Только для меня']);
