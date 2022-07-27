@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/TelegramBotHandMad
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/OzonConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/YandexDiscConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Report.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/DateBase.php';
 
 include($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
@@ -14,6 +15,9 @@ use Telegram\Bot\Api;
 $botApiConfiguration = TelegramBotHandMadeConfiguration::get_instance();
 $yandexDiscConfiguration = YandexDiscConfiguration::get_instance();
 $ozonConfiguration = OzonConfiguration::get_instance();
+$db = DateBase::get_instance();
+
+$report = new Report($db->getConnection());
 
 $yaDisk = new YaDisk();
 $yaDisk->setToken($yandexDiscConfiguration->getYandexDiscToken());
@@ -58,8 +62,8 @@ if(isset($callBack))
             'inline_keyboard' =>
                 [
                     [
-                        ['text'=> 'Материалы', 'callback_data' => 'type|1'],
-                        ['text'=> 'Аренда', 'callback_data' => 'type|2'],
+                        ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
+                        ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
 
                     ],
 
@@ -242,10 +246,20 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         }else{
             $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'такого товара нет']);
         }
-    }elseif($text == '1000')
-    {
+    }elseif($text >= 10){
 
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $text.' занесен']);
+        $arrTodb = [
+            'saller'=> $chat_id,
+            'name_expens'=>file_get_contents('type.txt'),
+            'totalPrice'=>$text,
+            'date'=>file_get_contents('month.txt'),
+        ];
+        $res = $report->addExpenses($arrTodb);
+        //$res = 1;
+
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $text.' занесен' . 'id-' . $res]);
+        file_put_contents('type.txt', 0);
+        file_put_contents('month.txt', 0);
     }
 }else{
 
