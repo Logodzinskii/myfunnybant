@@ -7,10 +7,18 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/TelegramBotHandMad
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/OzonConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/YandexDiscConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Report.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Controller/CallBackController.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/DateBase.php';
 
 include($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
+
+$arrayCallBackData = [
+    'month'=>'monthResponse',
+    'type'=>'typeResponse',
+    'location'=>'locationResponse',
+    'deleteExp'=>'deleteExp',
+];
 
 $botApiConfiguration = TelegramBotHandMadeConfiguration::get_instance();
 $yandexDiscConfiguration = YandexDiscConfiguration::get_instance();
@@ -51,137 +59,42 @@ if(isset($callBack))
 {
 
     $chat_id = $result['callback_query']['message']['chat']['id'];
-
+    /**
+     * парсим CallBack и из массива @param $arrayCallBackData
+     * по совпадающему ключу вызываем метод класса CallBackDataController
+     */
     if(strpos($callBack, "th")>0)
     {
-        $month = explode('|',$callBack);
 
-        if($month[1] == 13)
-        {
-            $date = new DateTime('NOW');
-            $y = $date->format("Y");
-            $m = $date->format("m");
-            $d = $date->format("d");
-            $today = $date->format("Y-m-d");
-
-            file_put_contents('month.txt', $today);
-
-            $keyboard = [
-                'inline_keyboard' =>
-                    [
-                        [
-                            ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
-                            ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
-
-                        ],
-
-                    ],
-            ];
-            $encodedKeyboard = json_encode($keyboard);
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Выберите тип расходов', 'reply_markup' => $encodedKeyboard]);
-
-
-        }elseif($month[1] == 0){
-
-            $keyboard = [
-                'inline_keyboard' =>
-                    [
-                        [
-                            ['text'=> 'Январь', 'callback_data' => 'month|1'],
-                            ['text'=> 'Февраль', 'callback_data' => 'month|2'],
-                            ['text'=> 'Март', 'callback_data' => 'month|3'],
-                        ],
-                        [
-                            ['text'=> 'Апрель', 'callback_data' => 'month|4'],
-                            ['text'=> 'Май', 'callback_data' => 'month|5'],
-                            ['text'=> 'Июнь', 'callback_data' => 'month|6'],
-                        ],
-                        [
-                            ['text'=> 'Июль', 'callback_data' => 'month|7'],
-                            ['text'=> 'Август', 'callback_data' => 'month|8'],
-                            ['text'=> 'Сентябрь', 'callback_data' => 'month|9'],
-                        ],
-                        [
-                            ['text'=> 'Октябрь', 'callback_data' => 'month|10'],
-                            ['text'=> 'Ноябрь', 'callback_data' => 'month|11'],
-                            ['text'=> 'Декабрь', 'callback_data' => 'month|12'],
-                        ],
-                        [
-                            ['text'=> 'Сегодня', 'callback_data' => 'month|13'],
-                        ]
-                    ],
-            ];
-
-            $encodedKeyboard = json_encode($keyboard);
-
-            $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => 'Выберите месяц', 'reply_markup' => $encodedKeyboard ]);
-
-        }else{
-
-
-            $date = new DateTime('NOW');
-            $y = $date->format("Y");
-            $m = $date->format("m");
-            $d = $date->format("d");
-            $today = $date->format("Y-m-d");
-            $date = $y.'-'.$month[1].'-01';
-            file_put_contents('month.txt', $date);
-
-            $keyboard = [
-                'inline_keyboard' =>
-                    [
-                        [
-                            ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
-                            ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
-
-                        ],
-
-                    ],
-            ];
-            $encodedKeyboard = json_encode($keyboard);
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Выберите тип расходов', 'reply_markup' => $encodedKeyboard]);
-        }
-
+        $monthResponse = new CallBackController($callBack);
+        $chat_id = ['chat_id'=>$chat_id];
+        $telegram->sendMessage(array_merge($chat_id, $monthResponse->monthResponse()));
 
 
     }elseif((strpos($callBack, "pe")>0))
     {
-        $type = explode('|',$callBack);
 
-        file_put_contents('type.txt', $type[1]);
-        $keyboard = [
-            'inline_keyboard' =>
-                [
-                    [
-                        ['text'=> 'Да', 'callback_data' => 'locations|yes'],
-                        ['text'=> 'Нет', 'callback_data' => 'locations|no'],
+        $typeResponse = new CallBackController($callBack);
+        $chat_id = ['chat_id'=>$chat_id];
+        $telegram->sendMessage(array_merge($chat_id, $typeResponse->typeResponse()));
 
-                    ],
-
-                ],
-        ];
-        $encodedKeyboard = json_encode($keyboard);
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Отправить локацию?', 'reply_markup' => $encodedKeyboard]);
     }
     elseif((strpos($callBack, "tio")>0))
     {
-        $loc = explode('|',$callBack);
-        if($loc[1] === 'no')
-        {
-            file_put_contents('location.txt', '{"latitude":0,"longitude":0}');
 
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Сумма расходов']);
-        }else{
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Отправь геопозицию']);
-        }
+        $locationResponse = new CallBackController($callBack);
+        $chat_id = ['chat_id'=>$chat_id];
+        $telegram->sendMessage(array_merge($chat_id, $locationResponse->locationResponse()));
+
 
     }elseif ((strpos($callBack, "teExp")) > 0)
     {
-        $id = explode('|',$callBack);
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $report->deleteExpenses($id)]);
+
+        $deleteExp = new CallBackController($callBack);
+        $chat_id = ['chat_id'=>$chat_id];
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $report->deleteExpenses($deleteExp->deleteExp())]);
 
     }
-
 
 }
 
