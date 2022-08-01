@@ -39,10 +39,42 @@ class YaDisk
         }else{
             file_put_contents('1.txt', $path);
             $this->path = $path;
+            $this->sharedDirectory($path);
+            $this->getMetaInformationDirectory($path);
             return 'Директория успешно создана';
 
         }
 
+    }
+
+    public function sharedDirectory($path)
+    {
+        $src = '/Ozon';
+
+        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/publish/?path=' . urlencode($src.'/'.$path));
+        curl_setopt($ch, CURLOPT_PUT, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        $res = curl_exec($ch);
+        file_put_contents('publish.txt', $res);
+    }
+
+    public function getMetaInformationDirectory($path)
+    {
+        $src = '/Ozon';
+        $fields = '_embedded.items.name,_embedded.items.type';
+        $limit = '10';
+        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/?path=' . urlencode($src.'/'.$path) . '&fields=' . $fields . '&limit=' . $limit);
+        //curl_setopt($ch, CURLOPT_PUT, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        $res = curl_exec($ch);
+        $res = json_decode($res, true);
+        file_put_contents('publish_res.txt', $res['public_url']);
     }
 
     public function saveFile($name)

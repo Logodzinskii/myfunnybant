@@ -40,7 +40,6 @@ $keyboard =[
     ],
     [
         ['text' => 'Расходы'],
-
     ],
 ]; //Клавиатура
 $photo = $result["message"]['photo'];
