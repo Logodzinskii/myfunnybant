@@ -1,24 +1,19 @@
 <?php
 
 include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/Upload.php');
-include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/ozon/ozon.php');
+//include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/ozon/ozon.php');
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/TelegramBotHandMadeConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/OzonConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/YandexDiscConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Report.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Ozon.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Controller/CallBackController.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Controller/TextControler.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/DateBase.php';
 
 include($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
-
-$arrayCallBackData = [
-    'month'=>'monthResponse',
-    'type'=>'typeResponse',
-    'location'=>'locationRespons',
-    'delete'=>'deleteExpenses',
-];
 
 $botApiConfiguration = TelegramBotHandMadeConfiguration::get_instance();
 $yandexDiscConfiguration = YandexDiscConfiguration::get_instance();
@@ -30,7 +25,7 @@ $report = new Report($db->getConnection());
 $yaDisk = new YaDisk();
 $yaDisk->setToken($yandexDiscConfiguration->getYandexDiscToken());
 
-$ozon = new Ozon($ozonConfiguration->getOzonToken(), $ozonConfiguration->ClientID);
+$ozon = new Ozon();
 
 $telegram = new Api($botApiConfiguration->getBotToken()); //Устанавливаем токен, полученный у BotFather
 $result = $telegram -> getWebhookUpdates(); //Передаем в переменную $result полную информацию о сообщении пользователя
@@ -39,17 +34,8 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $path = $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/';
-$keyboard =[
 
-    [
-        ['text' => 'TOP-корзина'],
-        ['text' => 'TOP-показы на карточке товара'],
-        ['text' => 'TOP-всего показов'],
-    ],
-    [
-        ['text' => 'Расходы'],
-    ],
-]; //Клавиатура
+
 $photo = $result["message"]['photo'];
 $file = $result["message"]['document'];
 $capture = $result['message']['caption'];
@@ -61,6 +47,12 @@ $callBack = $result['callback_query']['data'];
 
 if(isset($callBack))
 {
+    $arrayCallBackData = [
+        'month'=>'monthResponse',
+        'type'=>'typeResponse',
+        'location'=>'locationRespons',
+        'delete'=>'deleteExpenses',
+    ];
     $callBackController = new CallBackController($callBack, $db->getConnection());
     $callBackControllerMethod = explode("|", $callBack);
     $callBackControllerMethod = $callBackControllerMethod[0];
@@ -68,48 +60,8 @@ if(isset($callBack))
     $chat_id = $result['callback_query']['message']['chat']['id'];
     $chat_id = ['chat_id'=>$chat_id];
 
-
     $telegram->sendMessage(array_merge($chat_id, $callBackController->$callBackControllerMethod()));
     file_put_contents('mon.txt', $callBackController->$callBackControllerMethod());
-
-    /*$chat_id = $result['callback_query']['message']['chat']['id'];
-    /**
-     * парсим CallBack и из массива @param $arrayCallBackData
-     * по совпадающему ключу вызываем метод класса CallBackDataController
-     */
-    /*if(strpos($callBack, "th")>0)
-    {
-
-        $monthResponse = new CallBackController($callBack);
-        $chat_id = ['chat_id'=>$chat_id];
-        file_put_contents('mon.txt', $monthResponse->monthResponse());
-        $telegram->sendMessage(array_merge($chat_id, $monthResponse->monthResponse()));
-
-
-    }elseif((strpos($callBack, "pe")>0))
-    {
-
-        $typeResponse = new CallBackController($callBack);
-        $chat_id = ['chat_id'=>$chat_id];
-        $telegram->sendMessage(array_merge($chat_id, $typeResponse->typeResponse()));
-
-    }
-    elseif((strpos($callBack, "tio")>0))
-    {
-
-        $locationResponse = new CallBackController($callBack);
-        $chat_id = ['chat_id'=>$chat_id];
-        $telegram->sendMessage(array_merge($chat_id, $locationResponse->locationResponse()));
-
-
-    }elseif ((strpos($callBack, "teExp")) > 0)
-    {
-
-        $deleteExp = new CallBackController($callBack);
-        $chat_id = ['chat_id'=>$chat_id];
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $report->deleteExpenses($deleteExp->deleteExp())]);
-
-    }*/
 
 }
 
@@ -178,18 +130,45 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         return false;
     }
 
+    if(isset($text))
+    {
+        $chat_id = [ 'chat_id' => $chat_id];
+        $textController = new TextControler($text);
+        $textRoutArray =
+            [
+                '/start' => 'startButtonTextController',
+                'Расходы'=>'executionChoiceMonth',
+
+            ];
+        if(array_key_exists($text, $textRoutArray))
+        {
+            $textControllerMethod = $textRoutArray[$text];
+
+            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+
+        }else
+        {
+            $textControllerMethod = $textController->checkTextRegular();
+            $responseTextControllerArray = $textController->$textControllerMethod();
+            if(array_key_exists('sendPhoto', $responseTextControllerArray)){
+                $telegram->sendPhoto([
+                    'chat_id' => $chat_id['chat_id'],
+                    'photo'=> $responseTextControllerArray['sendPhoto']['photo'],
+                    'caption'=> $responseTextControllerArray['sendPhoto']['caption'],
+                    ]);
+            }
+            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+        }
+
+    }
+
     if ($text != '/start' && strpos($text, "/") > 0) {
 
         $res = $yaDisk->createPath($text);
 
         $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $res]);
 
-    }elseif ($text == '/start')
-    {
-        $reply_markup = $telegram->replyKeyboardMarkup([ 'keyboard' => $keyboard, 'resize_keyboard' => true, 'one_time_keyboard' => false ]);
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => 'Ok', 'reply_markup' => $reply_markup ]);
-    }
-    elseif(preg_match('/^[TOP]+(-)+[а-я]+/', $text) > 0) {
+    }elseif(preg_match('/^[TOP]+(-)+[а-я]+/', $text) > 0) {
 
         $request = [
             'hits_tocart' => 'TOP-корзина',
@@ -224,22 +203,6 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']]);
         }
 
-    }elseif($text === 'Расходы')
-    {
-        $keyboard = [
-            'inline_keyboard' =>
-                [
-                    [
-                        ['text'=> 'Сегодня', 'callback_data' => 'month|13'],
-                        ['text'=> 'Другой месяц', 'callback_data' => 'month|0'],
-
-                    ],
-                ],
-        ];
-
-        $encodedKeyboard = json_encode($keyboard);
-
-        $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => 'Выберите месяц', 'reply_markup' => $encodedKeyboard ]);
     }elseif(strpos($text,'-')>0){
         $data = '{
                     "offer_id": [
