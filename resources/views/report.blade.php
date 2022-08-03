@@ -17,7 +17,7 @@
         <header >
 
         </header>
-        {{ $items['caption'] }}
+
         <section class="container-md">
             <div class="row justify-content-center">
                 <div class="col-md-12">

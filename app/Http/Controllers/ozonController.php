@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ozonController
 {
@@ -52,10 +53,17 @@ class ozonController
 
     }
 
-    public function showAllItems()
+    public function showAllItems(Request $lastId = null)
     {
+
+        $lastId = Cache::get('last_id');
+        if (Cache::has('last_id'))
+        {
+            $lastId = Cache::get('last_id');
+        }
         $data = '{
-            "limit":7
+            "limit":3,
+            "last_id": ""
         }';
         $method = '/v2/product/list';
 
@@ -73,7 +81,12 @@ class ozonController
                 self::showItem($item['offer_id']);
             }
 
-            file_put_contents('log.txt', json_encode($this->getResponseOzonArray()));
+           Cache::put('pages', ['id'=>$arrOzonItems['result']['last_id']], $secconds = 90);
+
+            $this->pagesArray = $arrOzonItems['result']['last_id'];
+
+            file_put_contents('log.txt', Cache::get('last_id'));
+
             $view = view('shop')->with(['items'=>$this->getResponseOzonArray()]);
 
             return new Response($view);
@@ -90,4 +103,5 @@ class ozonController
     {
         return $this->responseOzonArray;
     }
+
 }
