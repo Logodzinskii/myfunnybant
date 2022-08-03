@@ -16,8 +16,8 @@ use Telegram\Bot\Api;
 $arrayCallBackData = [
     'month'=>'monthResponse',
     'type'=>'typeResponse',
-    'location'=>'locationResponse',
-    'deleteExp'=>'deleteExp',
+    'location'=>'locationRespons',
+    'delete'=>'deleteExpenses',
 ];
 
 $botApiConfiguration = TelegramBotHandMadeConfiguration::get_instance();
@@ -53,21 +53,36 @@ $keyboard =[
 $photo = $result["message"]['photo'];
 $file = $result["message"]['document'];
 $capture = $result['message']['caption'];
+/**
+ * @param string $callBack
+ * Например: type|Материалы
+ */
 $callBack = $result['callback_query']['data'];
 
 if(isset($callBack))
 {
-
+    $callBackController = new CallBackController($callBack, $db->getConnection());
+    $callBackControllerMethod = explode("|", $callBack);
+    $callBackControllerMethod = $callBackControllerMethod[0];
+    $callBackControllerMethod = $arrayCallBackData[$callBackControllerMethod];
     $chat_id = $result['callback_query']['message']['chat']['id'];
+    $chat_id = ['chat_id'=>$chat_id];
+
+
+    $telegram->sendMessage(array_merge($chat_id, $callBackController->$callBackControllerMethod()));
+    file_put_contents('mon.txt', $callBackController->$callBackControllerMethod());
+
+    /*$chat_id = $result['callback_query']['message']['chat']['id'];
     /**
      * парсим CallBack и из массива @param $arrayCallBackData
      * по совпадающему ключу вызываем метод класса CallBackDataController
      */
-    if(strpos($callBack, "th")>0)
+    /*if(strpos($callBack, "th")>0)
     {
 
         $monthResponse = new CallBackController($callBack);
         $chat_id = ['chat_id'=>$chat_id];
+        file_put_contents('mon.txt', $monthResponse->monthResponse());
         $telegram->sendMessage(array_merge($chat_id, $monthResponse->monthResponse()));
 
 
@@ -94,7 +109,7 @@ if(isset($callBack))
         $chat_id = ['chat_id'=>$chat_id];
         $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $report->deleteExpenses($deleteExp->deleteExp())]);
 
-    }
+    }*/
 
 }
 
@@ -260,7 +275,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             'inline_keyboard' =>
                 [
                     [
-                        ['text'=> 'Удалить?', 'callback_data' => 'deleteExpenses|'. $res],
+                        ['text'=> 'Удалить?', 'callback_data' => 'delete|'. $res],
                     ],
                 ],
         ];
