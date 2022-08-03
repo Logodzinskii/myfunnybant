@@ -58,7 +58,7 @@ class Report
         $params = [$id];
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return 'Удалено';
+        return 'Удалено - ' . $id;
     }
 
 

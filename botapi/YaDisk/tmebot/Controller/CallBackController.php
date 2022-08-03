@@ -1,15 +1,15 @@
 <?php
 
+
 class CallBackController
 {
-    protected string $callBackData;
+    public string $callBackData;
+    public $connections;
 
-
-    public function __construct($callBackData)
+    public function __construct($callBackData, $connections)
     {
-        $this->callBackData = $callBackData['data'];
-
-
+        $this->callBackData = $callBackData;
+        $this->connections = $connections;
     }
 
     public function monthResponse()
@@ -113,8 +113,8 @@ class CallBackController
             'inline_keyboard' =>
                 [
                     [
-                        ['text'=> 'Да', 'callback_data' => 'locations|yes'],
-                        ['text'=> 'Нет', 'callback_data' => 'locations|no'],
+                        ['text'=> 'Да', 'callback_data' => 'location|yes'],
+                        ['text'=> 'Нет', 'callback_data' => 'location|no'],
 
                     ],
 
@@ -124,7 +124,7 @@ class CallBackController
         return ['text' => 'Отправить локацию?', 'reply_markup' => $encodedKeyboard];
     }
 
-    public function locationResponse()
+    public function locationRespons()
     {
         $loc = explode('|',$this->callBackData);
         if($loc[1] === 'no')
@@ -137,10 +137,15 @@ class CallBackController
         }
     }
 
-    public function deleteExp()
+    public function deleteExpenses()
     {
         $id = explode('|',$this->callBackData);
 
-        return $id[1];
+        $query = "DELETE FROM `expenses` WHERE `id` = ?";
+        $params = [$id[1]];
+        $stmt = $this->connections->prepare($query);
+        $stmt->execute($params);
+        return 'Удалено - ' . $id[1];
+
     }
 }
