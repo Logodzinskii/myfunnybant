@@ -61,7 +61,6 @@ if(isset($callBack))
     $chat_id = ['chat_id'=>$chat_id];
 
     $telegram->sendMessage(array_merge($chat_id, $callBackController->$callBackControllerMethod()));
-    file_put_contents('mon.txt', $callBackController->$callBackControllerMethod());
 
 }
 
@@ -133,6 +132,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
     if(isset($text))
     {
         $chat_id = [ 'chat_id' => $chat_id];
+
         $textController = new TextControler($text);
         $textRoutArray =
             [
@@ -148,16 +148,33 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
 
         }else
         {
-            $textControllerMethod = $textController->checkTextRegular();
-            $responseTextControllerArray = $textController->$textControllerMethod();
-            if(array_key_exists('sendPhoto', $responseTextControllerArray)){
-                $telegram->sendPhoto([
-                    'chat_id' => $chat_id['chat_id'],
-                    'photo'=> $responseTextControllerArray['sendPhoto']['photo'],
-                    'caption'=> $responseTextControllerArray['sendPhoto']['caption'],
-                    ]);
+            $textController = new TextControler($text);
+
+            $textControllerMethod = $textController->checkTextRegular();//ozonShowItem
+            file_put_contents('checkTextRegular.txt', $textControllerMethod);
+            if($textControllerMethod === 'not found')
+            {
+                $telegram->sendMessage(array_merge($chat_id, ['text'=> $textControllerMethod]));
             }
-            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+
+            $responseTextControllerArray = $textController->$textControllerMethod();
+
+            if(array_key_exists('sendPhoto', $responseTextControllerArray))
+            {
+                file_put_contents('checkTextRegular.txt', $chat_id . '|' . $responseTextControllerArray['sendPhoto']['photo'] . '|' . $responseTextControllerArray['sendPhoto']['caption']);
+
+                $telegram->sendPhoto(
+                    [
+                        'chat_id' => $chat_id['chat_id'],
+                        'photo'=> $responseTextControllerArray['sendPhoto']['photo'],
+                        'caption'=> $responseTextControllerArray['sendPhoto']['caption'],
+                    ]
+                );
+
+            }else{
+                $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+            }
+
         }
 
     }

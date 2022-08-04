@@ -5,6 +5,7 @@ class TextControler
     protected $ozon;
 
     protected string $text;
+
     public function __construct($text)
     {
         $this->text = $text;
@@ -54,24 +55,25 @@ class TextControler
         $arrRegular =
             [
                 'method'=>'/^[TOP]+(-)+[а-я]+/',
-                'ozonShowIitem'=>'/^[a-zA-z]*-[0-9]*-[0-9]*/',
+                'ozonShowItem'=>'/^[a-zA-Z]*-[0-9]*-[0-9]*/',
             ];
+
 
         foreach ($arrRegular as $reg=>$val)
         {
 
             if(preg_match($val, $this->text) > 0)
             {
+
                 return $reg;
 
-            }else{
-                return 'not found';
             }
         }
     }
 
     public function ozonShowItem()
     {
+
         $data = '{
                     "offer_id": [
                         "'.strtolower($this->text).'"
@@ -79,7 +81,9 @@ class TextControler
                     "product_id": [],
                     "sku": []
                 }';
+
         $res = json_decode($this->ozon->showItemArticle($data), true);
+
         if(is_array($res) && array_key_exists('img', $res)){
 
             return [
