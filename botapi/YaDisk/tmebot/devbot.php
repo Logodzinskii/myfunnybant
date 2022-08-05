@@ -20,7 +20,7 @@ $yandexDiscConfiguration = YandexDiscConfiguration::get_instance();
 $ozonConfiguration = OzonConfiguration::get_instance();
 $db = DateBase::get_instance();
 
-$report = new Report($db->getConnection());
+$report = new Report();
 
 $yaDisk = new YaDisk();
 $yaDisk->setToken($yandexDiscConfiguration->getYandexDiscToken());
@@ -61,7 +61,6 @@ if(isset($callBack))
     $chat_id = ['chat_id'=>$chat_id];
 
     $telegram->sendMessage(array_merge($chat_id, $callBackController->$callBackControllerMethod()));
-    file_put_contents('mon.txt', $callBackController->$callBackControllerMethod());
 
 }
 
@@ -133,6 +132,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
     if(isset($text))
     {
         $chat_id = [ 'chat_id' => $chat_id];
+
         $textController = new TextControler($text);
         $textRoutArray =
             [
@@ -148,16 +148,47 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
 
         }else
         {
-            $textControllerMethod = $textController->checkTextRegular();
+            $textController = new TextControler($text);
+
+            $textControllerMethod = $textController->checkTextRegular();//ozonShowItem
+            file_put_contents('checkTextRegular.txt', $textControllerMethod);
+            if($textControllerMethod === 'not found')
+            {
+                $telegram->sendMessage(array_merge($chat_id, ['text'=> $textControllerMethod]));
+            }
+
             $responseTextControllerArray = $textController->$textControllerMethod();
-            if(array_key_exists('sendPhoto', $responseTextControllerArray)){
-                $telegram->sendPhoto([
-                    'chat_id' => $chat_id['chat_id'],
-                    'photo'=> $responseTextControllerArray['sendPhoto']['photo'],
-                    'caption'=> $responseTextControllerArray['sendPhoto']['caption'],
+
+            if(array_key_exists('sendPhoto', $responseTextControllerArray))
+            {
+                file_put_contents('checkTextRegular.txt', $chat_id . '|' . $responseTextControllerArray['sendPhoto']['photo'] . '|' . $responseTextControllerArray['sendPhoto']['caption']);
+
+                $telegram->sendPhoto(
+                    [
+                        'chat_id' => $chat_id['chat_id'],
+                        'photo'=> $responseTextControllerArray['sendPhoto']['photo'],
+                        'caption'=> $responseTextControllerArray['sendPhoto']['caption'],
+                    ]
+                );
+
+            }elseif(array_key_exists('sendMessage', $responseTextControllerArray))
+            {
+
+                $telegram->sendMessage(
+                    [
+                        'chat_id' => $chat_id['chat_id'],
+                        'text' => $responseTextControllerArray['sendMessage']['text'],
+                    ]);
+            }elseif(array_key_exists('inline_keyboard', $responseTextControllerArray))
+            {
+                $telegram->sendMessage(
+                    [
+                        'chat_id' => $chat_id['chat_id'],
+                        'text' => $responseTextControllerArray['inline_keyboard']['text'],
+                        'reply_markup' => $responseTextControllerArray['inline_keyboard']['reply_markup'],
                     ]);
             }
-            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+
         }
 
     }
@@ -203,24 +234,6 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']]);
         }
 
-    }elseif(strpos($text,'-')>0){
-        $data = '{
-                    "offer_id": [
-                        "'.strtolower($text).'"
-                    ],
-                    "product_id": [],
-                    "sku": []
-                }';
-        $res = json_decode($ozon->showItemArticle($data), true);
-        if(is_array($res) && array_key_exists('img', $res)){
-            $telegram->sendPhoto([
-                'chat_id' => $chat_id,
-                'photo' => $res['img'],
-                'caption' => $res['name'] . ' На складе ' . $res['caption'] . '; цена до скидок - ' . $res['old_price'] . '; цена со скидкой ' . $res['price'] . '; Итого со всеми скидками (акции) ' . $res['marketing_price'] .  ' статус - ' .  $res['state_name'] . ' ' . $res['state_description'] . ' ' . $res['state_tooltip']
-            ]);
-        }else{
-            $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'такого товара нет']);
-        }
     }elseif($text >= 10){
 
         $arrTodb = [

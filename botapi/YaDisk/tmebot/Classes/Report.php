@@ -3,9 +3,10 @@
 class Report
 {
     protected $connection;
-    public function __construct($connection)
+    public function __construct()
     {
-        $this->connection = $connection;
+        $connection = DateBase::get_instance();
+        $this->connection = $connection->getConnection();
     }
 
     public function addExpenses($arrExpenses)
@@ -54,11 +55,11 @@ class Report
     }
     public function deleteExpenses($id)
     {
-        $query = "DELETE FROM `expenses` WHERE `ind` = ?";
+        $query = "DELETE FROM `expenses` WHERE `id` = ?";
         $params = [$id];
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return 'Удалено - ' . $id;
+        return 'Удалено ' . $id;
     }
 
 

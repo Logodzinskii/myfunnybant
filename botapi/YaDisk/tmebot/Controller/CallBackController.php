@@ -1,6 +1,5 @@
 <?php
-
-
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/DateBase.php';
 class CallBackController
 {
     public string $callBackData;
@@ -14,6 +13,7 @@ class CallBackController
 
     public function monthResponse()
     {
+        file_put_contents( $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/tmp/monthResponse.txt', $this->callBackData);
         $month = explode('|', $this->callBackData);
 
         if($month[1] == 13)
@@ -146,6 +146,5 @@ class CallBackController
         $stmt = $this->connections->prepare($query);
         $stmt->execute($params);
         return 'Удалено - ' . $id[1];
-
     }
 }
