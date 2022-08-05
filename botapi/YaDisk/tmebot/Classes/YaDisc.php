@@ -1,8 +1,13 @@
 <?php
 
-class YaDisk1
+class YaDisk
 {
     protected $token, $path;
+
+    public function __construct()
+    {
+        $this->token = 'AQAAAAAoFeHvAAfsJJpAzjDJ5U1Qi986WqcnMGM';
+    }
 
     /**
      * @param string $YandexDiscToken
@@ -40,8 +45,8 @@ class YaDisk1
             file_put_contents('1.txt', $path);
             $this->path = $path;
             $this->sharedDirectory($path);
-            $this->getMetaInformationDirectory($path);
-            return 'Директория успешно создана';
+            //$this->getMetaInformationDirectory($path);
+            return 'Директория успешно создана ' . $this->getMetaInformationDirectory($path);
 
         }
 
@@ -64,7 +69,7 @@ class YaDisk1
     public function getMetaInformationDirectory($path)
     {
         $src = '/Ozon';
-        $fields = '_embedded.items.name,_embedded.items.type';
+        $fields = 'name,_embedded.items.path, public_url';
         $limit = '10';
         $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/?path=' . urlencode($src.'/'.$path) . '&fields=' . $fields . '&limit=' . $limit);
         //curl_setopt($ch, CURLOPT_PUT, true);
@@ -74,7 +79,8 @@ class YaDisk1
         curl_setopt($ch, CURLOPT_HEADER, false);
         $res = curl_exec($ch);
         $res = json_decode($res, true);
-        file_put_contents('publish_res.txt', $res['public_url']);
+        file_put_contents('publish_res.txt', json_encode($res));
+        return $res['public_url'];
     }
 
     public function saveFile($name)
@@ -115,7 +121,7 @@ class YaDisk1
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-             if ($http_code == 201) {
+            if ($http_code == 201) {
                 return 'Файл успешно загружен.';
             }else{
                 return $http_code;

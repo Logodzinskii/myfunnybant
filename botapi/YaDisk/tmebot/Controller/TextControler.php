@@ -11,6 +11,7 @@ class TextControler
         $this->text = $text;
         $this->ozon = new Ozon();
         $this->report = new Report();
+        $this->yaDisc = new YaDisk();
     }
     public function executionChoiceMonth()
     {
@@ -20,7 +21,6 @@ class TextControler
                     [
                         ['text'=> 'Сегодня', 'callback_data' => 'month|13'],
                         ['text'=> 'Другой месяц', 'callback_data' => 'month|0'],
-
                     ],
                 ],
         ];
@@ -58,6 +58,8 @@ class TextControler
                 'method'=>'/^[TOP]+(-)+[а-я]+/',
                 'ozonShowItem'=>'/^[a-zA-Z]*-[0-9]*-[0-9]*/',
                 'executionAdd'=>'/^Расход-[0-9]*/',
+                'yandexDiscCreateDirectory'=>'/^[a-zA-Z]*-[0-9]*\//'
+
             ];
 
 
@@ -98,7 +100,7 @@ class TextControler
         }else{
 
             return [
-                'sendMessage' =>[
+                    'sendMessage' =>[
                     'text' => 'такого товара нет'
                 ]
             ];
@@ -142,5 +144,16 @@ class TextControler
         //file_put_contents('type.txt', 0);
         //file_put_contents('month.txt', 0);
         //file_put_contents('location.txt', 0);
+    }
+
+    public function yandexDiscCreateDirectory()
+    {
+
+        $res = $this->yaDisc->createPath($this->text);
+        return [
+                'sendMessage' =>[
+                'text' => $res
+            ]
+        ];
     }
 }

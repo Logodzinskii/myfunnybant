@@ -8,6 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/OzonConfiguration.
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/YandexDiscConfiguration.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Report.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/Ozon.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Classes/YaDisc.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Controller/CallBackController.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/Controller/TextControler.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/DateBase.php';
@@ -34,7 +35,7 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 $path = $_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/tmebot/';
-
+$db->setUserChatId($chat_id);
 
 $photo = $result["message"]['photo'];
 $file = $result["message"]['document'];
@@ -234,39 +235,11 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']]);
         }
 
-    }elseif($text >= 10){
-
-        $arrTodb = [
-            'saller'=> $chat_id,
-            'name_expens'=>file_get_contents('type.txt'),
-            'totalPrice'=>$text,
-            'date'=>file_get_contents('month.txt'),
-            'location'=>file_get_contents('location.txt'),
-        ];
-
-        $res = $report->addExpenses($arrTodb);
-        //$res = 1;
-
-        $keyboard = [
-            'inline_keyboard' =>
-                [
-                    [
-                        ['text'=> 'Удалить?', 'callback_data' => 'delete|'. $res],
-                    ],
-                ],
-        ];
-
-        $encodedKeyboard = json_encode($keyboard);
-
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $text.' занесен' . 'id - ' . $res, 'reply_markup' => $encodedKeyboard]);
-        file_put_contents('type.txt', 0);
-        file_put_contents('month.txt', 0);
-        file_put_contents('location.txt', 0);
     }
     if(isset($result["message"]["location"]))
     {
         file_put_contents('location.txt', $result["message"]["location"]);
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Пришли сумму расхода']);
+        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Пришли сумму расхода. Пример: Расход-120']);
     }
 
 
