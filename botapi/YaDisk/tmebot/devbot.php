@@ -138,7 +138,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         $textRoutArray =
             [
                 '/start' => 'startButtonTextController',
-                'Расходы'=>'executionChoiceMonth',
+                'Внести Расходы'=>'executionChoiceMonth',
                 'Пришли расходы' => 'showExpensesController',
                 'TOP-Ozon'=>'choiceOzonTop',
                 'В начальное меню'=>'startButtonTextController',

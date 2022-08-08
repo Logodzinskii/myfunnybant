@@ -131,7 +131,7 @@ class CallBackController
         {
             file_put_contents('location.txt', '{"latitude":0,"longitude":0}');
 
-            return ['text' => 'Сумма расходов'];
+            return ['text' => 'Сумма расходов. например: Расход-120'];
         }else{
             return ['text' => 'Отправь геопозицию'];
         }
@@ -145,6 +145,6 @@ class CallBackController
         $params = [$id[1]];
         $stmt = $this->connections->prepare($query);
         $stmt->execute($params);
-        return 'Удалено - ' . $id[1];
+        return ['text' => 'Удалено - ' . $id[1]];
     }
 }
