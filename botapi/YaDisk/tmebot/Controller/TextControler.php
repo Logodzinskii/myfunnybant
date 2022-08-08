@@ -10,6 +10,8 @@ class TextControler
     {
         $this->text = $text;
         $this->ozon = new Ozon();
+        $this->report = new Report();
+        $this->yaDisc = new YaDisk();
     }
     public function executionChoiceMonth()
     {
@@ -19,7 +21,6 @@ class TextControler
                     [
                         ['text'=> 'Сегодня', 'callback_data' => 'month|13'],
                         ['text'=> 'Другой месяц', 'callback_data' => 'month|0'],
-
                     ],
                 ],
         ];
@@ -33,12 +34,11 @@ class TextControler
         $keyboard =[
             'keyboard'=>[
                 [
-                    ['text' => 'TOP-корзина'],
-                    ['text' => 'TOP-показы на карточке товара'],
-                    ['text' => 'TOP-всего показов'],
+                    ['text' => 'TOP-Ozon'],
                 ],
                 [
-                    ['text' => 'Расходы'],
+                    ['text' =>'Внести Расходы'],
+                    ['text' =>'Пришли расходы'],
                 ],
             ],
             "one_time_keyboard" => false,
@@ -50,12 +50,36 @@ class TextControler
         return ['text' => 'Ok', 'reply_markup' => $encodedKeyboard];
     }
 
+    public function choiceOzonTop()
+    {
+        $keyboard =[
+            'keyboard'=>[
+                [
+                    ['text' => 'TOP-корзина'],
+                    ['text' => 'TOP-показы на карточке товара'],
+                    ['text' => 'TOP-всего показов'],
+                ],
+                [
+                    ['text' => 'В начальное меню'],
+                ],
+            ],
+            "one_time_keyboard" => false,
+            "resize_keyboard" => true
+
+
+        ];
+        $encodedKeyboard = json_encode($keyboard);
+        return ['text' => 'Ok', 'reply_markup' => $encodedKeyboard];
+    }
     public function checkTextRegular()
     {
         $arrRegular =
             [
-                'method'=>'/^[TOP]+(-)+[а-я]+/',
+                'topOzonCart'=>'/^TOP*/',
                 'ozonShowItem'=>'/^[a-zA-Z]*-[0-9]*-[0-9]*/',
+                'executionAdd'=>'/^Расход-[0-9]*/',
+                'yandexDiscCreateDirectory'=>'/^[a-zA-Z]*-[0-9]*\//'
+
             ];
 
 
@@ -102,5 +126,114 @@ class TextControler
             ];
 
         }
+    }
+
+    public function topOzonCart()
+    {
+        $request = [
+            'hits_tocart' => 'TOP-корзина',
+            'hits_view_pdp' => 'TOP-показы на карточке товара',
+            'hits_view' => 'TOP-всего показов',
+        ];
+
+        $strRes = array_search($this->text, $request);
+
+        $resHit = json_decode($this->ozon->hitToCart($strRes),true);
+
+        foreach ($resHit as $hit)
+        {
+            $data = '{
+                    "offer_id": [
+
+                    ],
+                    "product_id": [],
+                    "sku": ["'.strtolower($hit['id']).'"]
+                }';
+
+            $resImg = json_decode($this->ozon->showItemArticle($data), true);
+
+            if(is_array($resImg) && array_key_exists('img', $resImg))
+            {
+
+                return [
+                    'sendPhoto'=>[
+                        'photo' => $resImg['img'],
+                        'caption' => $resImg['name'] . ' На складе ' . $resImg['caption'] . '; цена до скидок - ' . $resImg['old_price'] . '; цена со скидкой ' . $resImg['price'] . '; Итого со всеми скидками (акции) ' . $resImg['marketing_price'] .  ' статус - ' .  $resImg['state_name'] . ' ' . $resImg['state_description'] . ' ' . $resImg['state_tooltip'] . $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart'],
+                    ]
+                ];
+
+
+
+            }else
+            {
+
+                return [
+                    'sendMessage' =>[
+                        'text' => 'такого товара нет'
+                    ]
+                ];
+
+            }
+
+        }
+    }
+    public function executionAdd()
+    {
+        $price = explode('-', $this->text);
+        $price = $price[1];
+
+        $arrTodb = [
+            'saller'=> 123456,
+            'name_expens'=>file_get_contents('type.txt'),
+            'totalPrice'=>intval($price),
+            'date'=>file_get_contents('month.txt'),
+            'location'=>file_get_contents('location.txt'),
+        ];
+
+        $res = $this->report->addExpenses($arrTodb);
+
+        $keyboard = [
+            'inline_keyboard' =>
+                [
+                    [
+                        ['text'=> 'Удалить?', 'callback_data' => 'delete|'. $res],
+                    ],
+                ],
+        ];
+
+        $encodedKeyboard = json_encode($keyboard);
+
+        return [
+            'inline_keyboard' =>  [
+                'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $this->text.' занесен' . 'id - ' . $res,
+                'reply_markup' => $encodedKeyboard,
+            ]
+        ];
+        //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Расход за месяц - ' .  file_get_contents('month.txt') . ' в категорию - ' . file_get_contents('type.txt') . ' на сумму - ' . $text.' занесен' . 'id - ' . $res, 'reply_markup' => $encodedKeyboard]);
+
+        //file_put_contents('type.txt', 0);
+        //file_put_contents('month.txt', 0);
+        //file_put_contents('location.txt', 0);
+    }
+
+    public function yandexDiscCreateDirectory()
+    {
+
+        $res = $this->yaDisc->createPath($this->text);
+        return [
+            'sendMessage' =>[
+                'text' => $res
+            ]
+        ];
+    }
+
+    public function showExpensesController()
+    {
+
+        return [
+
+            'text' => $this->report->showExpenses(),
+
+        ];
     }
 }
