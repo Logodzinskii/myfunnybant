@@ -38,6 +38,12 @@ class ozonController
 
         return (json_decode($html, true));
     }
+
+    /**
+     * Функция получает на входе offer_id например br-1-3
+     * @param $offer_id
+     * Полученный результат из API seller ozon записывает в array
+     */
     public function showItem($offer_id)
     {
 
@@ -48,30 +54,164 @@ class ozonController
         $method = '/v2/product/info';
 
         $arrOzonItems = self::curl_request_ozon($data, $method);
-
+        /**
+         * получаю ответ
+         * {
+        "id": 266673018,
+        "name": "Бант для волос \"Зефирка\" 2 шт., на резинке, праздничные, нарядные. Myfunnybant",
+        "offer_id": "b-02-02",
+        "barcode": "OZN554024534",
+        "buybox_price": "",
+        "category_id": 55592804,
+        "created_at": "2022-04-12T16:15:02.330161Z",
+        "images": [
+        "https://cdn1.ozone.ru/s3/multimedia-1/6375670765.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-v/6375670759.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-w/6375670760.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-q/6375670754.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-p/6375670753.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-u/6375670758.jpg"
+        ],
+        "marketing_price": "355.0000",
+        "min_ozon_price": "",
+        "old_price": "639.0000",
+        "premium_price": "",
+        "price": "429.0000",
+        "recommended_price": "",
+        "min_price": "339.0000",
+        "sources": [
+        {
+        "is_enabled": true,
+        "sku": 554024534,
+        "source": "fbo"
+        },
+        {
+        "is_enabled": true,
+        "sku": 554024535,
+        "source": "fbs"
+        }
+        ],
+        "stocks": {
+        "coming": 0,
+        "present": 55,
+        "reserved": 0
+        },
+        "errors": [],
+        "vat": "0.0",
+        "visible": true,
+        "visibility_details": {
+        "has_price": true,
+        "has_stock": true,
+        "active_product": false
+        },
+        "price_index": "0.00",
+        "commissions": [
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "fbo",
+        "delivery_amount": 0,
+        "return_amount": 0
+        },
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "fbs",
+        "delivery_amount": 0,
+        "return_amount": 0
+        },
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "rfbs",
+        "delivery_amount": 0,
+        "return_amount": 0
+        }
+        ],
+        "volume_weight": 0.1,
+        "is_prepayment": false,
+        "is_prepayment_allowed": false,
+        "images360": [],
+        "color_image": "",
+        "primary_image": "https://cdn1.ozone.ru/s3/multimedia-s/6375670756.jpg",
+        "status": {
+        "state": "price_sent",
+        "state_failed": "",
+        "moderate_status": "approved",
+        "decline_reasons": [],
+        "validation_state": "success",
+        "state_name": "Продается",
+        "state_description": "",
+        "is_failed": false,
+        "is_created": true,
+        "state_tooltip": "",
+        "item_errors": [],
+        "state_updated_at": "2022-08-10T04:49:36.049561Z"
+        },
+        "state": "",
+        "service_type": "IS_CODE_SERVICE",
+        "fbo_sku": 554024534,
+        "fbs_sku": 554024535,
+        "currency_code": "RUB",
+        "is_kgt": false
+        }
+         * заполняю массив
+         */
         $this->responseOzonArray[] = $arrOzonItems['result'];
+        /*if($arrOzonItems['result']['category_id'] == 78286803){
+
+        }*/
+
 
     }
 
-    public function showAllItems(Request $lastId = null)
+    /**
+     * @param Request|null $lastId
+     * @return Response|string
+     */
+    public function showAllItems($last_id = null)
     {
 
-        $lastId = Cache::get('last_id');
-        if (Cache::has('last_id'))
+        if($last_id == null)
         {
-            $lastId = Cache::get('last_id');
+            $last_id = '';
         }
+        /**
+        * бантики category_id = 55592804
+        * чокеры category_id = 78286803
+        * наборы, комплекты бантиков category_id = 78059066
+         * Бант \"Пироженка\" category_id = 78059088
+         *
+         */
         $data = '{
-            "limit":3,
-            "last_id": ""
+        "filter": {
+
+            "visibility": "IN_SALE"
+            },
+            "limit":"1",
+            "last_id": "'.$last_id.'"
         }';
         $method = '/v2/product/list';
 
+        echo $last_id;
+
         /**
-         * $arrOzonItems список товаров json {"items":[{"product_id":261984365,"offer_id":"br-1-3"},{"product_id":266673018,"offer_id":"b-02-02"}],"total":102,"last_id":"WzI2NjY3MzAxOCwyNjY2NzMwMThd"}
+         * $arrOzonItems список товаров json {
+         * "items":
+         * [
+         *      {"product_id":261984365,"offer_id":"br-1-3"},
+         *      {"product_id":266673018,"offer_id":"b-02-02"}
+         * ],
+         * "total":102,
+         * "last_id":"WzI2NjY3MzAxOCwyNjY2NzMwMThd"
+         * }
          */
 
         $arrOzonItems = self::curl_request_ozon($data, $method);
+        file_put_contents('log.txt',json_encode($this->getResponseOzonArray()));
 
 
         if (isset($arrOzonItems['result'])){
@@ -81,14 +221,18 @@ class ozonController
                 self::showItem($item['offer_id']);
             }
 
-           Cache::put('pages', ['id'=>$arrOzonItems['result']['last_id']], $secconds = 90);
 
             $this->pagesArray = $arrOzonItems['result']['last_id'];
 
-            file_put_contents('log.txt', Cache::get('last_id'));
 
-            $view = view('shop')->with(['items'=>$this->getResponseOzonArray()]);
-
+            $resArr = array_merge($this->getResponseOzonArray(), ['last_id' => $arrOzonItems['result']['last_id']]);
+            file_put_contents('log1.txt',json_encode($resArr));
+            $data = [
+                'items'=>$this->getResponseOzonArray(),
+                'last_id' => $arrOzonItems['result']['last_id'],
+            ];
+            $view = view('shop')->with('data', $data);
+            self::showCategoryAttributeValues();
             return new Response($view);
 
         }else{
@@ -96,6 +240,45 @@ class ozonController
         }
     }
 
+    public function showCategoryAttributeValues($last_id = null)
+    {
+        if($last_id == null)
+        {
+            $last_id = '';
+        }
+
+        $data = '{
+        "filter": {
+        "visibility": "IN_SALE"
+        },
+        "limit": 100,
+        "last_id": "",
+        "sort_dir": "DESC"
+        }';
+        $method = '/v3/products/info/attributes';
+        $arrOzonItems = self::curl_request_ozon($data, $method);
+        var_dump(count($arrOzonItems));
+        $arr = [];
+        $last_id = '';
+        foreach ($arrOzonItems['result'] as $item)
+        {
+            if($item['category_id'] == 78286803)
+            {
+                $arr[]=$item;
+                $last_id = $item['last_id'];
+            }
+        }
+
+        $data = [
+            'items'=>$arr,
+            'last_id' => $last_id,
+        ];
+        file_put_contents('attrVal.txt', json_encode($arr));
+        $view = view('shop')->with('data', $data);
+        return new Response($view);
+
+
+    }
     /**
      * @return array
      */
