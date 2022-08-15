@@ -7,6 +7,7 @@ class Report
     {
         $connection = DateBase::get_instance();
         $this->connection = $connection->getConnection();
+
     }
 
     public function addExpenses($arrExpenses)
@@ -39,7 +40,7 @@ class Report
         try{
             $stmt = $this->connection->prepare("INSERT INTO `expenses` SET `saller` =:saller, `name_expens` =:name_expens, `totalPrice`=:totalPrice, `date`=:date, `location`=:location, `location_name`=:location_name ");
             $stmt->execute([
-                'saller'=>$arrExpenses['saller'],
+                'saller'=>'1454009127',
                 'name_expens'=>$arrExpenses['name_expens'],
                 'totalPrice'=>$arrExpenses['totalPrice'],
                 'date'=>$arrExpenses['date'],
@@ -63,5 +64,35 @@ class Report
     }
 
 
+    public function showExpenses()
+    {
+        $date = new DateTime('NOW');
+        $today = $date->format("m");
+        $year = $date->format("Y");
+        $res = '';
+        $params = [
+            'date' => $today,
+            'year'=> $year,
+        ];
+        $query = "SELECT * FROM `expenses` WHERE MONTH(date) =:date AND YEAR(date) =:year ORDER BY date ASC";
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute($params);
+        if($stmt->rowCount() > 0)
+        {
+            while ($row = $stmt->fetch(PDO::FETCH_LAZY))
+            {
+                $geolocation = json_decode($row->location, true);
+                $longtitude = $geolocation['longitude'];
+                $latitude = $geolocation['latitude'];
+                $res = $res. '📍' .$row->date .', Тип -' . $row->name_expens. ', Расходы -' . $row->totalPrice . ', Место - ' . $row->location_name . PHP_EOL . '<a href="https://yandex.ru/maps/?text='.$latitude.'%2C'.$longtitude.'&z=16.72"> На карте </a>'. PHP_EOL;
+            }
+            $unswer = $res;
+        }else{
+            $unswer = 'Ещё ничего не занесено' . $today;
+        }
+        return $unswer;
+
+    }
 
 }

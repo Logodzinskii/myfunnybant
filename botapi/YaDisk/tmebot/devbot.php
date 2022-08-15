@@ -1,6 +1,6 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/Upload.php');
+//include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/yadisk/Upload.php');
 //include_once($_SERVER['DOCUMENT_ROOT'].'/botapi/YaDisk/ozon/ozon.php');
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/botapi/Configuration/TelegramBotHandMadeConfiguration.php';
@@ -138,8 +138,13 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         $textRoutArray =
             [
                 '/start' => 'startButtonTextController',
-                'Расходы'=>'executionChoiceMonth',
-
+                'Внести Расходы'=>'executionChoiceMonth',
+                'Пришли расходы' => 'showExpensesController',
+                'TOP-Ozon'=>'choiceOzonTop',
+                'В начальное меню'=>'startButtonTextController',
+                //'TOP-корзина'=>'topOzonCart',
+                //'TOP-показы на карточке товара'=>'topOzonCart',
+                //'TOP-всего показов'=>'topOzonCart',
             ];
         if(array_key_exists($text, $textRoutArray))
         {
@@ -155,14 +160,14 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
             file_put_contents('checkTextRegular.txt', $textControllerMethod);
             if($textControllerMethod === 'not found')
             {
-                $telegram->sendMessage(array_merge($chat_id, ['text'=> $textControllerMethod]));
+                $telegram->sendMessage(array_merge($chat_id['chat_id'], ['text'=> $textControllerMethod]));
             }
 
             $responseTextControllerArray = $textController->$textControllerMethod();
 
             if(array_key_exists('sendPhoto', $responseTextControllerArray))
             {
-                file_put_contents('checkTextRegular.txt', $chat_id . '|' . $responseTextControllerArray['sendPhoto']['photo'] . '|' . $responseTextControllerArray['sendPhoto']['caption']);
+                file_put_contents('checkTextRegular.txt', $chat_id['chat_id'] . '|' . $responseTextControllerArray['sendPhoto']['photo'] . '|' . $responseTextControllerArray['sendPhoto']['caption']);
 
                 $telegram->sendPhoto(
                     [
@@ -194,48 +199,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
 
     }
 
-    if ($text != '/start' && strpos($text, "/") > 0) {
 
-        $res = $yaDisk->createPath($text);
-
-        $telegram->sendMessage(['chat_id' => $chat_id, 'text' => $res]);
-
-    }elseif(preg_match('/^[TOP]+(-)+[а-я]+/', $text) > 0) {
-
-        $request = [
-            'hits_tocart' => 'TOP-корзина',
-            'hits_view_pdp' => 'TOP-показы на карточке товара',
-            'hits_view' => 'TOP-всего показов',
-        ];
-
-        $strRes = array_search($text, $request);
-
-        $resHit = json_decode($ozon->hitToCart($strRes),true);
-
-        foreach ($resHit as $hit)
-        {
-            $data = '{
-                    "offer_id": [
-
-                    ],
-                    "product_id": [],
-                    "sku": ["'.strtolower($hit['id']).'"]
-                }';
-
-            $resImg = json_decode($ozon->showItemArticle($data), true);
-            if(is_array($resImg) && array_key_exists('img', $resImg)){
-                $telegram->sendPhoto([
-                    'chat_id' => $chat_id,
-                    'photo' => $resImg['img'],
-                    'caption' => $resImg['name'] . ' На складе ' . $resImg['caption'] . '; цена до скидок - ' . $resImg['old_price'] . '; цена со скидкой ' . $resImg['price'] . '; Итого со всеми скидками (акции) ' . $resImg['marketing_price'] .  ' статус - ' .  $resImg['state_name'] . ' ' . $resImg['state_description'] . ' ' . $resImg['state_tooltip'] . $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']
-                ]);
-            }else{
-                $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'такого товара нет']);
-            }
-            //$telegram->sendMessage(['chat_id' => $chat_id, 'text' => $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart']]);
-        }
-
-    }
     if(isset($result["message"]["location"]))
     {
         file_put_contents('location.txt', $result["message"]["location"]);
@@ -248,4 +212,3 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
     $telegram->sendMessage(['chat_id' => $chat_id, 'text' => 'Только для меня']);
 
 }
-

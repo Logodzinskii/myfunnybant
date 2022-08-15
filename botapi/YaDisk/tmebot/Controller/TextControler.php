@@ -34,12 +34,11 @@ class TextControler
         $keyboard =[
             'keyboard'=>[
                 [
-                    ['text' => 'TOP-корзина'],
-                    ['text' => 'TOP-показы на карточке товара'],
-                    ['text' => 'TOP-всего показов'],
+                    ['text' => 'TOP-Ozon'],
                 ],
                 [
-                    ['text' => 'Расходы'],
+                    ['text' =>'Внести Расходы'],
+                    ['text' =>'Пришли расходы'],
                 ],
             ],
             "one_time_keyboard" => false,
@@ -51,11 +50,32 @@ class TextControler
         return ['text' => 'Ok', 'reply_markup' => $encodedKeyboard];
     }
 
+    public function choiceOzonTop()
+    {
+        $keyboard =[
+            'keyboard'=>[
+                [
+                    ['text' => 'TOP-корзина'],
+                    ['text' => 'TOP-показы на карточке товара'],
+                    ['text' => 'TOP-всего показов'],
+                ],
+                [
+                    ['text' => 'В начальное меню'],
+                ],
+            ],
+            "one_time_keyboard" => false,
+            "resize_keyboard" => true
+
+
+        ];
+        $encodedKeyboard = json_encode($keyboard);
+        return ['text' => 'Ok', 'reply_markup' => $encodedKeyboard];
+    }
     public function checkTextRegular()
     {
         $arrRegular =
             [
-                'method'=>'/^[TOP]+(-)+[а-я]+/',
+                'topOzonCart'=>'/^TOP*/',
                 'ozonShowItem'=>'/^[a-zA-Z]*-[0-9]*-[0-9]*/',
                 'executionAdd'=>'/^Расход-[0-9]*/',
                 'yandexDiscCreateDirectory'=>'/^[a-zA-Z]*-[0-9]*\//'
@@ -100,10 +120,60 @@ class TextControler
         }else{
 
             return [
-                    'sendMessage' =>[
+                'sendMessage' =>[
                     'text' => 'такого товара нет'
                 ]
             ];
+
+        }
+    }
+
+    public function topOzonCart()
+    {
+        $request = [
+            'hits_tocart' => 'TOP-корзина',
+            'hits_view_pdp' => 'TOP-показы на карточке товара',
+            'hits_view' => 'TOP-всего показов',
+        ];
+
+        $strRes = array_search($this->text, $request);
+
+        $resHit = json_decode($this->ozon->hitToCart($strRes),true);
+
+        foreach ($resHit as $hit)
+        {
+            $data = '{
+                    "offer_id": [
+
+                    ],
+                    "product_id": [],
+                    "sku": ["'.strtolower($hit['id']).'"]
+                }';
+
+            $resImg = json_decode($this->ozon->showItemArticle($data), true);
+
+            if(is_array($resImg) && array_key_exists('img', $resImg))
+            {
+
+                return [
+                    'sendPhoto'=>[
+                        'photo' => $resImg['img'],
+                        'caption' => $resImg['name'] . ' На складе ' . $resImg['caption'] . '; цена до скидок - ' . $resImg['old_price'] . '; цена со скидкой ' . $resImg['price'] . '; Итого со всеми скидками (акции) ' . $resImg['marketing_price'] .  ' статус - ' .  $resImg['state_name'] . ' ' . $resImg['state_description'] . ' ' . $resImg['state_tooltip'] . $hit['name'] . '. Просмотров всего-' . $hit['hits_view'] . '. В корзину - ' . $hit['hits_to_cart'],
+                    ]
+                ];
+
+
+
+            }else
+            {
+
+                return [
+                    'sendMessage' =>[
+                        'text' => 'такого товара нет'
+                    ]
+                ];
+
+            }
 
         }
     }
@@ -151,9 +221,19 @@ class TextControler
 
         $res = $this->yaDisc->createPath($this->text);
         return [
-                'sendMessage' =>[
+            'sendMessage' =>[
                 'text' => $res
             ]
+        ];
+    }
+
+    public function showExpensesController()
+    {
+
+        return [
+
+            'text' => $this->report->showExpenses(),
+
         ];
     }
 }
