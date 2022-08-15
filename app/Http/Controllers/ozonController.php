@@ -260,10 +260,7 @@ class ozonController
         var_dump(count($arrOzonItems));
         $arr = [];
         $last_id = '';
-<<<<<<< HEAD
-        file_put_contents('error.log', json_encode($arrOzonItems));
-=======
->>>>>>> test
+
         foreach ($arrOzonItems['result'] as $item)
         {
             if($item['category_id'] == 78286803)
