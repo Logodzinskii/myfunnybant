@@ -155,7 +155,7 @@ if(!empty($arr['callback_query']['data'])){
         case('sumAllSellerByMonth'):
             $parametrForMetod = explode('|', $metodParametrs[0]);
             $report = new Report();
-            $bot->reply($report->sumAllSellerByMonth($metodParametrs[0]),$arr['callback_query']['message']['chat']['id']);
+            $bot->reply($report->sumAllSellerByMonth($metodParametrs[1]),$arr['callback_query']['message']['chat']['id']);
             break;
 
     }
