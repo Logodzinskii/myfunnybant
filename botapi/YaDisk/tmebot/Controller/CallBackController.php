@@ -31,8 +31,11 @@ class CallBackController
                     [
                         [
                             ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
+                            ['text'=> 'Упаковка', 'callback_data' => 'type|Упаковка'],
+                            ['text'=> 'Перекуп', 'callback_data' => 'type|Перекуп'],
+                        ],
+                        [
                             ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
-
                         ],
 
                     ],
