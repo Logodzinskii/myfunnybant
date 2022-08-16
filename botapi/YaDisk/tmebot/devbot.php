@@ -150,7 +150,7 @@ if($chat_id == $botApiConfiguration->getManagerId() || $botApiConfiguration->get
         {
             $textControllerMethod = $textRoutArray[$text];
 
-            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod()));
+            $telegram->sendMessage(array_merge($chat_id, $textController->$textControllerMethod(), ['parse_mode'=>'HTML']));
 
         }else
         {
