@@ -85,7 +85,13 @@ class Report
                 $geolocation = json_decode($row->location, true);
                 $longtitude = $geolocation['longitude'];
                 $latitude = $geolocation['latitude'];
-                $res = $res. '📍' .$row->date .', Тип -' . $row->name_expens. ', Расходы -' . $row->totalPrice . ', Место - ' . $row->location_name . PHP_EOL . '<a href="https://yandex.ru/maps/?text='.$latitude.'%2C'.$longtitude.'&z=16.72"> На карте </a>'. PHP_EOL;
+                if ($row->name_expens === 'Аренда')
+                {
+                    $res = $res. '📍' .$row->date .', Тип -' . $row->name_expens. ', Расходы -' . $row->totalPrice . ', Место - ' . $row->location_name . PHP_EOL . '<a href="https://yandex.ru/maps/?text='.$latitude.'%2C'.$longtitude.'&z=16.72"> На карте </a>'. PHP_EOL;
+                }else{
+                    $res = $res. '📍' .$row->date .', Тип -' . $row->name_expens. ', Расходы -' . $row->totalPrice . PHP_EOL;
+                }
+
             }
             $unswer = $res;
         }else{
