@@ -74,7 +74,7 @@ class Report
             'date' => $today,
             'year'=> $year,
         ];
-        $query = "SELECT * FROM `expenses` WHERE MONTH(date) =:date AND YEAR(date) =:year ORDER BY date ASC";
+        $query = "SELECT * FROM `expenses` WHERE MONTH(date) =:date AND YEAR(date) =:year ORDER BY date DESC ";
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
