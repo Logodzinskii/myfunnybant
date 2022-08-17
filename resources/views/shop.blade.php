@@ -13,96 +13,46 @@
         <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
 
         <script src={{ asset('js/owl.carousel.min.js')}}></script>
-    <script type="javascript">
+        <script type="text/javascript">
         $(document).ready(function(){
             $(".owl-carousel").owlCarousel(
-
+                {
+                    loop:true,
+                    margin:10,
+                    responsive:{
+                        0:{
+                            items:1
+                        },
+                        600:{
+                            items:3
+                        },
+                        1000:{
+                            items:5
+                        }
+                    }
+                }
             );
         });
     </script>
-
     </head>
     <body class="container-fluid">
-        <header >
-
-        </header>
-
+        @include('header')
         <section class="container-md">
             <div class="owl-carousel owl-theme owl-loaded">
                 <div class="owl-stage-outer">
                     <div class="owl-stage">
                         @php($n = 0)
                         @foreach($data['items'] as $item)
-
-                            @if($n % 3 == 0)
                                 <div class="owl-item">
-                                    @endif
-                                    <div class="card col-sm">
-                                        <div class="card-body">
-                                            <div class="card-title">
-                                                <h2>{{$item['name']}}</h2>
-                                            </div>
-                                            <div class="card-img">
-                                                <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
-                                            </div>
-                                            <div class="card-footer">
-                                                <p><span>Цена с учетом скидок: </span></p>
-                                                <p></p>
 
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <h2>{{$item['name']}}</h2>
+                                    <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
 
-                                    @php($n++)
-                                    @if($n % 3 == 0)
                                 </div>
-                            @endif
                         @endforeach
-
                     </div>
-                </div>
-                <div class="owl-nav">
-                    <div class="owl-prev">prev</div>
-                    <div class="owl-next">next</div>
-                </div>
-                <div class="owl-dots">
-                    <div class="owl-dot active"><span></span></div>
-                    <div class="owl-dot"><span></span></div>
-                    <div class="owl-dot"><span></span></div>
                 </div>
             </div>
-            @php($n = 0)
-            @foreach($data['items'] as $item)
-
-                @if($n % 3 == 0)
-                <div class="row">
-                    @endif
-                    <div class="card col-sm">
-                        <div class="card-body">
-                            <div class="card-title">
-                                <h2>{{$item['name']}}</h2>
-                            </div>
-                            <div class="card-img">
-                                <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
-                            </div>
-                            <div class="card-footer">
-                                <p><span>Цена с учетом скидок: </span></p>
-                                <p></p>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    @php($n++)
-                    @if($n % 3 == 0)
-                        </div>
-                @endif
-            @endforeach
         </section>
-        <p> <a href="/public/shop/{{$data['last_id']}}" >Назад</a>
-            <a href="/public/shop/{{$data['last_id']}}" >Далее</a></p>
-
-        </section>
-
     </body>
 </html>
