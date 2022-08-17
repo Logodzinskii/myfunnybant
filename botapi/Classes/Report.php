@@ -129,23 +129,19 @@ class Report extends Exception
     }
     public function sumAllSellerByMonth($date=null)
     {
-        if(is_null($date)){
-            $date = new DateTime('NOW');
-            $y = $date->format("Y");
-            $m = $date->format("m");
-            $d = $date->format("d");
-            $today = $date->format("M");
-        }else{
+
             $today = $date;
-        }
+            $dates = new DateTime('NOW');
+            $y = $dates->format("Y");
+
 
 
         $str = '';
         $params = [
             'date'=> $today,
-            'year'=> '2022',
+            'year'=> $y,
         ];
-        $query = 'SELECT MONTH(date_sale) as month_sale, (count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
+        $query = 'SELECT MONTH(date_sale) as month_sale, SUM(count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
         $stmt = $this->dbh->prepare($query);
         $stmt->execute($params);
         if($stmt->rowCount() > 0){

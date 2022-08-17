@@ -31,8 +31,11 @@ class CallBackController
                     [
                         [
                             ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
+                            ['text'=> 'Упаковка', 'callback_data' => 'type|Упаковка'],
+                            ['text'=> 'Перекуп', 'callback_data' => 'type|Перекуп'],
+                        ],
+                        [
                             ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
-
                         ],
 
                     ],
@@ -93,8 +96,11 @@ class CallBackController
                     [
                         [
                             ['text'=> 'Материалы', 'callback_data' => 'type|Материалы'],
+                            ['text'=> 'Упаковка', 'callback_data' => 'type|Упаковка'],
+                            ['text'=> 'Перекуп', 'callback_data' => 'type|Перекуп'],
+                        ],
+                        [
                             ['text'=> 'Аренда', 'callback_data' => 'type|Аренда'],
-
                         ],
 
                     ],
@@ -131,7 +137,7 @@ class CallBackController
         {
             file_put_contents('location.txt', '{"latitude":0,"longitude":0}');
 
-            return ['text' => 'Сумма расходов'];
+            return ['text' => 'Сумма расходов. например: Расход-120'];
         }else{
             return ['text' => 'Отправь геопозицию'];
         }
@@ -145,16 +151,6 @@ class CallBackController
         $params = [$id[1]];
         $stmt = $this->connections->prepare($query);
         $stmt->execute($params);
-        return 'Удалено - ' . $id[1];
-
-        $stmt = $this->connections->prepare( "DELETE FROM `expenses` WHERE id =:id" );
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        if( $stmt->rowCount() ){
-            return 'Удалено - ' . $id[1];
-        }else{
-            return "Deletion failed";
-        }
-
+        return ['text' => 'Удалено - ' . $id[1]];
     }
 }
