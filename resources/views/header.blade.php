@@ -1,5 +1,9 @@
 <header>
-    <section>
-        <h1>Аксессуары для волос ручной работы - myfunnybant </h1>
+    <section class="container">
+        <div class="row">
+            <div class="col-lg-2">logo myfunnybant</div>
+            <div class="col-lg-8">main menu</div>
+            <div class="col-lg-2">vk t.me</div>
+        </div>
     </section>
 </header>
