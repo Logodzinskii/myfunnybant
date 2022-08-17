@@ -17,6 +17,9 @@ use App\Http\Controllers\ozonController;
 Route::get('/', function () {
     return view('index', ['webTitle' => 'Myfunnybant аксессуары для волос ручной работы', 'meta'=>'ручная работа']);
 });
+Route::get('/main', function () {
+    return view('main', ['webTitle' => 'Myfunnybant аксессуары для волос ручной работы', 'meta'=>'ручная работа']);
+});
 Route::get('/shop/', [ozonController::class, 'showCategoryAttributeValues']);
 
 Route::get('/shop/{last_id}/', [ozonController::class, 'showCategoryAttributeValues']);
