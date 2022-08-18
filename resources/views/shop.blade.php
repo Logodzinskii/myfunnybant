@@ -32,27 +32,62 @@
                     }
                 }
             );
+
         });
     </script>
     </head>
     <body class="container-fluid">
         @include('header')
         <section class="container-md">
+            <article>
+                <h1>Аксессуары для волос ручной работы - myfunnybant </h1>
+                <h2>Резинки для волос</h2>
+                <p>Резинка для волос это эластичное кольцо для собирания волос и создания прически.</p>
+                <p>В основном резинка для волос предназначается для того, чтобы предотвратить попадание волос в глаза или механическую технику во время домашней работы.</p>
+                <p>Сегодня этот аксессуар используется для создания причесок, таких как: <a href="#">конский хвост</a>, <a href="#">коса</a> </p>
+                <h2>Виды резинок</h2>
+                <p>На нашем сайте вы можете выбрать и заказать резинки скранч. Это широкая резинка из ткани для волос, популярная в 1980-х, начале 19090-х, а затем и в 2010-х годах</p>
+                <p>Посмотрите на образцы моих изделий ручной работы</p>
+                <h2>Резинки для волос</h2>
+            </article>
             <div class="owl-carousel owl-theme owl-loaded">
                 <div class="owl-stage-outer">
                     <div class="owl-stage">
-                        @php($n = 0)
-                        @foreach($data['items'] as $item)
-                                <div class="owl-item">
+                        @foreach($data['bant'] as $item)
+                            <div class="owl-item">
 
-                                    <h2>{{$item['name']}}</h2>
-                                    <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
+                                <h5 style="height: 75px;">{{$item['name']}}</h5>
+                                <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
 
-                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
             </div>
         </section>
+        <section class="container-md">
+            <article>
+                <h2>Чокер</h2>
+                <p>Чокер — короткое ожерелье, которое плотно прилегает к шее, оснащено регуляторами размера.</p>
+                <p>Такое украшение имеет множество разновидностей. Чокеры изготавливаются из ракушек, дерева, кости, драгоценных металлов, драгоценных и полудрагоценных камней, кожи, пластмассы, бархата, атласа и тому подобное.</p>
+                <p>В моем магазине чокеры сделаны из бисера, на прочном ювелирном тросике</p>
+
+            </article>
+            <div class="owl-carousel owl-theme owl-loaded">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        @foreach($data['chocker'] as $item)
+                            <div class="owl-item">
+
+                                <h5>{{$item['name']}}</h5>
+                                <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
+
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </body>
 </html>

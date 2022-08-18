@@ -196,8 +196,6 @@ class ozonController
         }';
         $method = '/v2/product/list';
 
-        echo $last_id;
-
         /**
          * $arrOzonItems список товаров json {
          * "items":
@@ -251,30 +249,58 @@ class ozonController
         "filter": {
         "visibility": "IN_SALE"
         },
-        "limit": 100,
+        "limit": 500,
         "last_id": "",
         "sort_dir": "DESC"
         }';
         $method = '/v3/products/info/attributes';
         $arrOzonItems = self::curl_request_ozon($data, $method);
-        var_dump(count($arrOzonItems));
-        $arr = [];
-        $last_id = '';
 
+        $arrBant = [];
+        $arrChocker = [];
+        $arrCollection = [];
+        $arrBantCake = [];
+
+        $last_id = '';
+        /**
+         * бантики category_id = 55592804
+         * чокеры category_id = 78286803
+         * наборы, комплекты бантиков category_id = 78059066
+         * Бант \"Пироженка\" category_id = 78059088
+         *
+         */
         foreach ($arrOzonItems['result'] as $item)
         {
+            if($item['category_id'] == 55592804)
+            {
+                $arrBant[]=$item;
+                $last_id = $item['last_id'];
+            }
             if($item['category_id'] == 78286803)
             {
-                $arr[]=$item;
+                $arrChocker[]=$item;
+                $last_id = $item['last_id'];
+            }
+            if($item['category_id'] == 78059066)
+            {
+                $arrCollection[]=$item;
+                $last_id = $item['last_id'];
+            }
+            if($item['category_id'] == 78059088)
+            {
+                $arrBantCake[]=$item;
                 $last_id = $item['last_id'];
             }
         }
 
         $data = [
-            'items'=>$arr,
+            'bant'=>$arrBant,
+            'chocker'=> $arrChocker,
+            'collection'=> $arrCollection,
+            'cake'=> $arrBantCake,
             'last_id' => $last_id,
         ];
-        file_put_contents('attrVal.txt', json_encode($arr));
+        //file_put_contents('attrVal.txt', json_encode($arr));
         $view = view('shop')->with('data', $data);
         return new Response($view);
 
