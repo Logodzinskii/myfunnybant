@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href={{ asset('css/owl.carousel.min.css') }}>
     <link rel="stylesheet" href={{ asset('css/owl.theme.default.min.css') }}>
-
+    <link rel="stylesheet" href="{{asset('css/myfunnybant.css')}}">
     <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
 
     <script src={{ asset('js/owl.carousel.min.js')}}></script>

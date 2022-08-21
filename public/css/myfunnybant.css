@@ -1,0 +1,15 @@
+@media screen {
+    body h1,h2,h3,h4,h5 {
+        color: coral;
+    }
+    body p{
+        color: saddlebrown;
+        font-size: x-large;
+        margin: 0;
+        padding: 0;
+    }
+    header_logo_img{
+        display:block;
+        margin:auto;
+    }
+}
