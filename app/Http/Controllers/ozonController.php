@@ -6,37 +6,54 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class ozonController
+class ozonController extends Cache
 {
     public $responseOzonArray = [];
 
-    protected function curl_request_ozon($data, $method)
+    protected function curl_request_ozon($data, $method):array
     {
-        $clientId = config('ozon.CLIENT_ID'); //айди шопа
-        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
-        $url = 'http://api-seller.ozon.ru'.$method;
-        $headers = array(
-            'Content-Type: application/json',
-            'Host: api-seller.ozon.ru',
-            'Client-Id: '.$clientId,
-            'Api-Key: '.$apiKey
-        ) ;
-        $ch = curl_init();
-        $options = array(
-            CURLOPT_URL => $url,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS => $data,
-            CURLOPT_HTTPHEADER => $headers
-        );
+        /**
+         * Проверим cache на предмет загруженного массива данных из озон
+         *
+         */
+        $html = '';
+        if (Cache::has('allItems'))
+        {
+            $html = Cache::get('allItems');
 
-        curl_setopt_array($ch, $options);
+        }else{
+            $clientId = config('ozon.CLIENT_ID'); //айди шопа
+            $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+            $url = 'http://api-seller.ozon.ru'.$method;
+            $headers = array(
+                'Content-Type: application/json',
+                'Host: api-seller.ozon.ru',
+                'Client-Id: '.$clientId,
+                'Api-Key: '.$apiKey
+            ) ;
+            $ch = curl_init();
+            $options = array(
+                CURLOPT_URL => $url,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POSTFIELDS => $data,
+                CURLOPT_HTTPHEADER => $headers
+            );
 
-        $html = curl_exec($ch);
+            curl_setopt_array($ch, $options);
 
-        curl_close($ch);
+            $html = curl_exec($ch);
 
-        return (json_decode($html, true));
+            curl_close($ch);
+
+            /**
+             * Результат запроса занесем в cache на 20 минут
+             */
+            Cache::put('allItems', json_decode($html, true), now()->addMinutes(50));
+            $html = json_decode($html, true);
+        }
+
+        return $html;
     }
 
     /**
@@ -160,6 +177,7 @@ class ozonController
         }
          * заполняю массив
          */
+
         $this->responseOzonArray[] = $arrOzonItems['result'];
         /*if($arrOzonItems['result']['category_id'] == 78286803){
 
@@ -299,12 +317,47 @@ class ozonController
             'collection'=> $arrCollection,
             'cake'=> $arrBantCake,
             'last_id' => $last_id,
+            'category'=>self::createAttributes(),
         ];
         //file_put_contents('attrVal.txt', json_encode($arr));
         $view = view('shop')->with('data', $data);
         return new Response($view);
 
 
+    }
+    public function createAttributes():array
+    {
+        $type =[];
+        $colors = [];
+        $allItems = Cache::get('allItems');
+        foreach ($allItems['result'] as $item)
+        {
+            foreach ($item['attributes'] as $attribute)
+            {
+                if($attribute['attribute_id'] === 8229) {
+                    if (!$attribute['values'][0]['value'] == '') {
+                        $type[] = $attribute['values'][0]['value'];
+                    }
+                }
+                if($attribute['attribute_id'] === 10096)
+                {
+                    if (!$attribute['values'][0]['value'] == ''){
+
+                        $colors[]=$attribute['values'][0]['value'];
+                    }
+
+                }
+
+            }
+
+        }
+        $itemsType = array_count_values($type);
+        $colors = array_count_values($colors);
+        $result = [
+            'type' =>$itemsType,
+            'colors'=>$colors,
+        ];
+        return $result;
     }
     /**
      * @return array
