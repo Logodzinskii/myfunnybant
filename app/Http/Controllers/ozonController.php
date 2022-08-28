@@ -310,20 +310,57 @@ class ozonController extends Cache
                 $last_id = $item['last_id'];
             }
         }
+        /**
+         * Уберем из массива повторяющиеся значения
+         * Получим уникальные названия товаров
+         * По каждому уникальному названию отфильтруем массив и заполним новый массив
+         */
+        $tmpName  = $this->array_unique_key($arrOzonItems['result'], 'category_id');
+        $bow =[];
+        foreach ($tmpName as $arr)
+        {
+            $name = $arr['category_id'];
 
+            $bow[] = array_filter($arrOzonItems['result'], function ($value) use ($name) {
+
+                return ($value["category_id"] == $name);
+            });
+
+        }
+        //file_put_contents('attrVal.txt', json_encode($bow));
         $data = [
-            'bant'=>$arrBant,
+            'bant'=>$bow,
             'chocker'=> $arrChocker,
             'collection'=> $arrCollection,
             'cake'=> $arrBantCake,
             'last_id' => $last_id,
             'category'=>self::createAttributes(),
         ];
-        //file_put_contents('attrVal.txt', json_encode($arr));
+
+
         $view = view('shop')->with('data', $data);
         return new Response($view);
 
+    }
 
+    /**
+     * Удаление дубликатов из массива по одному ключу
+     * @param $array
+     * @param $key
+     * @return array
+     */
+    protected function array_unique_key($array, $key) {
+        $tmp = $key_array = array();
+        $i = 0;
+
+        foreach($array as $val) {
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[$i] = $val[$key];
+                $tmp[$i] = $val;
+            }
+            $i++;
+        }
+        return $tmp;
     }
     public function createAttributes():array
     {
