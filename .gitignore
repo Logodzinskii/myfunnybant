@@ -2,6 +2,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/*.txt
 /storage/*.key
 /vendor
 .env
@@ -19,4 +20,6 @@ index.php
 /botapi/Configuration
 *.txt
 *.log
+/botapi/*.txt
+
 

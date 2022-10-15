@@ -24,7 +24,7 @@ class ozonController extends Cache
         }else{
             $clientId = config('ozon.CLIENT_ID'); //айди шопа
             $apiKey = config('ozon.OZONTOKEN');; // ключ апи
-            $url = 'http://api-seller.ozon.ru'.$method;
+            $url = 'https://api-seller.ozon.ru'.$method;
             $headers = array(
                 'Content-Type: application/json',
                 'Host: api-seller.ozon.ru',
@@ -65,15 +65,42 @@ class ozonController extends Cache
     {
 
         $data = '{
-            "offer_id": "'.$offer_id.'" ,
-            "sku":0
+
+            "offer_id":  "",
+            "product_id": "'.$offer_id.'",
+            "sku": 0
         }';
         $method = '/v2/product/info';
 
-        $arrOzonItems = self::curl_request_ozon($data, $method);
+        $clientId = config('ozon.CLIENT_ID'); //айди шопа
+        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+        $url = 'https://api-seller.ozon.ru'.$method;
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $headers
+        );
+
+        curl_setopt_array($ch, $options);
+
+        $html = curl_exec($ch);
+
+        curl_close($ch);
+
+
         /**
          * получаю ответ
-         * {
+         *
+         {
         "id": 266673018,
         "name": "Бант для волос \"Зефирка\" 2 шт., на резинке, праздничные, нарядные. Myfunnybant",
         "offer_id": "b-02-02",
@@ -177,8 +204,8 @@ class ozonController extends Cache
         }
          * заполняю массив
          */
-
-        $this->responseOzonArray[] = $arrOzonItems['result'];
+        return view('item', ['result' => json_decode($html,true)]);
+        //$this->responseOzonArray[] = $arrOzonItems['result'];
         /*if($arrOzonItems['result']['category_id'] == 78286803){
 
         }*/

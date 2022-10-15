@@ -18,17 +18,18 @@
         $(document).ready(function(){
             $(".owl-carousel").owlCarousel(
                 {
-
+                    autoWidth: false,
+                    dots: true,
                     margin:10,
                     responsive:{
                         0:{
                             items:1
                         },
                         600:{
-                            items:2
+                            items:1
                         },
                         1000:{
-                            items:3
+                            items:1
                         }
                     }
                 }
@@ -52,7 +53,9 @@
                         <h1 class="card-title">В моем магазине вы можете выбрать и заказать</h1>
                         <ul class="list-group">
                             @foreach($data['category']['type'] as $type => $count)
-                                <li class="list-group-item"><a href="/shop/category/{{$type}}" class="btn btn-light">{{$type}} - {{$count}}</a></li>
+                                <li class="list-group-item">
+                                    <p>{{$type}} - {{$count}}</p>
+                                </li>
                             @endforeach
                         </ul>
                         <p>Все работы, представленные в моем магазине сделаны с любовью</p>
@@ -65,55 +68,85 @@
         <h1 class="card-title text-center">Посмотрите мои работы</h1>
     </section>
         <div class="row">
-            <section class="col-lg-2">
-                <nav class="navbar sticky-top navbar-light bg-light">
-                    <div class="container-fluid">
-                        <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Выбор цвета
-                            </a>
+            <section>
+                <!-- Button trigger modal
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Фильтр по цвету
+                </button>-->
 
-                            <ul class="dropdown-menu">
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Фильтр по цвету</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
                                 @foreach($data['category']['colors'] as $color => $count)
-                                    <div class="input-group mb-3 dropdown-item">
-                                        <div class="input-group-text">
-                                            <input class="form-check-input mt-0" type="checkbox" value="{{$color}}" aria-label="Checkbox for following text input">
-                                            <span>{{$color}} - {{$count}}</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="{{$color}}" id="flexCheckChecked">
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            {{$color}} - {{$count}}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="button" class="btn btn-primary">Показать</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+            <section class="col-lg-12">
+                <section class="container-md">
+                    @foreach($data['bant'] as $items)
+                        <div class="container">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
+                                @foreach($items as $item)
+                                    <div class="col">
+                                        <div class="card" style="width: 330px">
+                                            <div class="card-header" style="min-height: 120px">
+                                                <h5>{{$item['name']}}</h5>
+                                            </div>
+                                            <div class="card-body" >
+                                                <div class="owl-carousel owl-theme owl-loaded side">
+                                                    <div class="owl-stage-outer">
+                                                        <div class="owl-stage">
+                                                            @foreach($item['images'] as $image)
+                                                                <div class="owl-item img">
+                                                                    <img src="{{$image['file_name']}}" width="200" class="img-fluid">
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer" style="min-height: 120px">
+                                                @foreach($item['attributes'] as $attribute)
+                                                    @if ($attribute['attribute_id'] == 10096)
+                                                        <p>Цвет: {{$attribute['values'][0]['value']}}</p>
+                                                        <a href="/shop/category/{{$item['id']}}" class="btn btn-sm btn-outline-dark">Подробнее</a>
+                                                        <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$item['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
+                                                    @endif
+                                                    @if ($attribute['attribute_id'] == 8229)
+                                                        <p>Тип: {{$attribute['values'][0]['value']}}</p>
+                                                    @endif
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </section>
-            <section class="col-lg-10">
-                <section class="container-md">
-                    <!--<div class="card">
-                        <div class="card-body">
-                            <div class="card-body">
-                                <h1 class="card-title">Резинки для волос</h1>
-                                <p>Резинка для волос это эластичное кольцо для собирания волос и создания прически.</p>
-                                <p>В основном резинка для волос предназначается для того, чтобы предотвратить попадание волос в глаза или механическую технику во время домашней работы.</p>
                             </div>
                         </div>
-                    </div>-->
-                    @foreach($data['bant'] as $items)
-                    <div class="owl-carousel owl-theme owl-loaded">
-                        <div class="owl-stage-outer">
-                            <div class="owl-stage">
-                                @foreach($items as $item)
-                                    <div class="owl-item">
-                                        <h5 style="height: 75px;">{{$item['name']}}</h5>
-                                        <img src="{{$item['images'][0]['file_name']}}" class="img-fluid">
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
                     @endforeach
                 </section>
             </section>
         </div>
+    @include('footer')
     </body>
 </html>

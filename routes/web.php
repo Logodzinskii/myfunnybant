@@ -22,4 +22,4 @@ Route::get('/main', function () {
 });
 Route::get('/shop/', [ozonController::class, 'showCategoryAttributeValues']);
 
-Route::get('/shop/{last_id}/', [ozonController::class, 'showCategoryAttributeValues']);
+Route::get('/shop/category/{offer_id}', [ozonController::class, 'showItem']);
