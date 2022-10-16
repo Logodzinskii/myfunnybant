@@ -420,6 +420,7 @@ class ozonController extends Cache
         }
          */
         curl_close($ch);
+        file_put_contents('t.txt',json_encode($htmlAttr));
         return view('item', ['result' => json_decode($html,true), 'attributes'=>json_decode($htmlAttr,true)]);
         //$this->responseOzonArray[] = $arrOzonItems['result'];
         /*if($arrOzonItems['result']['category_id'] == 78286803){
