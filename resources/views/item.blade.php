@@ -2,8 +2,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <META NAME="description">
-        <title>Myfunnybant - аксессуары для волос</title>
+        @foreach($attributes['result'][0]['attributes'] as $attribute)
+            @if($attribute['attribute_id'] == 4191 )
+            <META NAME="description" content="{{$attribute['values'][0]['value']}}">
+            @endif
+        @endforeach
+        <title>{{$result['result']['name']}}</title>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="icon" type="image/png" href="{{ asset('images/logo/logo.png') }}"/>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -50,7 +54,11 @@
                                 <div class="owl-stage">
                                     @foreach($res['images'] as $image)
                                         <div class="owl-item">
-                                            <img src="{{$image}}" class="img-fluid">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <img src="{{$image}}" width="200" class="img-fluid">
+                                                </div>
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -59,8 +67,37 @@
                     </div>
                     <div class="col">
                     <div class="card">
-                       <h1>Цена</h1>
-                        <p>{{$res['marketing_price']}}</p>
+                        <div class="card-body">
+                            <div class="card-header">
+                                <h2>Информация</h2>
+                            </div>
+                            <div class="card-text">
+                                <ul class="list-group">
+                                    <li class="list-group-item">ширина - {{$attributes['result'][0]['width']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                    <li class="list-group-item">высота - {{$attributes['result'][0]['height']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                    <li class="list-group-item">длинна - {{$attributes['result'][0]['depth']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                    <li <li class="list-group-item active" aria-current="true"><b style="font-size: xx-large">цена - {{$res['marketing_price']}}</b></li>
+                                </ul>
+                                @foreach($attributes['result'][0]['attributes'] as $attribute)
+
+                                    @if($attribute['attribute_id'] == 4191 )
+                                        <p>{{$attribute['values'][0]['value']}}</p>
+                                    @endif
+                                    @if($attribute['attribute_id'] == 4119 )
+                                        <p>{{$attribute['values'][0]['value']}}</p>
+                                    @endif
+                                        @if($attribute['attribute_id'] == 10097)
+                                            <ul class="list-group">
+                                            <li class="list-group-item active">цвет - {{$attribute['values'][0]['value']}}</li>
+                                            </ul>
+                                            <div class="card-footer">
+                                                <p >Для оформления покупки перейдите по ссылке в мой магазин на Ozon</p>
+                                                <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
+                                            </div>
+                                        @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                     </div>
                 @endforeach

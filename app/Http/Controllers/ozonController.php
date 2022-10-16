@@ -63,11 +63,380 @@ class ozonController extends Cache
      */
     public function showItem($offer_id)
     {
-
+        /**
+         * Получу информацию о ценах
+         */
         $data = '{
 
             "offer_id":  "",
             "product_id": "'.$offer_id.'",
+            "sku": 0
+        }';
+        $method = '/v2/product/info';
+
+        $clientId = config('ozon.CLIENT_ID'); //айди шопа
+        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+        $url = 'https://api-seller.ozon.ru'.$method;
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $headers
+        );
+
+        curl_setopt_array($ch, $options);
+
+        $html = curl_exec($ch);
+
+        curl_close($ch);
+        /**
+         * получаю ответ
+         *
+         {
+        "id": 266673018,
+        "name": "Бант для волос \"Зефирка\" 2 шт., на резинке, праздничные, нарядные. Myfunnybant",
+        "offer_id": "b-02-02",
+        "barcode": "OZN554024534",
+        "buybox_price": "",
+        "category_id": 55592804,
+        "created_at": "2022-04-12T16:15:02.330161Z",
+        "images": [
+        "https://cdn1.ozone.ru/s3/multimedia-1/6375670765.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-v/6375670759.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-w/6375670760.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-q/6375670754.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-p/6375670753.jpg",
+        "https://cdn1.ozone.ru/s3/multimedia-u/6375670758.jpg"
+        ],
+        "marketing_price": "355.0000",
+        "min_ozon_price": "",
+        "old_price": "639.0000",
+        "premium_price": "",
+        "price": "429.0000",
+        "recommended_price": "",
+        "min_price": "339.0000",
+        "sources": [
+        {
+        "is_enabled": true,
+        "sku": 554024534,
+        "source": "fbo"
+        },
+        {
+        "is_enabled": true,
+        "sku": 554024535,
+        "source": "fbs"
+        }
+        ],
+        "stocks": {
+        "coming": 0,
+        "present": 55,
+        "reserved": 0
+        },
+        "errors": [],
+        "vat": "0.0",
+        "visible": true,
+        "visibility_details": {
+        "has_price": true,
+        "has_stock": true,
+        "active_product": false
+        },
+        "price_index": "0.00",
+        "commissions": [
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "fbo",
+        "delivery_amount": 0,
+        "return_amount": 0
+        },
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "fbs",
+        "delivery_amount": 0,
+        "return_amount": 0
+        },
+        {
+        "percent": 8,
+        "min_value": 0,
+        "value": 28.4,
+        "sale_schema": "rfbs",
+        "delivery_amount": 0,
+        "return_amount": 0
+        }
+        ],
+        "volume_weight": 0.1,
+        "is_prepayment": false,
+        "is_prepayment_allowed": false,
+        "images360": [],
+        "color_image": "",
+        "primary_image": "https://cdn1.ozone.ru/s3/multimedia-s/6375670756.jpg",
+        "status": {
+        "state": "price_sent",
+        "state_failed": "",
+        "moderate_status": "approved",
+        "decline_reasons": [],
+        "validation_state": "success",
+        "state_name": "Продается",
+        "state_description": "",
+        "is_failed": false,
+        "is_created": true,
+        "state_tooltip": "",
+        "item_errors": [],
+        "state_updated_at": "2022-08-10T04:49:36.049561Z"
+        },
+        "state": "",
+        "service_type": "IS_CODE_SERVICE",
+        "fbo_sku": 554024534,
+        "fbs_sku": 554024535,
+        "currency_code": "RUB",
+        "is_kgt": false
+        }
+         * заполняю массив
+         */
+
+        /**
+         * Получу атрибуты товара
+         */
+        $data = '{
+        "filter": {
+        "product_id":[
+            "'.$offer_id.'"
+            ],
+        "visibility": "ALL"
+        },
+        "limit": 1,
+        "last_id": "",
+        "sort_dir": "DESC"
+        }';
+
+        $method = '/v3/products/info/attributes';
+
+        $clientId = config('ozon.CLIENT_ID'); //айди шопа
+        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+        $url = 'https://api-seller.ozon.ru'.$method;
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $headers
+        );
+
+        curl_setopt_array($ch, $options);
+
+        $htmlAttr = curl_exec($ch);
+        /**
+         * {
+        "result": [
+        {
+        "id": 213761435,
+        "barcode": "",
+        "category_id": 17038062,
+        "name": "Пленка защитная для Xiaomi Redmi Note 10 Pro 5G",
+        "offer_id": "21470",
+        "height": 10,
+        "depth": 210,
+        "width": 140,
+        "dimension_unit": "mm",
+        "weight": 50,
+        "weight_unit": "g",
+        "images": [
+        {
+        "file_name": "https://cdn1.ozone.ru/s3/multimedia-f/6190456071.jpg",
+        "default": true,
+        "index": 0
+        },
+        {
+        "file_name": "https://cdn1.ozone.ru/s3/multimedia-7/6190456099.jpg",
+        "default": false,
+        "index": 1
+        },
+        {
+        "file_name": "https://cdn1.ozone.ru/s3/multimedia-9/6190456065.jpg",
+        "default": false,
+        "index": 2
+        }
+        ],
+        "image_group_id": "",
+        "images360": [ ],
+        "pdf_list": [ ],
+        "attributes": [
+        {
+        "attribute_id": 5219,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 970718176,
+        "value": "универсальный"
+        }
+        ]
+        },
+        {
+        "attribute_id": 11051,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 970736931,
+        "value": "Прозрачный"
+        }
+        ]
+        },
+        {
+        "attribute_id": 10100,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "false"
+        }
+        ]
+        },
+        {
+        "attribute_id": 11794,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 970860783,
+        "value": "safe"
+        }
+        ]
+        },
+        {
+        "attribute_id": 9048,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "Пленка защитная для Xiaomi Redmi Note 10 Pro 5G"
+        }
+        ]
+        },
+        {
+        "attribute_id": 5076,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 39638,
+        "value": "Xiaomi"
+        }
+        ]
+        },
+        {
+        "attribute_id": 9024,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "21470"
+        }
+        ]
+        },
+        {
+        "attribute_id": 10015,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "false"
+        }
+        ]
+        },
+        {
+        "attribute_id": 85,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 971034861,
+        "value": "Brand"
+        }
+        ]
+        },
+        {
+        "attribute_id": 9461,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 349824787,
+        "value": "Защитная пленка для смартфона"
+        }
+        ]
+        },
+        {
+        "attribute_id": 4180,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "Пленка защитная для Xiaomi Redmi Note 10 Pro 5G"
+        }
+        ]
+        },
+        {
+        "attribute_id": 4191,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 0,
+        "value": "Пленка предназначена для модели Xiaomi Redmi Note 10 Pro 5G. Защитная гидрогелевая пленка обеспечит защиту вашего смартфона от царапин, пыли, сколов и потертостей."
+        }
+        ]
+        },
+        {
+        "attribute_id": 8229,
+        "complex_id": 0,
+        "values": [
+        {
+        "dictionary_value_id": 91521,
+        "value": "Защитная пленка"
+        }
+        ]
+        }
+        ],
+        "complex_attributes": [ ],
+        "color_image": "",
+        "last_id": ""
+        }
+        ],
+        "total": 1,
+        "last_id": "onVsfA=="
+        }
+         */
+        curl_close($ch);
+        return view('item', ['result' => json_decode($html,true), 'attributes'=>json_decode($htmlAttr,true)]);
+        //$this->responseOzonArray[] = $arrOzonItems['result'];
+        /*if($arrOzonItems['result']['category_id'] == 78286803){
+
+        }*/
+
+
+    }
+
+    public function showItemPost(Request $request)
+    {
+        $product_id = $request->input('id');
+
+        $data = '{
+
+            "offer_id":  "",
+            "product_id": "'.$product_id.'",
             "sku": 0
         }';
         $method = '/v2/product/info';
@@ -100,7 +469,7 @@ class ozonController extends Cache
         /**
          * получаю ответ
          *
-         {
+        {
         "id": 266673018,
         "name": "Бант для волос \"Зефирка\" 2 шт., на резинке, праздничные, нарядные. Myfunnybant",
         "offer_id": "b-02-02",
@@ -212,6 +581,8 @@ class ozonController extends Cache
 
 
     }
+
+
 
     /**
      * @param Request|null $lastId

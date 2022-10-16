@@ -3,6 +3,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <META NAME="description">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>Myfunnybant - аксессуары для волос</title>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="icon" type="image/png" href="{{ asset('images/logo/logo.png') }}"/>
@@ -38,13 +39,13 @@
         });
     </script>
     </head>
-    <body class="container-fluid">
+    <body class="container-fluid p-0 m-0">
         @include('header')
 
-    <section style="min-height: 100vh">
-        <div class="card mb-3 h-100">
+    <section style="min-height: 100vh" class="p-0 m-0">
+        <div class="card mb-3 h-100 p-0 m-0">
             <h1 class="card-title text-center">Аксессуары для волос ручной работы</h1>
-            <div class="row g-0">
+            <div class="row g-0 p-0 m-0">
                 <div class="col-md-4">
                     <img src="{{asset('images/logo/logo.png')}}" width="100%"  alt="...">
                 </div>
@@ -67,7 +68,7 @@
         </div>
         <h1 class="card-title text-center">Посмотрите мои работы</h1>
     </section>
-        <div class="row">
+        <div class="row p-0 m-0">
             <section>
                 <!-- Button trigger modal
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -103,7 +104,7 @@
 
             </section>
             <section class="col-lg-12">
-                <section class="container-md">
+                <section class="">
                     @foreach($data['bant'] as $items)
                         <div class="container">
                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
@@ -130,7 +131,13 @@
                                                 @foreach($item['attributes'] as $attribute)
                                                     @if ($attribute['attribute_id'] == 10096)
                                                         <p>Цвет: {{$attribute['values'][0]['value']}}</p>
+                                                        <form id="itemInfo" method="post" action="{{route('shop.information')}}">
+                                                            @csrf
+                                                            <input type="hidden" id="_token" value="{{ csrf_token() }}">
+                                                            <input type="hidden" name="id" value="{{$item['id']}}">
+                                                            <!--<button type="submit" class="btn btn-outline-secondary">Подробнее</button>-->
                                                         <a href="/shop/category/{{$item['id']}}" class="btn btn-sm btn-outline-dark">Подробнее</a>
+                                                        </form>
                                                         <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$item['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
                                                     @endif
                                                     @if ($attribute['attribute_id'] == 8229)
