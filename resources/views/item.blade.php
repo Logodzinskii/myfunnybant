@@ -77,15 +77,15 @@
                                     <li class="list-group-item">высота - {{$attributes['result'][0]['height']}} {{$attributes['result'][0]['dimension_unit']}}</li>
                                     <li class="list-group-item">длинна - {{$attributes['result'][0]['depth']}} {{$attributes['result'][0]['dimension_unit']}}</li>
                                     @foreach($attributes['result'][0]['attributes'] as $attribute)
-                                    @if($attribute['attribute_id'] == 4191 )
-                                    <li class="list-group-item">{{$attribute['values'][0]['value']}}</li>
-                                    @endif
                                         @if($attribute['attribute_id'] == 10097)
-                                    <li class="list-group-item active">цвет - {{$attribute['values'][0]['value']}}</li>
-                            <div class="card-footer">
-                                <p >Для оформления покупки перейдите по ссылке в мой магазин на Ozon</p>
-                                <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
-                            </div>
+                                            <li class="list-group-item active">цвет - {{$attribute['values'][0]['value']}}</li>
+                                            <div class="card-footer">
+                                                <p >Для оформления покупки перейдите по ссылке в мой магазин на Ozon</p>
+                                                <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
+                                            </div>
+                                        @endif
+                                        @if($attribute['attribute_id'] == 4191 )
+                                        <li class="list-group-item">{{$attribute['values'][0]['value']}}</li>
                                         @endif
                                 @endforeach
                             <li class="list-group-item active" aria-current="true"><b style="font-size: xx-large">цена - {{$res['marketing_price']}}</b></li>

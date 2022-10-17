@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Psr7\AppendStream;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -580,10 +581,7 @@ class ozonController extends Cache
 
         }*/
 
-
     }
-
-
 
     /**
      * @param Request|null $lastId
@@ -677,17 +675,19 @@ class ozonController extends Cache
         $arrChocker = [];
         $arrCollection = [];
         $arrBantCake = [];
+        $arrAnother =[];
 
         $last_id = '';
         /**
          * бантики category_id = 55592804
          * чокеры category_id = 78286803
          * наборы, комплекты бантиков category_id = 78059066
-         * Бант \"Пироженка\" category_id = 78059088
-         *
+         * Бант \"Пироженка\" category_id = 78059088         *
          */
+
         foreach ($arrOzonItems['result'] as $item)
         {
+            //file_put_contents('te.txt', json_encode($item['category_id']) . '|', FILE_APPEND);
             if($item['category_id'] == 55592804)
             {
                 $arrBant[]=$item;
@@ -706,6 +706,11 @@ class ozonController extends Cache
             if($item['category_id'] == 78059088)
             {
                 $arrBantCake[]=$item;
+                $last_id = $item['last_id'];
+            }
+            if($item['category_id'] != 55592804 || $item['category_id'] != 78286803 || $item['category_id'] != 78059066 || $item['category_id'] != 78059088)
+            {
+                $arrAnother[]=$item;
                 $last_id = $item['last_id'];
             }
         }
@@ -729,13 +734,9 @@ class ozonController extends Cache
         //file_put_contents('attrVal.txt', json_encode($bow));
         $data = [
             'bant'=>$bow,
-            'chocker'=> $arrChocker,
-            'collection'=> $arrCollection,
-            'cake'=> $arrBantCake,
             'last_id' => $last_id,
             'category'=>self::createAttributes(),
         ];
-
 
         $view = view('shop')->with('data', $data);
         return new Response($view);

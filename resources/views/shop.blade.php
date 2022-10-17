@@ -112,7 +112,7 @@
                                     <div class="col">
                                         <div class="card" style="width: 330px">
                                             <div class="card-header" style="min-height: 120px">
-                                                <h5>{{$item['name']}}</h5>
+                                                <h5>{{$item['name']}}{{$item['category_id']}}</h5>
                                             </div>
                                             <div class="card-body" >
                                                 <div class="owl-carousel owl-theme owl-loaded side">
