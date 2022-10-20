@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         @foreach($attributes['result'][0]['attributes'] as $attribute)
             @if($attribute['attribute_id'] == 4191 )
-            <META NAME="description" content="{{$attribute['values'][0]['value']}}">
+            <META NAME="description" content="{{preg_replace("/[a-zA-Z<>\\/&n#]+/", "", $attribute['values'][0]['value'])}}">
             @endif
         @endforeach
         <title>{{$result['result']['name']}}</title>
@@ -72,24 +72,27 @@
                                 <h2>Информация</h2>
                             </div>
                             <div class="card-text">
-                                <ul class="list-group">
-                                    <li class="list-group-item">ширина - {{$attributes['result'][0]['width']}} {{$attributes['result'][0]['dimension_unit']}}</li>
-                                    <li class="list-group-item">высота - {{$attributes['result'][0]['height']}} {{$attributes['result'][0]['dimension_unit']}}</li>
-                                    <li class="list-group-item">длинна - {{$attributes['result'][0]['depth']}} {{$attributes['result'][0]['dimension_unit']}}</li>
-                                    @foreach($attributes['result'][0]['attributes'] as $attribute)
-                                        @if($attribute['attribute_id'] == 10097)
-                                            <li class="list-group-item active">цвет - {{$attribute['values'][0]['value']}}</li>
-                                            <div class="card-footer">
-                                                <p >Для оформления покупки перейдите по ссылке в мой магазин на Ozon</p>
-                                                <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
-                                            </div>
-                                        @endif
-                                        @if($attribute['attribute_id'] == 4191 )
-                                        <li class="list-group-item">{{$attribute['values'][0]['value']}}</li>
-                                        @endif
+
+                                @foreach($attributes['result'][0]['attributes'] as $attribute)
+                                @if($attribute['attribute_id'] == 4191 )
+                                        <div class="list-group-item"><p>{{preg_replace("/[a-zA-Z<>\\/&n#]+/", "", $attribute['values'][0]['value'])}}</p></div>
+                                    @endif
                                 @endforeach
-                            <li class="list-group-item active" aria-current="true"><b style="font-size: xx-large">цена - {{$res['marketing_price']}}</b></li>
-                            </ul>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">ширина - {{$attributes['result'][0]['width']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                        <li class="list-group-item">высота - {{$attributes['result'][0]['height']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                        <li class="list-group-item">длинна - {{$attributes['result'][0]['depth']}} {{$attributes['result'][0]['dimension_unit']}}</li>
+                                    </ul>
+                                    @foreach($attributes['result'][0]['attributes'] as $attribute)
+                                    @if($attribute['attribute_id'] == 10097)
+                                        <div class="btn btn-outline-secondary">цвет - {{$attribute['values'][0]['value']}}</div>
+                                            <div class="list-group-item" aria-current="true">
+                                                <b style="font-size: xx-large">цена - {{ceil(intval($res['marketing_price']))}}.00 Р
+                                                    <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-info">Перейти в Ozon</a>
+                                                </b>
+                                            </div>
+                                    @endif
+                                @endforeach
                         </div>
                         </div>
                     </div>

@@ -708,7 +708,7 @@ class ozonController extends Cache
                 $arrBantCake[]=$item;
                 $last_id = $item['last_id'];
             }
-            if($item['category_id'] != 55592804 || $item['category_id'] != 78286803 || $item['category_id'] != 78059066 || $item['category_id'] != 78059088)
+            if($item['category_id'] != 55592804 && $item['category_id'] != 78286803 && $item['category_id'] != 78059066 && $item['category_id'] != 78059088)
             {
                 $arrAnother[]=$item;
                 $last_id = $item['last_id'];

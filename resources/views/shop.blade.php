@@ -17,6 +17,25 @@
         <script src={{ asset('js/owl.carousel.min.js')}}></script>
         <script type="text/javascript">
         $(document).ready(function(){
+            $(".owl-carousel:eq(0)").owlCarousel(
+                {
+                    autoWidth: false,
+                    dots: false,
+                    margin:10,
+                    autoplay: true,
+                    responsive:{
+                        0:{
+                            items:3
+                        },
+                        600:{
+                            items:3
+                        },
+                        1000:{
+                            items:3
+                        }
+                    }
+                }
+            );
             $(".owl-carousel").owlCarousel(
                 {
                     autoWidth: false,
@@ -52,13 +71,20 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h1 class="card-title">В моем магазине вы можете выбрать и заказать</h1>
-                        <ul class="list-group">
-                            @foreach($data['category']['type'] as $type => $count)
-                                <li class="list-group-item">
-                                    <p>{{$type}} - {{$count}}</p>
-                                </li>
-                            @endforeach
-                        </ul>
+
+                            <div class="owl-carousel owl-theme owl-loaded side">
+                                <div class="owl-stage-outer">
+                                    <div class="owl-stage">
+                                    @foreach($data['category']['type'] as $type => $count)
+                                        <div class="owl-item btn btn-outline-secondary" style="background-color: white">
+                                            <p style="font-size: small">{{$type}}</p>
+                                            <p>{{$count}} шт.</p>
+                                        </div>
+                                    @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
                         <p>Все работы, представленные в моем магазине сделаны с любовью</p>
                         <p>Я использую только проверенные мной материалы</p>
                         <p>Мои работы высокого качества и служат долго</p>
@@ -100,8 +126,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </section>
             <section class="col-lg-12">
                 <section class="">
@@ -136,7 +160,7 @@
                                                             <input type="hidden" id="_token" value="{{ csrf_token() }}">
                                                             <input type="hidden" name="id" value="{{$item['id']}}">
                                                             <!--<button type="submit" class="btn btn-outline-secondary">Подробнее</button>-->
-                                                        <a href="/shop/category/{{$item['id']}}" class="btn btn-sm btn-outline-dark">Подробнее</a>
+                                                        <a href="/category/{{$item['id']}}" class="btn btn-sm btn-outline-dark">Подробнее</a>
                                                         </form>
                                                         <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$item['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-secondary">Перейти в Ozon</a>
                                                     @endif

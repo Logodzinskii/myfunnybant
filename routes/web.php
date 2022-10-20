@@ -16,6 +16,6 @@ use App\Http\Controllers\ozonController;
 
 Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
 
-Route::get('/shop/category/{offer_id}', [ozonController::class, 'showItem']);
+Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
 
-Route::post('/shop/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
+Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
