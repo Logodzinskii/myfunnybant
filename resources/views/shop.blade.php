@@ -76,10 +76,10 @@
                                 <div class="owl-stage-outer">
                                     <div class="owl-stage">
                                     @foreach($data['category']['type'] as $type => $count)
-                                        <div class="owl-item btn btn-outline-secondary" style="background-color: white">
+                                        <a href="#{{$type}}" class="owl-item btn btn-outline-secondary" style="background-color: white">
                                             <p style="font-size: small">{{$type}}</p>
                                             <p>{{$count}} шт.</p>
-                                        </div>
+                                        </a>
                                     @endforeach
                                     </div>
                                 </div>
@@ -128,15 +128,14 @@
                 </div>
             </section>
             <section class="col-lg-12">
-                <section class="">
                     @foreach($data['bant'] as $items)
                         <div class="container">
                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
                                 @foreach($items as $item)
                                     <div class="col">
-                                        <div class="card" style="width: 330px">
+                                        <div class="card">
                                             <div class="card-header" style="min-height: 120px">
-                                                <h5>{{$item['name']}}{{$item['category_id']}}</h5>
+                                                <h5>{{$item['name']}}</h5>
                                             </div>
                                             <div class="card-body" >
                                                 <div class="owl-carousel owl-theme owl-loaded side">
@@ -175,7 +174,6 @@
                             </div>
                         </div>
                     @endforeach
-                </section>
             </section>
         </div>
     @include('footer')
