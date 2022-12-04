@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\App;
 
 class Report extends Exception
 {
@@ -129,27 +130,65 @@ class Report extends Exception
     }
     public function sumAllSellerByMonth($date=null)
     {
-
-            $today = $date;
-            $dates = new DateTime('NOW');
-            $y = $dates->format("Y");
-
-
+        $today = $date;
+        $dates = new DateTime('NOW');
+        $y = $dates->format("Y");
 
         $str = '';
         $params = [
             'date'=> $today,
             'year'=> $y,
         ];
+
+        $clientId = ''; //айди шопа
+
+        $apiKey = ''; // ключ апи
+
+        $method = '/v1/finance/realization'; //метод запроса
+
+        $url = 'https://api-seller.ozon.ru/v1/finance/realization';
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $month = substr($today, 0, 2);
+        if(strlen($month) < 1){
+            $month = '0'.$month;
+        }
+
+            $dateOzon = $y.'-'. $month;
+        $data = '{
+            "date": "'. $dateOzon .'"
+        }';
+
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $headers
+        );
+        curl_setopt_array($ch, $options);
+        $html = curl_exec($ch);
+        curl_close($ch);
+        //return $html;
+        $arr = (json_decode($html, true));
+        file_put_contents('ozon.txt', $today);
         $query = 'SELECT MONTH(date_sale) as month_sale, SUM(count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
         $stmt = $this->dbh->prepare($query);
         $stmt->execute($params);
+        $s = '';
         if($stmt->rowCount() > 0){
             while ($row = $stmt->fetch(PDO::FETCH_LAZY)) {
                 //echo $row->id . ' - ' .$row->total . PHP_EOL;
                 $str = $str.  $row->month_sale .', 💰 - '. $row->total ."\n" ;
+                $s = $row->total;
             }
-            $unswer = $str;
+            $totals = intval($s) + intval($arr['result']['header']['doc_amount']);
+            $unswer = $str . ' - ozon: '. $arr['result']['header']['doc_amount']."\n". 'всего: ' .$totals;
         }else{
             $unswer = 'Ещё ничего не продано';
         }

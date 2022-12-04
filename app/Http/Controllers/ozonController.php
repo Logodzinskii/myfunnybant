@@ -18,11 +18,11 @@ class ozonController extends Cache
          *
          */
         $html = '';
-        if (Cache::has('allItems'))
+        /*if (Cache::has('allItems'))
         {
             $html = Cache::get('allItems');
 
-        }else{
+        }else{*/
             $clientId = config('ozon.CLIENT_ID'); //айди шопа
             $apiKey = config('ozon.OZONTOKEN');; // ключ апи
             $url = 'https://api-seller.ozon.ru'.$method;
@@ -52,7 +52,7 @@ class ozonController extends Cache
              */
             Cache::put('allItems', json_decode($html, true), now()->addMinutes(50));
             $html = json_decode($html, true);
-        }
+        //}
 
         return $html;
     }
@@ -655,7 +655,10 @@ class ozonController extends Cache
 
     public function showCategoryAttributeValues($last_id = null)
     {
-        if($last_id == null)
+        if($last_id != null)
+        {
+            $last_id = $last_id;
+        }else
         {
             $last_id = '';
         }
@@ -664,20 +667,22 @@ class ozonController extends Cache
         "filter": {
         "visibility": "IN_SALE"
         },
-        "limit": 500,
-        "last_id": "",
+        "limit": 1000,
+        "last_id": "'.$last_id.'",
         "sort_dir": "DESC"
         }';
         $method = '/v3/products/info/attributes';
         $arrOzonItems = self::curl_request_ozon($data, $method);
 
-        $arrBant = [];
-        $arrChocker = [];
-        $arrCollection = [];
-        $arrBantCake = [];
+        $arrBant = []; //55592804
+        $arrChocker = [];//78286803
+        $arrCollection = [];//78059066
+        $arrBantCake = [];//78059088
         $arrAnother =[];
+        $arr6 =[];
+        $arr7 =[];
 
-        $last_id = '';
+        $last_id = $arrOzonItems['last_id'];
         /**
          * бантики category_id = 55592804
          * чокеры category_id = 78286803
@@ -691,36 +696,46 @@ class ozonController extends Cache
             if($item['category_id'] == 55592804)
             {
                 $arrBant[]=$item;
-                $last_id = $item['last_id'];
+
             }
             if($item['category_id'] == 78286803)
             {
                 $arrChocker[]=$item;
-                $last_id = $item['last_id'];
+
             }
             if($item['category_id'] == 78059066)
             {
                 $arrCollection[]=$item;
-                $last_id = $item['last_id'];
+
             }
             if($item['category_id'] == 78059088)
             {
                 $arrBantCake[]=$item;
-                $last_id = $item['last_id'];
+
             }
-            if($item['category_id'] != 55592804 && $item['category_id'] != 78286803 && $item['category_id'] != 78059066 && $item['category_id'] != 78059088)
+            if($item['category_id'] == 17036892)
             {
                 $arrAnother[]=$item;
-                $last_id = $item['last_id'];
+
+            }
+            if($item['category_id'] == 17029520)
+            {
+                $arr6[]=$item;
+
+            }
+            if($item['category_id'] == 17035163)
+            {
+                $arr7[]=$item;
+
             }
         }
         /**
          * Уберем из массива повторяющиеся значения
          * Получим уникальные названия товаров
          * По каждому уникальному названию отфильтруем массив и заполним новый массив
-         */
+
         $tmpName  = $this->array_unique_key($arrOzonItems['result'], 'category_id');
-        $bow =[];
+        $bow =['type'=>$item['category_id']];
         foreach ($tmpName as $arr)
         {
             $name = $arr['category_id'];
@@ -736,8 +751,22 @@ class ozonController extends Cache
             'bant'=>$bow,
             'last_id' => $last_id,
             'category'=>self::createAttributes(),
-        ];
+        ];*/
 
+        $data = [
+            'bant'=>[
+                $arrBantCake[0]['category_id']=>$arrBantCake,
+                $arrCollection[0]['category_id']=>$arrCollection,
+                $arrBant[0]['category_id']=>$arrBant,
+                $arrChocker[0]['category_id']=>$arrChocker,
+                $arrAnother[0]['category_id']=>$arrAnother,
+                $arr6[0]['category_id']=>$arr6,
+                $arr7[0]['category_id']=>$arr7,
+            ],
+            'category'=>self::createAttributes(),
+            'last_id'=>$last_id,
+        ];
+        //print_r($arrChocker[0]['category_id']);
         $view = view('shop')->with('data', $data);
         return new Response($view);
 
@@ -766,34 +795,73 @@ class ozonController extends Cache
     {
         $type =[];
         $colors = [];
+        $typeCode =[];
+        $arrFull =[];
+        $arrayMenu = [];
         $allItems = Cache::get('allItems');
         foreach ($allItems['result'] as $item)
         {
+            $key ='';
+            $val ='';
             foreach ($item['attributes'] as $attribute)
             {
+
                 if($attribute['attribute_id'] === 8229) {
                     if (!$attribute['values'][0]['value'] == '') {
-                        $type[] = $attribute['values'][0]['value'];
+                        $typeCode[]=$item['category_id'];
+                        $key = $item['category_id'];
+                        if($item['category_id'] === 78059088){
+                            $type[] = 'Бант для волос детский';
+                        }else{
+                            /**
+                             * Наименование категории на русском
+                             */
+                            $type[] = $attribute['values'][0]['value'];
+                        }
+                        $val = $attribute['values'][0]['value'];
                     }
+
                 }
+                /**
+                 * Цвет
+                 */
                 if($attribute['attribute_id'] === 10096)
                 {
                     if (!$attribute['values'][0]['value'] == ''){
-
                         $colors[]=$attribute['values'][0]['value'];
                     }
 
                 }
 
             }
+            $arrFull[]=[
+                $key => $val,
+            ];
 
         }
-        $itemsType = array_count_values($type);
-        $colors = array_count_values($colors);
-        $result = [
-            'type' =>$itemsType,
-            'colors'=>$colors,
-        ];
+
+        $array = array_unique($arrFull, SORT_REGULAR);
+
+        $array = array_map("unserialize", array_unique(array_map("serialize", $array)));
+
+        foreach ($array as $arr)
+        {
+            if(array_key_first($arr) != ""){
+               $arrayMenu[] = [
+                   'category_id' => array_key_first($arr),
+                   'text_menu'=> array_values($arr),
+               ];
+            }
+
+        }
+
+            $result = [
+
+                'colors'=>$colors,
+                'typeCode'=>$arrayMenu,
+            ];
+
+
         return $result;
     }
     /**

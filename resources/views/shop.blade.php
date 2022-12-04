@@ -17,73 +17,65 @@
         <script src={{ asset('js/owl.carousel.min.js')}}></script>
         <script type="text/javascript">
         $(document).ready(function(){
-            $(".owl-carousel:eq(0)").owlCarousel(
-                {
-                    autoWidth: false,
-                    dots: false,
-                    margin:10,
-                    autoplay: true,
-                    responsive:{
-                        0:{
-                            items:3
-                        },
-                        600:{
-                            items:3
-                        },
-                        1000:{
-                            items:3
-                        }
-                    }
-                }
-            );
-            $(".owl-carousel").owlCarousel(
-                {
-                    autoWidth: false,
-                    dots: true,
-                    margin:10,
-                    responsive:{
-                        0:{
-                            items:1
-                        },
-                        600:{
-                            items:1
-                        },
-                        1000:{
-                            items:1
-                        }
-                    }
-                }
-            );
+            $(window).scroll(function() {
 
+                if($(this).scrollTop() != 0) {
+
+                    $('#toTop').fadeIn();
+
+                } else {
+
+                    $('#toTop').fadeOut();
+
+                }
+
+            });
+
+            $('#toTop').click(function() {
+
+                $('body,html').animate({scrollTop:0},800);
+
+            });
         });
     </script>
     </head>
     <body class="container-fluid p-0 m-0">
         @include('header')
-
     <section style="min-height: 100vh" class="p-0 m-0">
         <div class="card mb-3 h-100 p-0 m-0">
             <h1 class="card-title text-center">Аксессуары для волос ручной работы</h1>
             <div class="row g-0 p-0 m-0">
                 <div class="col-md-4">
-                    <img src="{{asset('images/logo/logo.png')}}" width="100%"  alt="...">
+                    <img src="{{asset('images/logo/logo.png')}}" width="100%"  alt="myfunnybant">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h1 class="card-title">В моем магазине вы можете выбрать и заказать</h1>
+                        <h1 class="card-title">
+                            В моем магазине вы можете выбрать и заказать аксессуары для волос ручной работы
+                        </h1>
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <div class="row">
 
+                                    @foreach($data['category']['typeCode'] as $arr)
+                                        <a href="#{{$arr['category_id']}}" class="col-6 col-sm-6 btn fs-6" style="border-bottom: 2px solid #6f42c1;">
+                                            <p>{{$arr['text_menu'][0]}} </p>
+                                        </a>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                            <!--<p>Фильтр по цвету</p>
                             <div class="owl-carousel owl-theme owl-loaded side">
                                 <div class="owl-stage-outer">
                                     <div class="owl-stage">
-                                    @foreach($data['category']['type'] as $type => $count)
-                                        <a href="#{{$type}}" class="owl-item btn btn-outline-secondary" style="background-color: white">
-                                            <p style="font-size: small">{{$type}}</p>
-                                            <p>{{$count}} шт.</p>
-                                        </a>
-                                    @endforeach
+                                        @foreach($data['category']['colors'] as $color => $count)
+                                        <div class="owl-item" style="background-color: white; border: 1px solid #000000; border-radius: 5px; padding: 5px">
+                                            {{$color}} - {{$count}}
+                                        </div>
+                                            @endforeach
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                         <p>Все работы, представленные в моем магазине сделаны с любовью</p>
                         <p>Я использую только проверенные мной материалы</p>
@@ -92,16 +84,9 @@
                 </div>
             </div>
         </div>
-        <h1 class="card-title text-center">Посмотрите мои работы</h1>
     </section>
         <div class="row p-0 m-0">
             <section>
-                <!-- Button trigger modal
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    Фильтр по цвету
-                </button>-->
-
-                <!-- Modal -->
                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -128,27 +113,23 @@
                 </div>
             </section>
             <section class="col-lg-12">
-                    @foreach($data['bant'] as $items)
-                        <div class="container">
+                    @foreach($data['bant'] as $key=>$items)
+                        <div class="container" style="margin-top: 40px; padding-top: 10px; border-top: 1px solid  #6f42c1">
                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
                                 @foreach($items as $item)
-                                    <div class="col">
+                                    <div class="col" id="{{$key}}">
                                         <div class="card">
                                             <div class="card-header" style="min-height: 120px">
                                                 <h5>{{$item['name']}}</h5>
                                             </div>
-                                            <div class="card-body" >
-                                                <div class="owl-carousel owl-theme owl-loaded side">
-                                                    <div class="owl-stage-outer">
-                                                        <div class="owl-stage">
-                                                            @foreach($item['images'] as $image)
-                                                                <div class="owl-item img">
-                                                                    <img src="{{$image['file_name']}}" width="200" class="img-fluid">
+                                            <div class="card-body side d-flex justify-content-center" >
+
+                                                            @for($i=0; $i<=0; $i++)
+                                                                <div class="img ">
+                                                                    <img src="{{$item['images'][$i]['file_name']}}" alt="{{$item['name']}}" width="200" class="img-fluid">
                                                                 </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                            @endfor
+
                                             </div>
                                             <div class="card-footer" style="min-height: 120px">
                                                 @foreach($item['attributes'] as $attribute)
@@ -176,6 +157,7 @@
                     @endforeach
             </section>
         </div>
+        <div id="toTop" >^ Наверх</div>
     @include('footer')
     </body>
 </html>

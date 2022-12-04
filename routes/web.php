@@ -15,6 +15,7 @@ use App\Http\Controllers\ozonController;
 */
 
 Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
+Route::get('/{last_id}', [ozonController::class, 'showCategoryAttributeValues']);
 
 Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
 
