@@ -36,7 +36,7 @@ class Report extends Exception
             if($stmt->rowCount() > 0){
                 while ($row = $stmt->fetch(PDO::FETCH_LAZY)) {
                     //echo $row->id . ' - ' .$row->total . PHP_EOL;
-                    $str = $str. $row->first_name . ': ' . $row->date_sale . ' Арт.- ' . $row->id . ' Количество- ' .$row->count_items. ', 💵 За шт.- ' . $row->sale_price .', 💰 - '. $row->total ."\n" ;
+                    $str = $str. $row->first_name . ': ' . $row->date_sale . ' Арт.- ' . $row->id . ' Количество- ' .$row->count_items. ', 💵 За шт.- ' . $row->sale_price .', 💰 - '. $row->total .', 🚩 - '.$row->place."\n" ;
                 }
                 $unswer = $str;
             }else{
@@ -47,7 +47,7 @@ class Report extends Exception
     public function enotherDay()
         {
             $res=[];
-            $query = 'select date_sale as date, sum(sale_price*saleitems.count_items) as sumSale from saleitems where YEAR(date_sale) = YEAR(curdate()) group by date order by date DESC LIMIT 10';
+            $query = 'select place, date_sale as date, sum(sale_price*saleitems.count_items) as sumSale from saleitems where YEAR(date_sale) = YEAR(curdate()) group by date order by date DESC LIMIT 10';
             $stmt = $this->dbh->prepare($query);
             $stmt->execute();
             if($stmt->rowCount() > 0)
@@ -56,7 +56,7 @@ class Report extends Exception
                {
                    $res[] = [
 
-                           ['text'=> date("d.m.Y", strtotime($row->date)) . '-' . $row->sumSale , 'callback_data' => 'showReportAnonotherDay#'.$row->date.'|0'],
+                           ['text'=>'🚩'.$row->place .' - '. date("d.m.Y", strtotime($row->date)) . '-' . $row->sumSale , 'callback_data' => 'showReportAnonotherDay#'.$row->date.'|0'],
                     ];
                }
             }

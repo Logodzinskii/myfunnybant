@@ -6,7 +6,7 @@ class ProcessingImage extends Exception
     {
         $db = DateBase::get_instance();
         $this->dbh = $db->getConnection();
-        
+
         try {
             $this->bot = $bot;
             $this->userPhoto = $image;
@@ -19,7 +19,7 @@ class ProcessingImage extends Exception
 
     public function writeAndSaveImageSalesToDb()
     {
-        
+
         $photo = array_pop($this->userPhoto);
         $res = $this->bot->sendTelegram(
         'getFile',
@@ -29,8 +29,8 @@ class ProcessingImage extends Exception
         );
 
         $res = json_decode($res, true);
-        
-        
+
+
         if ($res['ok'] && $this->userPhotoCaption == '') {
 
         $src = 'https://api.telegram.org/file/bot' . $this->bot->getBotAPI() . '/' . $res['result']['file_path'];
@@ -55,9 +55,13 @@ class ProcessingImage extends Exception
                 $iditem = explode('.',basename($src));
                 $id = explode('_',$iditem[0]);
                 $totalPrice = $arrData[0] * $arrData[1];
-
+                if (isset($arrData[2])){
+                    $place = $arrData[2];
+                }else{
+                    $place = 'не указано';
+                }
                 try {
-                    $sth = $this->dbh->prepare("INSERT INTO `saleitems` SET `id` = :id, `sale_to_chatID` = :sale_to_chatID, `date_sale` = :date_sale, `count_items` = :count_items, `sale_price` = :sale_price, `sale_file` = :sale_file");
+                    $sth = $this->dbh->prepare("INSERT INTO `saleitems` SET `id` = :id, `sale_to_chatID` = :sale_to_chatID, `date_sale` = :date_sale, `count_items` = :count_items, `sale_price` = :sale_price, `sale_file` = :sale_file, `place` = :place");
                     $sth->execute([
                         'id' => $id[1],
                         'sale_to_chatID' => $idchat,
@@ -65,9 +69,10 @@ class ProcessingImage extends Exception
                         'count_items'=>$arrData[0],
                         'sale_price' => $arrData[1],
                         'sale_file' => $dest,
+                        'place'=>$place,
                         ]);
                     // Получаем id вставленной записи
-                    
+
                     $keyboard = [
                         'inline_keyboard' => [
 
@@ -92,9 +97,9 @@ class ProcessingImage extends Exception
                             ],
 
                     ];
-                    
+
                    $reply_markup = json_encode($keyboard);
-        
+
                     $this->bot->sendTelegram(
                         'sendMessage',
                         array(
@@ -102,8 +107,8 @@ class ProcessingImage extends Exception
                             'text' => 'Запись - ' . $this->dbh->lastInsertId() . ', внесена',
                             'reply_markup'=>$reply_markup,
                         ));
-                       
-                   
+
+
                 }catch (PDOException $e){
                     trigger_error("Bot.php select: delSaleitems " . $e->getMessage(), E_USER_WARNING);
                     die();
