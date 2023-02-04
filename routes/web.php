@@ -20,3 +20,11 @@ Route::get('/{last_id}', [ozonController::class, 'showCategoryAttributeValues'])
 Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
 
 Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
+
+/**
+ * Маршруты для панели администрирования
+ */
+
+Auth::routes();
+
+Route::get('/admin/panel/', [App\Http\Controllers\HomeController::class, 'indexSignIn'])->name('home');
