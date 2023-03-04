@@ -45,7 +45,7 @@ class ProcessingImage extends Exception
         }else{
 
             $src = 'https://api.telegram.org/file/bot' . $this->bot->getBotAPI() . '/' . $res['result']['file_path'];
-            $dest = $_SERVER['DOCUMENT_ROOT']. '/botapi/saleitems/' . basename($src);
+            $dest = $_SERVER['DOCUMENT_ROOT']. '/public/images/saleitems/' . basename($src);
             $idchat = $this->bot->getTelegrammid();
             $dateadd = date('Y-m-d');
 

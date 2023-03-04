@@ -7,7 +7,13 @@
                 <p>{{$item['date_sale']}}</p>
                 </div>
                 <div class="card-body">
-                    <img src="{{asset('')}}" class="img-thumbnail" />
+                    @php
+                        $re = '/(file_[0-9]{0,10}.jpg)/';
+
+                        preg_match_all($re, $item['sale_file'], $matches, PREG_SET_ORDER, 0);
+
+                    @endphp
+                    <img src="{{asset('/images/saleitems/'.$matches[0][0])}}" class="img-thumbnail" />
                 </div>
                 <div class="card-footer d-flex justify-content-start flex-wrap">
                     <p>Количество: {{$item['count_items']}};</p>
