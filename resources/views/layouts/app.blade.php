@@ -13,6 +13,9 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+    <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
 
 </head>
 <body>
