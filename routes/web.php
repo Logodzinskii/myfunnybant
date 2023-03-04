@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
 
@@ -15,7 +16,6 @@ use App\Http\Controllers\ozonController;
 */
 
 Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
-Route::get('/{last_id}', [ozonController::class, 'showCategoryAttributeValues']);
 
 Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
 
@@ -27,4 +27,4 @@ Route::post('/information/', [ozonController::class, 'showItemPost'])->name('sho
 
 Auth::routes();
 
-Route::get('/admin/panel/', [App\Http\Controllers\HomeController::class, 'indexSignIn'])->name('home');
+Route::get('/home/admin/start/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
