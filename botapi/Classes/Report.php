@@ -1,6 +1,8 @@
 <?php
-use Illuminate\Support\Facades\App;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
+use OzonConfiguration;
 class Report extends Exception
 {
     public function __construct()
@@ -140,9 +142,9 @@ class Report extends Exception
             'year'=> $y,
         ];
 
-        $clientId = ''; //айди шопа
+        /*$clientId = env('OZON_CLIENT_ID'); //айди шопа
 
-        $apiKey = ''; // ключ апи
+        $apiKey = env('OZON_APP_TOKEN'); // ключ апи
 
         $method = '/v1/finance/realization'; //метод запроса
 
@@ -176,7 +178,7 @@ class Report extends Exception
         curl_close($ch);
         //return $html;
         $arr = (json_decode($html, true));
-        file_put_contents('ozon.txt', $today);
+        file_put_contents('ozon.txt', $today);*/
         $query = 'SELECT MONTH(date_sale) as month_sale, SUM(count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
         $stmt = $this->dbh->prepare($query);
         $stmt->execute($params);
@@ -187,8 +189,8 @@ class Report extends Exception
                 $str = $str.  $row->month_sale .', 💰 - '. $row->total ."\n" ;
                 $s = $row->total;
             }
-            $totals = intval($s) + intval($arr['result']['header']['doc_amount']);
-            $unswer = $str . ' - ozon: '. $arr['result']['header']['doc_amount']."\n". 'всего: ' .$totals;
+            $totals = intval($s) ;
+            $unswer = 'всего: ' .$totals;
         }else{
             $unswer = 'Ещё ничего не продано';
         }
