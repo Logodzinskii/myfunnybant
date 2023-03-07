@@ -18,7 +18,12 @@
     <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
 
 </head>
-<body>
-@yield('content')
+<body class="col-12 d-flex justify-content-start flex-wrap">
+    <section class="col-3">
+        @include('admin/leftMenu')
+    </section>
+    <section class="col-9">
+        @yield('content')
+    </section>
 </body>
 </html>
