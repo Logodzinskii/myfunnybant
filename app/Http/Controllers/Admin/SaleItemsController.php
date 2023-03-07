@@ -85,6 +85,7 @@ class SaleItemsController extends Controller
     {
         $items = saleitems::paginate(30)->withQueryString();
         return view('admin/itemsView', ['items'=>$items]);
+
     }
 
 
