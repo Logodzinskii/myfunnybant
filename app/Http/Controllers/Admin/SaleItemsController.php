@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isEmpty;
 
 class SaleItemsController extends Controller
 {
@@ -15,8 +16,8 @@ class SaleItemsController extends Controller
     {
         $date = new \DateTime('now');
         $yesterdayDate = new \DateTime('- 1 day');
-        $weekThisYear = new \DateTime('- 1 week');
-        $weekLastYear = new \DateTime('- 1 year -1 week');
+        $weekThisYear = new \DateTime('monday this week');
+        $weekLastYear = new \DateTime('- 1 year this week');
         $lastYearDate =  new \DateTime('- 1 year');
 
         $today = $date->format('Y-m-d');
@@ -29,6 +30,9 @@ class SaleItemsController extends Controller
 
         $weekThisYearRes = $this->queryBetween($weekThisYear, $today);
         $weekLastYearRes = $this->queryBetween($weekLastYear, $lastYearDate);
+
+        $thisYearRes = $this->queryBetween($date->format('Y-01-01'), $today );
+        $lastYearRes = $this->queryBetween($lastYearDate->format('Y-01-01'), $lastYearDate );
         return view('admin/adminDashBoard', ['stat'=>[
             'todayThisYear'=>$today,
             'todayThisYearRes'=>$todayThisYearRes,
@@ -38,6 +42,8 @@ class SaleItemsController extends Controller
             'monthLastYearRes'=>$monthLastYearRes,
             'weekThisYearRes'=>[$weekThisYear->format('d-m-Y'), $date->format('d-m-Y'), $weekThisYearRes],
             'weekLastYearRes'=>[$weekLastYear->format('d-m-Y'), $lastYearDate->format('d-m-Y'), $weekLastYearRes],
+            'thisYearRes'=>$thisYearRes,
+            'lastYearRes'=>$lastYearRes,
                                                     ]]);
     }
 
@@ -47,7 +53,15 @@ class SaleItemsController extends Controller
             ->where('date_sale', '=', $query)
             ->select(DB::raw('SUM(count_items*sale_price) as done'))
             ->get();
-        return $result;
+        if ($result[0]->done = '')
+        {
+            return 0;
+
+        }else{
+
+            return $result[0]->done ;
+        }
+
     }
 
     protected function queryBetween($dateStart, $dateStop)
@@ -57,7 +71,7 @@ class SaleItemsController extends Controller
             ->where('date_sale','<=', $dateStop)
             ->select(DB::raw('SUM(count_items*sale_price) as done'))
             ->get();
-        return $result;
+        return $result[0]->done;
     }
 
     public function showAllSaleItems()
