@@ -30,4 +30,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth','isAdmin'])->group(function() {
     Route::get('/admin/show/all/items/', [\App\Http\Controllers\Admin\SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
+    Route::get('/admin/total/year/',[\App\Http\Controllers\Admin\SaleItemsController::class,'index'])->middleware('auth');
 });
