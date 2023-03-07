@@ -34,13 +34,13 @@
                 <div class="fs-4">{{$stat['weekLastYearRes'][2]}} Р.</div>
                 <div class="fs-6">с {{$stat['weekLastYearRes'][0]}} по {{$stat['weekLastYearRes'][1]}}</div>
             </div>
-            @if(intval($stat['weekThisYearRes'][2] - $stat['weekLastYearRes'][2]) >= 0)
+            @if(intval($stat['weekThisYearRes'][2]) - intval($stat['weekLastYearRes'][2]) >= 0)
                 <div class="text-success">
-                    <div class="fs-4">{{intval($stat['weekThisYearRes'][2] - $stat['weekLastYearRes'][2])}} Р.</div>
+                    <div class="fs-4">{{intval($stat['weekThisYearRes'][2]) - intval($stat['weekLastYearRes'][2])}} Р.</div>
                 </div>
             @else
                 <div class="text-danger">
-                    <div class="fs-4">{{intval($stat['weekThisYearRes'][2] - $stat['weekLastYearRes'][2])}} Р.</div>
+                    <div class="fs-4">{{intval($stat['weekThisYearRes'][2]) - intval($stat['weekLastYearRes'][2])}} Р.</div>
                 </div>
             @endif
         </div>
@@ -81,13 +81,13 @@
                     <div class="fs-4">{{$stat['lastYearRes']}} Р.</div>
                     <div class="fs-6">Аналогичный период прошлого года</div>
                 </div>
-                @if(intval($stat['thisYearRes'] - $stat['lastYearRes']) >= 0)
+                @if(intval($stat['thisYearRes']) - intval($stat['lastYearRes']) >= 0)
                     <div class="text-success">
-                        <div class="fs-4">{{intval($stat['thisYearRes'] - $stat['lastYearRes'])}} Р.</div>
+                        <div class="fs-4">{{intval($stat['thisYearRes']) - intval($stat['lastYearRes'])}} Р.</div>
                     </div>
                 @else
                     <div class="text-danger">
-                        <div class="fs-4">{{intval($stat['thisYearRes'] - $stat['lastYearRes'])}} Р.</div>
+                        <div class="fs-4">{{intval($stat['thisYearRes']) - intval($stat['lastYearRes'])}} Р.</div>
                     </div>
                 @endif
             </div>
@@ -95,3 +95,4 @@
     </div>
 </div>
 @endsection
+

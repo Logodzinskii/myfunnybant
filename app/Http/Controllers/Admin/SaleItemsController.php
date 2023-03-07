@@ -53,7 +53,7 @@ class SaleItemsController extends Controller
             ->where('date_sale', '=', $query)
             ->select(DB::raw('SUM(count_items*sale_price) as done'))
             ->get();
-        if ($result[0]->done = '')
+        if (is_null($result[0]->done))
         {
             return 0;
 
@@ -71,13 +71,21 @@ class SaleItemsController extends Controller
             ->where('date_sale','<=', $dateStop)
             ->select(DB::raw('SUM(count_items*sale_price) as done'))
             ->get();
-        return $result[0]->done;
+        if (is_null($result[0]->done))
+        {
+            return 0;
+
+        }else{
+
+            return $result[0]->done ;
+        }
     }
 
     public function showAllSaleItems()
     {
         $items = saleitems::paginate(30)->withQueryString();
         return view('admin/itemsView', ['items'=>$items]);
+
     }
 
 
