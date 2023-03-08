@@ -463,7 +463,7 @@ class Bot extends Exception
 
     public function updateDate($idSaleItems, $date, $chatId)
     {
-        $date = new DateTime('-1 day');
+        $date = new \DateTime('- 1 day');
         $query = "UPDATE `saleitems` SET `date_sale` =:category WHERE `id` =:id";
         $params = [
             ':id' => $idSaleItems,
@@ -476,7 +476,8 @@ class Bot extends Exception
             $this->reply('Запись - ' . $idSaleItems . ' - установлена дата: ' . $date->format('Y-m-d') , $chatId);
 
         }catch (PDOException $e){
-            trigger_error("Bot.php SendTelegram: 425" .$e->getMessage() . $idSaleItems . '|' . $date, E_USER_WARNING);
+            $this->reply('Ошибка изменения даты: ' . $date->format('Y-m-d') .'|'. $idSaleItems . '|' .$idSaleItems);
+            trigger_error("Bot.php SendTelegram: 425" .$e->getMessage() . $idSaleItems . '|' . $date->format('Y-m-d'), E_USER_WARNING);
             die();
         }
 
