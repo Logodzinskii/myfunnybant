@@ -136,6 +136,10 @@ if(!empty($arr['callback_query']['data'])){
             $bot->updateCat($parametrForMetod[0],$parametrForMetod[1], $arr['callback_query']['message']['chat']['id']);
 
             break;
+        case('updateDate'):
+            $parametrForMetod = explode('|', $metodParametrs[1]);
+            $bot->updateDate($parametrForMetod[0], $arr['callback_query']['message']['chat']['id']);
+            break;
         case('addSaleToAnotherSeller'):
             //$user->verifyUser();
             $parametrForMetod = explode('|', $metodParametrs[1]);
