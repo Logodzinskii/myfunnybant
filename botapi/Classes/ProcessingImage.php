@@ -91,7 +91,7 @@ class ProcessingImage extends Exception
                                     ['text' => 'Удалить - '. $this->dbh->lastInsertId(), 'callback_data' => 'delSaleitems#items|'.$this->dbh->lastInsertId()],
                                 ],
                                 [
-                                    ['text' => 'Занести продажу: '. $this->dbh->lastInsertId() . ' за другого продавца -', 'callback_data' => 'addSaleToAnotherSeller#items|'.$this->dbh->lastInsertId()],
+                                    ['text' => 'Занести продажу: '. $this->dbh->lastInsertId() . ' за вчерашний день -', 'callback_data' => 'updateDate#'.$this->dbh->lastInsertId().'|'.$this->dbh->lastInsertId()],
                                 ],
 
                             ],
