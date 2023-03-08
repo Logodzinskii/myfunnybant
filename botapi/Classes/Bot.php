@@ -460,6 +460,28 @@ class Bot extends Exception
         }
 
     }
+
+    public function updateDate($idSaleItems, $date, $chatId)
+    {
+        $date = new DateTime('-1 day');
+        $query = "UPDATE `saleitems` SET `date_sale` =:category WHERE `id` =:id";
+        $params = [
+            ':id' => $idSaleItems,
+            ':date_sale' => $date->format('Y-m-d'),
+        ];
+
+        try {
+            $stmt = $this->connect->prepare($query);
+            $stmt->execute($params);
+            $this->reply('Запись - ' . $idSaleItems . ' - установлена дата: ' . $date->format('Y-m-d') , $chatId);
+
+        }catch (PDOException $e){
+            trigger_error("Bot.php SendTelegram: 425" .$e->getMessage() . $idSaleItems . '|' . $date, E_USER_WARNING);
+            die();
+        }
+
+    }
+
     public function addSaleToAnotherSeller($idSaleItems, $chatId)
     {
         //$this->reply('Запись - ' . $idSaleItems, $chatId);
@@ -500,6 +522,7 @@ class Bot extends Exception
                         ));
 
     }
+
     public function insertSalesForSeller($telegram_id, $idSaleItems, $chatId)
     {
         $query = "UPDATE `saleitems` SET `sale_to_chatID` =:telegram_id WHERE `ind` =:ind";
