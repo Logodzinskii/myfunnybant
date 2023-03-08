@@ -461,7 +461,7 @@ class Bot extends Exception
 
     }
 
-    public function updateDate($idSaleItems, $date, $chatId)
+    public function updateDate($idSaleItems, $chatId)
     {
         $date = new \DateTime('- 1 day');
         $query = "UPDATE `saleitems` SET `date_sale` =:category WHERE `id` =:id";
