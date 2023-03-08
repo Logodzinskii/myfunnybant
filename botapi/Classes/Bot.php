@@ -464,7 +464,7 @@ class Bot extends Exception
     public function updateDate($idSaleItems, $chatId)
     {
         $date = new \DateTime('- 1 day');
-        $query = "UPDATE `saleitems` SET `date_sale` =:category WHERE `id` =:id";
+        $query = "UPDATE `saleitems` SET `date_sale` =:date_sale WHERE `id` =:id";
         $params = [
             ':id' => $idSaleItems,
             ':date_sale' => $date->format('Y-m-d'),
@@ -476,7 +476,7 @@ class Bot extends Exception
             $this->reply('Запись - ' . $idSaleItems . ' - установлена дата: ' . $date->format('Y-m-d') , $chatId);
 
         }catch (PDOException $e){
-            $this->reply('Ошибка изменения даты: ' . $date->format('Y-m-d') .'|'. $idSaleItems . '|' .$idSaleItems);
+            $this->reply('Ошибка изменения даты: ' . $date->format('Y-m-d') .'|'. $idSaleItems . '|' .$idSaleItems, $chatId);
             trigger_error("Bot.php SendTelegram: 425" .$e->getMessage() . $idSaleItems . '|' . $date->format('Y-m-d'), E_USER_WARNING);
             die();
         }
@@ -538,7 +538,7 @@ class Bot extends Exception
             $this->reply('Запись - ' . $idSaleItems . ' - отнесена за : ' . $telegram_id , $chatId);
 
         }catch (PDOException $e){
-            trigger_error("Bot.php SendTelegram: 483" .$e->getMessage() . $idSaleItems . '|' . $category, E_USER_WARNING);
+            trigger_error("Bot.php SendTelegram: 483" .$e->getMessage() . $idSaleItems , E_USER_WARNING);
             die();
         }
     }
