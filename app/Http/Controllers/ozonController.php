@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ClickOzonLink;
 use GuzzleHttp\Psr7\AppendStream;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -64,6 +65,7 @@ class ozonController extends Cache
      */
     public function showItem($offer_id)
     {
+        ClickOzonLink::dispatch($offer_id);
         /**
          * Получу информацию о ценах
          */
