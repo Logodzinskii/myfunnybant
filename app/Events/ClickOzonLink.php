@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -15,14 +16,16 @@ class ClickOzonLink
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $offerId;
+    public $request;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($offerId)
+    public function __construct($offerId, $request)
     {
         $this->offerId = $offerId;
+        $this->request = $request;
         /**
          * внести информацию в базу данных, доделать
          */
