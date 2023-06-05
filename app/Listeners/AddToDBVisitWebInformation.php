@@ -46,6 +46,7 @@ class AddToDBVisitWebInformation
             ]);
 
             Log::info('Посетитель сайта' .'; '. $ipVisitor .'; '. $path .'; '. $fullUrl .'; '. $header .'; '. $userAgent);
+
         }
 
     }
@@ -82,4 +83,5 @@ class AddToDBVisitWebInformation
         return false;
 
     }
+
 }
