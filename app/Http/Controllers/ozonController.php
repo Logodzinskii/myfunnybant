@@ -63,9 +63,9 @@ class ozonController extends Cache
      * @param $offer_id
      * Полученный результат из API seller ozon записывает в array
      */
-    public function showItem($offer_id)
+    public function showItem($offer_id, Request $request)
     {
-        ClickOzonLink::dispatch($offer_id);
+        ClickOzonLink::dispatch($offer_id, $request);
         /**
          * Получу информацию о ценах
          */
