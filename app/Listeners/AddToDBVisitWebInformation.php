@@ -70,7 +70,7 @@ class AddToDBVisitWebInformation
                 'Nigma.ru', 'Baiduspider', 'Statsbot', 'SISTRIX', 'AcoonBot', 'findlinks',
                 'proximic', 'OpenindexSpider','statdom.ru', 'Exabot', 'Spider', 'SeznamBot',
                 'oBot', 'C-T bot', 'Updownerbot', 'Snoopy', 'heritrix', 'Yeti',
-                'DomainVader', 'DCPbot', 'PaperLiBot'
+                'DomainVader', 'DCPbot', 'PaperLiBot', 'bingbot'
             );
 
             foreach($options as $row) {

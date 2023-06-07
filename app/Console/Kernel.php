@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:VisitorCount')->hourly();
+        $schedule->command('app:ActionsOzon')->dailyAt('10:00');
     }
 
     /**
