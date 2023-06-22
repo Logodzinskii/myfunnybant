@@ -31,4 +31,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware(['auth','isAdmin'])->group(function() {
     Route::get('/admin/show/all/items/', [\App\Http\Controllers\Admin\SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
     Route::get('/admin/total/year/',[\App\Http\Controllers\Admin\SaleItemsController::class,'index'])->middleware('auth');
+    Route::get('/admin/sale/date/',[\App\Http\Controllers\Admin\SaleItemsController::class,'showDateBetween'])->middleware('auth');
+    Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
+
 });

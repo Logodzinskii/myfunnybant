@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\saleitems;
 use App\Models\User;
+use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -88,5 +89,31 @@ class SaleItemsController extends Controller
 
     }
 
+    public function showDateBetween()
+    {
+        return view('admin/saleItemsBetween', ['sum'=>'',
+            'date_start'=>'',
+            'date_stop'=>'',
+        ]);
+    }
+
+    public function sumDateBetween(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'date_start'=>'required|date_format:Y-m-d',
+                'date_stop'=>'required|date_format:Y-m-d',
+            ]);
+        }catch (ValidationException $e){
+            die($e->getMessage());
+        }
+
+        $result = $this->queryBetween($request['date_start'], $request['date_stop']);
+
+        return view('admin/saleItemsBetween', ['sum'=>$result,
+            'date_start'=>$request['date_start'],
+            'date_stop'=>$request['date_stop'],
+        ]);
+    }
 
 }
