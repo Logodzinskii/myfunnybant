@@ -82,6 +82,22 @@ class SaleItemsController extends Controller
         }
     }
 
+    protected function allSalesQueryBetween($dateStart, $dateStop)
+    {
+        $result = DB::table('saleitems')
+            ->where('date_sale','>=', $dateStart)
+            ->where('date_sale','<=', $dateStop)
+            ->select('saleitems.*')
+            ->get();
+        if (is_null($result))
+        {
+            return 0;
+
+        }else{
+            return $result;
+        }
+    }
+
     public function showAllSaleItems()
     {
         $items = saleitems::paginate(30)->withQueryString();
@@ -109,10 +125,12 @@ class SaleItemsController extends Controller
         }
 
         $result = $this->queryBetween($request['date_start'], $request['date_stop']);
+        $allSales= $this->allSalesQueryBetween($request['date_start'], $request['date_stop']);
 
         return view('admin/saleItemsBetween', ['sum'=>$result,
             'date_start'=>$request['date_start'],
             'date_stop'=>$request['date_stop'],
+            'allSales'=>$allSales,
         ]);
     }
 
