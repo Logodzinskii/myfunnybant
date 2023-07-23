@@ -28,15 +28,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($allSales as $sales)
-                <tr>
-                    <th scope="row">{{$sales->id}}</th>
-                    <td>{{$sales->date_sale}}</td>
-                    <td>{{$sales->count_items}}</td>
-                    <td>{{$sales->sale_price}}</td>
-                    <td>{{$sales->count_items * $sales->sale_price}}</td>
-                </tr>
-                @endforeach
+                @if(isset($allSales))
+                    @foreach($allSales as $sales)
+                    <tr>
+                        <th scope="row">{{$sales->id}}</th>
+                        <td>{{$sales->date_sale}}</td>
+                        <td>{{$sales->count_items}}</td>
+                        <td>{{$sales->sale_price}}</td>
+                        <td>{{$sales->count_items * $sales->sale_price}}</td>
+                    </tr>
+                    @endforeach
+                @endif
                 </tbody>
             </table>
 
