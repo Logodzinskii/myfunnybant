@@ -15,4 +15,30 @@
     <div>
         <h2>За выбранный период продано на сумму: {{$sum}}</h2>
     </div>
+    <div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Дата продажи</th>
+                    <th scope="col">Количество</th>
+                    <th scope="col">Сумма продажи</th>
+                    <th scope="col">Итого</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($allSales as $sales)
+                <tr>
+                    <th scope="row">{{$sales->id}}</th>
+                    <td>{{$sales->date_sale}}</td>
+                    <td>{{$sales->count_items}}</td>
+                    <td>{{$sales->sale_price}}</td>
+                    <td>{{$sales->count_items * $sales->sale_price}}</td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+    </div>
 @endsection
