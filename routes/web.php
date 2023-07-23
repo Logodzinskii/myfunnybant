@@ -18,7 +18,7 @@ use App\Http\Controllers\ozonController;
 //Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
 
 Route::get('/', function (){
-   return view('404');
+   return view('shop');
 });
 
 Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
