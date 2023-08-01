@@ -22,8 +22,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         ClickOzonLink::class=>[
-            AddToDBVisitWebInformation::class,
-            //SendInformationOnClick::class,
+            //AddToDBVisitWebInformation::class,
+            SendInformationOnClick::class,
         ]
     ];
 

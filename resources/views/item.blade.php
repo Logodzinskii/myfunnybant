@@ -88,7 +88,7 @@
                                         <div class="btn btn-outline-secondary">цвет - {{$attribute['values'][0]['value']}}</div>
                                             <div class="list-group-item" aria-current="true">
                                                 <b style="font-size: xx-large">цена - {{ceil(intval($res['marketing_price']))}}.00 Р
-                                                    <a href="https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text={{$attributes['result'][0]['name']}}' '{{$attribute['values'][0]['value']}}" class="btn btn-sm btn-outline-info">Перейти в Ozon</a>
+                                                    <a href="{{route("seller.ozon", ['url'=>$attributes['result'][0]['name'].$attribute['values'][0]['value']])}}" class="btn btn-sm btn-outline-secondary">Перейти в озон</a>
                                                 </b>
                                             </div>
                                     @endif

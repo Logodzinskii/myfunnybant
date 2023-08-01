@@ -4,10 +4,11 @@ namespace App\Listeners;
 
 use App\Events\ClickOzonLink;
 use App\Models\Visitors;
-use GuzzleHttp\Psr7\Request;
+
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class AddToDBVisitWebInformation
 {
@@ -27,26 +28,40 @@ class AddToDBVisitWebInformation
      * @param  \App\Events\ClickOzonLink  $event
      * @return void
      */
-    public function handle(ClickOzonLink $event)
+    public function handle(Request $request, $event)
     {
-        $ipVisitor = $event->request->ip();
-        $path = $event->request->path();
-        $fullUrl = $event->request->fullUrl();
-        $header = $event->request->header('X-Header-Name');
-        $userAgent = $event->request->server('HTTP_USER_AGENT');
+        $ipVisitor = $request->ip();
+        $path = $request->path();
+        $fullUrl = $request->fullUrl();
+        $header = $request->header('X-Header-Name');
+        $userAgent = $request->server('HTTP_USER_AGENT');
 
         if($this->isBot($userAgent) == true)
         {
-            Visitors::create([
-                'ip'=>$ipVisitor,
-                'path'=>$path,
-                'fullUrl'=>$fullUrl,
-                'header'=>$header,
-                'userAgent'=>$userAgent,
-            ]);
+            // visitors::create([
+            //     'ip'=>$ipVisitor,
+            //     'path'=>$path,
+            //     'fullUrl'=>$fullUrl,
+            //     'header'=>$header,
+            //    'userAgent'=>$userAgent,
+            //  ]);
 
-            Log::info('Посетитель сайта' .'; '. $ipVisitor .'; '. $path .'; '. $fullUrl .'; '. $header .'; '. $userAgent);
+            //  Log::info('Посетитель сайта' .'; '. $ipVisitor .'; '. $path .'; '. $fullUrl .'; '. $header .'; '. $userAgent);
+            $chatId = config('telegram.TELEGRAMADMIN');
+            $token = config('telegram.TELEGRAMTOKEN');
+            $message = 'переход в озон: ' . $userAgent;
+            $response = array(
+                'chat_id' => $chatId,
+                'text' => $message,
+            );
 
+            $ch = curl_init('https://api.telegram.org/bot' . $token . '/sendMessage');
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $response);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_exec($ch);
+            curl_close($ch);
         }
 
     }
@@ -70,7 +85,8 @@ class AddToDBVisitWebInformation
                 'Nigma.ru', 'Baiduspider', 'Statsbot', 'SISTRIX', 'AcoonBot', 'findlinks',
                 'proximic', 'OpenindexSpider','statdom.ru', 'Exabot', 'Spider', 'SeznamBot',
                 'oBot', 'C-T bot', 'Updownerbot', 'Snoopy', 'heritrix', 'Yeti',
-                'DomainVader', 'DCPbot', 'PaperLiBot', 'bingbot'
+                'DomainVader', 'DCPbot', 'PaperLiBot', 'bingbot', 'PetalBot', 'Bot'
+
             );
 
             foreach($options as $row) {
