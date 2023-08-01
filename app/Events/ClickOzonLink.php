@@ -16,16 +16,16 @@ class ClickOzonLink
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $offerId;
-    public $request;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($offerId, $request)
+    public function __construct($offerId)
     {
         $this->offerId = $offerId;
-        $this->request = $request;
+
         /**
          * внести информацию в базу данных, доделать
          */

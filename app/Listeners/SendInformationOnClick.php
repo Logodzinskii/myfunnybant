@@ -28,7 +28,7 @@ class SendInformationOnClick
     {
         $chatId = config('telegram.TELEGRAMADMIN');
         $token = config('telegram.TELEGRAMTOKEN');
-        $message = 'Переход по ссылке: https://myfunnybant.ru/category/' . $event->offerId;
+        $message = 'вход' . $event->offerId;
         $response = array(
             'chat_id' => $chatId,
             'text' => $message,

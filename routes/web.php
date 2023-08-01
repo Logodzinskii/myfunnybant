@@ -15,16 +15,31 @@ use App\Http\Controllers\ozonController;
 |
 */
 
-//Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
-
-Route::get('/', function (){
-   return view('shop');
-});
+Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
 
 Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
 
 Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
 
+Route::get('/sell/{url}', function($url){
+
+
+    $fullUrl = \Illuminate\Support\Facades\Request::userAgent();
+    $ipVisitor = \Illuminate\Support\Facades\Request::ip();
+    $path = \Illuminate\Support\Facades\Request::path();
+    $fullUrl = \Illuminate\Support\Facades\Request::fullUrl();
+    $header = \Illuminate\Support\Facades\Request::header('X-Header-Name');
+    $userAgent = \Illuminate\Support\Facades\Request::server('HTTP_USER_AGENT');
+        preg_match('/Bot/', $fullUrl, $output_array);
+        if(preg_match('/Bot/', $fullUrl, $output_array)==0){
+            \App\Events\ClickOzonLink::dispatch(' ip: ' . $ipVisitor . '; Браузер ' . $userAgent . '; Url ' . $fullUrl);
+        }
+
+    return redirect('https://www.ozon.ru/seller/myfunnybant-302542/aksessuary-7697/?miniapp=seller_302542&text='.$url);
+
+})->name('seller.ozon');
+
+Route::post('/seller/{name}', [ozonController::class, 'showItem'])->name('seller.show');
 /**
  * Маршруты для панели администрирования
  */
@@ -39,3 +54,4 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
 
 });
+
