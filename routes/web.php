@@ -39,7 +39,7 @@ Route::get('/sell/{url}', function($url){
 
 })->name('seller.ozon');
 
-Route::post('/seller/{name}', [ozonController::class, 'showItem'])->name('seller.show');
+Route::post('/seller/', [ozonController::class, 'showItem'])->name('seller.show');
 /**
  * Маршруты для панели администрирования
  */
