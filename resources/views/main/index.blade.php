@@ -15,7 +15,6 @@
                                     <div class="" style="width: 100%; min-height: 60px; background-color: rgba(244, 232, 250, 0.7)">
                                         <h5 class="text-center" >{{$item->name}}</h5>
                                     </div>
-
                                 </div>
                                 @for($i=0; $i<=0; $i++)
                                     <div class="p-0 m-0 ">
@@ -27,21 +26,15 @@
                                             @csrf
                                             <input type="hidden" id="_token" value="{{ csrf_token() }}">
                                             <input type="hidden" name="id" value="{{$item['attributes']['id']}}">
-                                            <button type="submit" class="btn btn-sm btn-primary bg-primary g-2 h-4 m-1">Подробнее</button>
+                                            <button type="submit" class="btn"><x-main-button text="Подробнее"></x-main-button></button>
+                                            <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
                                         </form>
                                         <!--<a href="{{route("seller.show", ['id'=>$item])}}" class="btn btn-sm btn-outline-dark">Подробнее</a>-->
-
-                                        <a href="{{route("seller.ozon", ['url'=>$item['name']])}}" class="btn btn-sm btn-primary bg-primary g-2 h-4 m-1">ozon.ru</a>
-                                        <div class="btn btn-sm btn-primary bg-primary g-2 h-4 m-1">
-                                            <span>
-                                                @foreach($item->attributes['colors'] as $attribute)
-                                                    {{'#'.$attribute}}
-                                                @endforeach
-                                            </span>
-                                        </div>
                                     </div>
+                                <div class="position-absolute bottom-0 start-0">
+                                    <i class="bi bi-heart p-3" style="color: #6610f2; font-size: 2rem"></i>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 @endforeach

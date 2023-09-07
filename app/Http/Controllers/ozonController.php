@@ -105,7 +105,6 @@ class ozonController extends Cache
                     'Материал'=>($this->attributeFilter($ozonResult['result'][0]['attributes'], 5309))[0] ?? null,
                     'Цвет'=>($this->attributeFilter($ozonResult['result'][0]['attributes'], 10096))[0] ?? null,
                     'Описание'=>($this->attributeFilter($ozonResult['result'][0]['attributes'], 4191))[0] ?? null,
-
                 ],
             ]);
         }else{
