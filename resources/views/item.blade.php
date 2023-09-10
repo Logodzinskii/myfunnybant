@@ -35,6 +35,7 @@
                                 @foreach($res->attributes as $key=>$attribute)
                                     <li class="card p-3 text-center"><span class="badge bg-secondary">{{ $key }}</span>{{ strip_tags($attribute) }}</li>
                                 @endforeach
+                                    <li>Номер: {{$res->colors}}</li>
                                 </ul>
                             </div>
                         </div>

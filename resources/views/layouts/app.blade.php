@@ -40,29 +40,6 @@
 
         gtag('config', 'G-SVJMVRECBB');
     </script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(window).scroll(function() {
-
-                if($(this).scrollTop() != 0) {
-
-                    $('#toTop').fadeIn();
-
-                } else {
-
-                    $('#toTop').fadeOut();
-
-                }
-
-            });
-
-            $('#toTop').click(function() {
-
-                $('body,html').animate({scrollTop:0},800);
-
-            });
-        });
-    </script>
     <!-- Yandex.RTB -->
     <script>window.yaContextCb=window.yaContextCb||[]</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>

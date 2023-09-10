@@ -107,6 +107,7 @@ class ozonController extends Cache
                     'Цвет'=>($this->attributeFilter($ozonResult['result'][0]['attributes'], 10096))[0] ?? null,
                     'Описание'=>($this->attributeFilter($ozonResult['result'][0]['attributes'], 4191))[0] ?? null,
                 ],
+                'colors'=>$ozonResult['result'][0]['offer_id'],
             ]);
         }else{
             return redirect('404');
@@ -383,7 +384,7 @@ class ozonController extends Cache
                         'colors'=>$this->attributeFilter($off['attributes'], 10096),
                         'like'=>$like,
                     ],
-                    'price'=>''
+                    'colors'=>$off['offer_id']
                 ]);
         }
         //return $arrOzonItems['result'];

@@ -95,4 +95,57 @@ class OzonShopController extends Controller
 
         return $res[0]->like_count;
     }
+
+    public function viewLike()
+    {
+        $data = '{
+        "filter": {
+        "visibility": "IN_SALE"
+        },
+        "limit": 1000,
+        "last_id": "",
+        "sort_dir": "DESC"
+        }';
+        $method = '/v3/products/info/attributes';
+        $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
+
+        $offers=[];
+        /**
+         * 8229 - Бант для волос
+         * 4180 - заголовок
+         * 4191 - описание
+         * 9725 - сезон
+         * 22336 - ключевые слова
+         * 9024 - ид товара b-01-01
+         * 10096 - цвета
+         * 5309 - материал
+         * 13214 - от скольки возрстная категория
+         * 13215 - до скольки лет
+         */
+        //return $arrOzonItems['result'];
+        foreach ($arrOzonItems['result'] as $off){
+            if(session()->has('ozon_id') && array_search($off['id'], session()->get('ozon_id')) !== false)
+            {
+                $like = OzonShop::where('ozon_id', $off['id'])->get();
+                $like =$like[0]->like_count;
+                $offers[] = new Offers([
+                    'name'=>$off['name'],
+                    'images'=>$off['images'],
+                    //'attributes'=>$off['attributes'][0]['attribute_id'],
+                    'attributes'=>[
+                        'id'=>$off['id'],
+                        'category'=> $off['category_id'],
+                        'type'=>StatGetOzon::attributeFilter($off['attributes'], 8229),
+                        'header'=>StatGetOzon::attributeFilter($off['attributes'], 4180),
+                        'description'=>StatGetOzon::attributeFilter($off['attributes'], 4191),
+                        'colors'=>StatGetOzon::attributeFilter($off['attributes'], 10096),
+                        'like'=>$like,
+                    ],
+                    'price'=>''
+                ]);
+            }
+
+        }
+        return view('main.index', ['data'=>[$offers]]);
+    }
 }

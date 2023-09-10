@@ -51,4 +51,20 @@ class StatGetOzon
 
         return $html;
     }
+
+    public static function attributeFilter($array, $value)
+    {
+        $typeAttr=[];
+        $type = array_filter($array, function($item) use ($value) {
+            return $item['attribute_id'] == $value;
+        });
+        foreach ($type as $item)
+        {
+            foreach ($item['values'] as $res)
+            {
+                $typeAttr[] = $res['value'];
+            }
+        }
+        return $typeAttr;
+    }
 }
