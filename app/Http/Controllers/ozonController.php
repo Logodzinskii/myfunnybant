@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\ClickOzonLink;
 use App\Models\Offers;
+use App\Models\OzonShop;
 use GuzzleHttp\Psr7\AppendStream;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -367,6 +368,8 @@ class ozonController extends Cache
          */
         //return $arrOzonItems['result'];
         foreach ($arrOzonItems['result'] as $off){
+            $like = OzonShop::where('ozon_id', $off['id'])->get();
+            $like =$like[0]->like_count;
                 $offers[] = new Offers([
                     'name'=>$off['name'],
                     'images'=>$off['images'],
@@ -377,11 +380,13 @@ class ozonController extends Cache
                         'type'=>$this->attributeFilter($off['attributes'], 8229),
                         'header'=>$this->attributeFilter($off['attributes'], 4180),
                         'description'=>$this->attributeFilter($off['attributes'], 4191),
-                        'colors'=>$this->attributeFilter($off['attributes'], 10096)
-                    ]
+                        'colors'=>$this->attributeFilter($off['attributes'], 10096),
+                        'like'=>$like,
+                    ],
+                    'price'=>''
                 ]);
         }
-        //return $offers;
+        //return $arrOzonItems['result'];
         //$view = view('main.index')->with('data', $offers);
         return view('main.index', ['data'=>[$offers]]);
 

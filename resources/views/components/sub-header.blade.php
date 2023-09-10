@@ -6,6 +6,8 @@
         <div class="col">
             <x-contacts></x-contacts>
         </div>
-        <div class="col">COl</div>
+        <div class="col">
+            <x-likes></x-likes>
+        </div>
     </div>
 </div>

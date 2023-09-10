@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OzonShopController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
@@ -43,6 +44,8 @@ Route::post('/seller/', [ozonController::class, 'showItem'])->name('seller.show'
 /**
  * Маршруты для панели администрирования
  */
+Route::get('/ozon/',[OzonShopController::class, 'create']);
+Route::post('addlike',[OzonShopController::class, 'addLike']);
 
 Auth::routes();
 

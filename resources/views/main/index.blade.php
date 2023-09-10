@@ -1,8 +1,24 @@
 @extends('layouts.app')
 @section('content')
-    <style type="">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.like').on('click',function(){
+                var id = $(this).data('heart');
+                var span = $(this);
+                $.post('/addlike', {id: id}, function(data){
 
-    </style>
+                    span.parent().find('span').text(data);
+                    span.removeClass('bi');
+                    span.removeClass('like');
+                    span.addClass('bi-like');
+                    let sess = "<?php echo count(session()->get('ozon_id')); ?>";
+
+                    $('#countLike').text(sess);
+                });
+            })
+        })
+    </script>
 <section class="col-lg-12">
     @foreach($data as $key=>$items)
         <div class="container">
@@ -32,7 +48,12 @@
                                         <!--<a href="{{route("seller.show", ['id'=>$item])}}" class="btn btn-sm btn-outline-dark">Подробнее</a>-->
                                     </div>
                                 <div class="position-absolute bottom-0 start-0">
-                                    <i class="bi bi-heart p-3" style="color: #6610f2; font-size: 2rem"></i>
+                                    @if(session()->has('ozon_id') && array_search($item['attributes']['id'], session()->get('ozon_id')) !== false)
+                                        <i class="bi-like p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                    @else
+                                        <i class="bi p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                    @endif
+                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle">{{$item['attributes']['like']}}</span>
                                 </div>
                             </div>
                         </div>
