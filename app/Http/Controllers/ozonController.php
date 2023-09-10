@@ -65,9 +65,16 @@ class ozonController extends Cache
      * @param $offer_id
      * Полученный результат из API seller ozon записывает в array
      */
-    public function showItem(Request $request)
+    public function showItem(Request $request, $offer_chpu = null)
     {
-        $offer_id = $request->id;
+        if($offer_chpu == null){
+
+            $offer_id = $request->id;
+        }else{
+            $offer_id = OzonShop::where('url_chpu', '=', $offer_chpu)->first();
+            $offer_id = $offer_id->ozon_id;
+        }
+
         //ClickOzonLink::dispatch($offer_id, $request);
         /**
          * Получу информацию о ценах

@@ -47,7 +47,7 @@ class OzonShopController extends Controller
             {
                 $arr[] = OzonShop::create([
                     'ozon_id'=>$off['id'],
-                    'url_chpu'=>'',
+                    'url_chpu'=>StatGetOzon::chpuGenerator($off['name']),
                     'like_count'=>0,
                 ]);
             }else{
@@ -144,8 +144,8 @@ class OzonShopController extends Controller
                     'price'=>''
                 ]);
             }
-
         }
+
         return view('main.index', ['data'=>[$offers]]);
     }
 }

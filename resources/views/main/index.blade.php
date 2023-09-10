@@ -12,9 +12,8 @@
                     span.removeClass('bi');
                     span.removeClass('like');
                     span.addClass('bi-like');
-                    let sess = "<?php echo count(session()->get('ozon_id')); ?>";
-
-                    $('#countLike').text(sess);
+                    let s = "<?php if(session()->has('ozon_id')){echo count(session()->get('ozon_id'));}else{echo 0;} ?>";
+                    $('#countLike').text(s);
                 });
             })
         })
@@ -38,14 +37,8 @@
                                     </div>
                                 @endfor
                                     <div class="position-absolute bottom-0 end-0 d-flex flex-wrap">
-                                        <form id="itemInfo" method="post" action="{{route('seller.show')}}">
-                                            @csrf
-                                            <input type="hidden" id="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="id" value="{{$item['attributes']['id']}}">
-                                            <button type="submit" class="btn"><x-main-button text="Подробнее"></x-main-button></button>
-                                            <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
-                                        </form>
-                                        <!--<a href="{{route("seller.show", ['id'=>$item])}}" class="btn btn-sm btn-outline-dark">Подробнее</a>-->
+                                        <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
+                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['attributes']['id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
                                     </div>
                                 <div class="position-absolute bottom-0 start-0">
                                     @if(session()->has('ozon_id') && array_search($item['attributes']['id'], session()->get('ozon_id')) !== false)

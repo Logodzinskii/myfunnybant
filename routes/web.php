@@ -18,7 +18,7 @@ use App\Http\Controllers\ozonController;
 
 Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
 
-Route::get('/category/{offer_id}', [ozonController::class, 'showItem']);
+Route::get('/shop/{offer_chpu}', [ozonController::class, 'showItem'])->name('shop');
 
 Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
 
@@ -56,6 +56,5 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::get('/admin/sale/date/',[\App\Http\Controllers\Admin\SaleItemsController::class,'showDateBetween'])->middleware('auth');
     Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
     Route::get('/ozon/',[OzonShopController::class, 'create']);
-
 });
 
