@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ClickOzonLink;
 use App\Models\Offers;
 use App\Models\OzonShop;
 use Illuminate\Http\Request;
@@ -90,7 +91,7 @@ class OzonShopController extends Controller
                 OzonShop::where('ozon_id', $id)
                     ->update(['like_count' => $curentCount[0]->like_count + 1]);
                 $res = OzonShop::where('ozon_id', $id)->get();
-
+                ClickOzonLink::dispatch('https://myfunnybant.ru/shop/' . $res[0]->url_chpu);
             }
 
         return $res[0]->like_count;
