@@ -28,7 +28,7 @@ class SendInformationOnClick
     {
         $chatId = config('telegram.TELEGRAMADMIN');
         $token = config('telegram.TELEGRAMTOKEN');
-        $message = 'вход' . $event->offerId;
+        $message = $event->offerId;
         $response = array(
             'chat_id' => $chatId,
             'text' => $message,
