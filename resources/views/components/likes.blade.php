@@ -1,5 +1,5 @@
 <div class="position-relative m-1">
-    <div class="shadow rounded-1 p-1" style="min-height: 150px">
+    <div class="shadow rounded-1 p-1" >
         <p>Понравившиеся</p>
         <i class="bi bi-like p-3"></i>
             @if(session()->exists('ozon_id'))
