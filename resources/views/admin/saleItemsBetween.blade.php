@@ -22,6 +22,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Дата продажи</th>
+                    <th scope="col">Фото</th>
                     <th scope="col">Количество</th>
                     <th scope="col">Сумма продажи</th>
                     <th scope="col">Итого</th>
@@ -33,6 +34,15 @@
                     <tr>
                         <th scope="row">{{$sales->id}}</th>
                         <td>{{$sales->date_sale}}</td>
+                        <td>
+                            @php
+                                $re = '/(file_[0-9]{0,10}.jpg)/';
+
+                                preg_match_all($re, $sales->sale_file, $matches, PREG_SET_ORDER, 0);
+
+                            @endphp
+                            <img src="{{asset('/images/saleitems/'.$matches[0][0])}}" class="img-thumbnail" style="height: 90px" />
+                        </td>
                         <td>{{$sales->count_items}}</td>
                         <td>{{$sales->sale_price}}</td>
                         <td>{{$sales->count_items * $sales->sale_price}}</td>

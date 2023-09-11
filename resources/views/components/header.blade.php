@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm sticky-top">
+<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
     <div class="container">
         <a class="navbar-brand fs-1 text-uppercase" style="color: saddlebrown" href="{{ url('/') }}">
             {{ __('Myfunnybant') }}
