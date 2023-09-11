@@ -171,11 +171,11 @@ class SaleItemsController extends Controller
                     'colors'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 10096),
                     'like'=>$item['like_count'],
                 ],
-                'price'=>''
+                'price'=>$item['like_count']
             ]);
         }
 
-        return view('main.index', ['data'=>[$offers]]);
+        return view('admin.adminAllLike', ['data'=>[$offers]]);
     }
 
 }

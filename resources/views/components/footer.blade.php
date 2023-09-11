@@ -92,10 +92,13 @@
                     <h6 class="text-uppercase fw-bold mb-4">Контакты</h6>
                     <p><i class="fas fa-home me-3"></i> </p>
                     <p>
-                        <i class="fas fa-envelope me-3"></i>
+                        <i class="bi-envelope"></i>
                         <a href="mailto:veronika-manager@mail.ru" class="text-reset">veronika-manager@mail.ru</a>
                     </p>
-                    <p><i class="fas fa-phone me-3"></i> </p>
+                    <p><i class="fas fa-phone me-3"></i>
+                        <i class="bi-geo-alt" style="font-size: 1.4rem;"></i>
+                        <a href="#!" class="text-reset p-2">Екатеринбург</a>
+                    </p>
                     <p><i class="fas fa-print me-3"></i> </p>
                 </div>
                 <!-- Grid column -->
