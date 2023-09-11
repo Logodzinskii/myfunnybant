@@ -15,7 +15,7 @@
                     @endif
 
                     {{ __('You are logged in!') }}
-                    <a href="/admin/show/all/items/">Продажи</a>
+                    <a href="/admin/sale/date/">Продажи</a>
                 </div>
             </div>
         </div>
