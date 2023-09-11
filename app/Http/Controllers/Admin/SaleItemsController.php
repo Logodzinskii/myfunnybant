@@ -139,54 +139,41 @@ class SaleItemsController extends Controller
 
     public function maxLike()
     {
-        $data = '{
-        "filter": {
-        "visibility": "IN_SALE"
-        },
-        "limit": 1000,
-        "last_id": "",
-        "sort_dir": "DESC"
-        }';
-        $method = '/v3/products/info/attributes';
-        $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
-
+        $like = OzonShop::where('like_count', '>', 0)
+            ->orderBy('like_count', 'desc')
+            ->get();
         $offers=[];
-        /**
-         * 8229 - Бант для волос
-         * 4180 - заголовок
-         * 4191 - описание
-         * 9725 - сезон
-         * 22336 - ключевые слова
-         * 9024 - ид товара b-01-01
-         * 10096 - цвета
-         * 5309 - материал
-         * 13214 - от скольки возрстная категория
-         * 13215 - до скольки лет
-         */
-        //return $arrOzonItems['result'];
-        foreach ($arrOzonItems['result'] as $off){
-
-                $like = OzonShop::where('like_count', '>', 0)
-                    ->orderBy('like_count', 'desc')
-                    ->get();
-                $like =$like[0]->like_count;
-                $offers[] = new Offers([
-                    'name'=>$off['name'],
-                    'images'=>$off['images'],
-                    //'attributes'=>$off['attributes'][0]['attribute_id'],
-                    'attributes'=>[
-                        'id'=>$off['id'],
-                        'category'=> $off['category_id'],
-                        'type'=>StatGetOzon::attributeFilter($off['attributes'], 8229),
-                        'header'=>StatGetOzon::attributeFilter($off['attributes'], 4180),
-                        'description'=>StatGetOzon::attributeFilter($off['attributes'], 4191),
-                        'colors'=>StatGetOzon::attributeFilter($off['attributes'], 10096),
-                        'like'=>$like,
+        foreach ($like as $item)
+        {
+            $data = '{
+                "filter": {
+                    "product_id": [
+                        "'.$item->ozon_id.'"
                     ],
-                    'price'=>''
-                ]);
-            }
-
+                    "visibility": "ALL"
+                },
+                "limit": 100,
+                "last_id": "okVsfA==«",
+                "sort_dir": "ASC"
+            }';
+            $method = '/v3/products/info/attributes';
+            $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
+            $offers[] = new Offers([
+                'name'=>$arrOzonItems['result'][0]['name'],
+                'images'=>$arrOzonItems['result'][0]['images'],
+                //'attributes'=>$off['attributes'][0]['attribute_id'],
+                'attributes'=>[
+                    'id'=>$arrOzonItems['result'][0]['id'],
+                    'category'=> $arrOzonItems['result'][0]['category_id'],
+                    'type'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 8229),
+                    'header'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 4180),
+                    'description'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 4191),
+                    'colors'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 10096),
+                    'like'=>$item['like_count'],
+                ],
+                'price'=>''
+            ]);
+        }
 
         return view('main.index', ['data'=>[$offers]]);
     }
