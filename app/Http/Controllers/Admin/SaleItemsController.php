@@ -165,8 +165,7 @@ class SaleItemsController extends Controller
          */
         //return $arrOzonItems['result'];
         foreach ($arrOzonItems['result'] as $off){
-            if(session()->has('ozon_id') && array_search($off['id'], session()->get('ozon_id')) !== false)
-            {
+
                 $like = OzonShop::where('like_count', '>', 0)
                     ->orderBy('like_count', 'desc')
                     ->get();
@@ -187,7 +186,7 @@ class SaleItemsController extends Controller
                     'price'=>''
                 ]);
             }
-        }
+
 
         return view('main.index', ['data'=>[$offers]]);
     }
