@@ -6,7 +6,7 @@
             $('.like').on('click',function(){
                 var id = $(this).data('heart');
                 var span = $(this);
-                $.post('/addlike', {id: id}, function(data){
+                $.post('/addlike', {"_token":$('meta[name="csrf-token"]').attr('content'), id: id}, function(data){
 
                     span.parent().find('span').text(data);
                     span.removeClass('bi');
@@ -21,7 +21,7 @@
 <section class="col-lg-12">
     @foreach($data as $key=>$items)
         <div class="container">
-            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
                 @foreach($items as $item)
                     <div class="col" id="{{$key}}">
                         <div class="card overflow-hidden" >
