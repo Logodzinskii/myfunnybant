@@ -89,7 +89,7 @@ class OzonShopController extends Controller
                 $curentCount = OzonShop::where('ozon_id', $id)->get();
 
                 OzonShop::where('ozon_id', $id)
-                    ->update(['like_count' => $curentCount[0]->like_count + 1]);
+                        ->update(['like_count' => $curentCount[0]->like_count + 1]);
                 $res = OzonShop::where('ozon_id', $id)->get();
                 ClickOzonLink::dispatch('https://myfunnybant.ru/shop/' . $res[0]->url_chpu);
             }

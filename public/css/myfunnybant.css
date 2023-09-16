@@ -99,3 +99,9 @@ img{
     background-size: 2rem 2rem;
 
 }
+.price{
+    color: mediumvioletred;
+}
+.action-price{
+    color: #6f42c1;
+}

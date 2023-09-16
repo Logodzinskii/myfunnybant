@@ -1,4 +1,12 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<style type="text/css">
+    .mynav a{
+        color: #6610f2;
+    }
+    .mynav a:hover{
+        color: rebeccapurple;
+    }
+</style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary mynav">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Навбар</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">

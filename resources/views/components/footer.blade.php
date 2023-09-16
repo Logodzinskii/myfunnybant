@@ -112,6 +112,7 @@
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
         © 2023 Copyright:
         <a class="text-reset fw-bold" href="#">myfunnybant.ru</a>
+        <p>Все права защищены. Копирование информации запрещено. Информация на сайте не является публичной офертой</p>
     </div>
     <!-- Copyright -->
 </footer>
