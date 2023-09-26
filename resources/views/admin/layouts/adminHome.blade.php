@@ -21,5 +21,6 @@
     <section >
         @yield('content')
     </section>
+<x-footer></x-footer>
 </body>
 </html>

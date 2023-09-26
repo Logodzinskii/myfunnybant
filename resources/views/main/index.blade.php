@@ -31,22 +31,22 @@
                                         <h5 class="text-center" >{{$item->name}}</h5>
                                     </div>
                                 </div>
-                                @for($i=0; $i<=0; $i++)
+
                                     <div class="p-0 m-0 ">
-                                        <img src="{{$item['images'][$i]['file_name']}}" alt="{{$item['name']}}">
+                                        <img src="{{json_decode($item->images, true)[0]['file_name']}}" alt="{{$item['name']}}">
                                     </div>
-                                @endfor
+
                                     <div class="position-absolute bottom-0 end-0 d-flex flex-wrap">
                                         <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
-                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['attributes']['id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
+                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['ozon_id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
                                     </div>
                                 <div class="position-absolute bottom-0 start-0">
-                                    @if(session()->has('ozon_id') && array_search($item['attributes']['id'], session()->get('ozon_id')) !== false)
-                                        <i class="bi-like p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                    @if(session()->has('ozon_id') && array_search($item['ozon_id'], session()->get('ozon_id')) !== false)
+                                        <i class="bi-like p-3 like" data-heart="{{$item['ozon_id']}}"></i>
                                     @else
-                                        <i class="bi p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                        <i class="bi p-3 like" data-heart="{{$item['ozon_id']}}"></i>
                                     @endif
-                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle">{{$item['attributes']['like']}}</span>
+                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle">{{\App\Models\OzonShop::where('ozon_id', '=', $item['ozon_id'])->first()->like_count}}</span>
                                 </div>
                             </div>
                         </div>

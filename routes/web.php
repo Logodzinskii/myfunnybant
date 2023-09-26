@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ActionOzonController;
+use App\Http\Controllers\ConcurentParserController;
+use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OzonShopController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +19,7 @@ use App\Http\Controllers\ozonController;
 |
 */
 
-Route::get('/', [ozonController::class, 'showCategoryAttributeValues']);
+Route::get('/', [ozonController::class, 'index']);
 
 Route::get('/shop/{offer_chpu}', [ozonController::class, 'showItem'])->name('shop');
 
@@ -39,11 +42,13 @@ Route::get('/sell/{url}', function($url){
 
 })->name('seller.ozon');
 
-Route::post('/seller/', [ozonController::class, 'showItem'])->name('seller.show');
+//Route::post('/seller/', [ozonController::class, 'showItem'])->name('seller.show');
 
 Route::get('my/like', [OzonShopController::class,'viewLike']);
 
 Route::post('addlike',[OzonShopController::class, 'addLike']);
+
+Route::get('/actions/', [ActionOzonController::class, 'getItemsInActions']);
 /**
  * Маршруты для панели администрирования
  */
@@ -55,7 +60,14 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::get('/admin/total/year/',[\App\Http\Controllers\Admin\SaleItemsController::class,'index'])->middleware('auth');
     Route::get('/admin/sale/date/',[\App\Http\Controllers\Admin\SaleItemsController::class,'showDateBetween'])->middleware('auth');
     Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
-    Route::get('/ozon/',[OzonShopController::class, 'create']);
+    Route::get('/admin/ozon/',[OzonShopController::class, 'create']);
     Route::get('/admin/maxlike',[\App\Http\Controllers\Admin\SaleItemsController::class, 'maxLike']);
+    Route::get('/admin/createShop/', [CreateShopController::class, 'createShop']);
 });
 
+/**
+ * Парсер
+ *
+ */
+
+Route::get('parse',[ConcurentParserController::class, 'getUrl']);

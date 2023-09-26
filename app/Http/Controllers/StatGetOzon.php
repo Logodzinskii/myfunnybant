@@ -89,4 +89,48 @@ class StatGetOzon
         return $value;
     }
 
+    public static  function getAllAction()
+    {
+
+        $method = '/v1/actions';
+        $clientId = config('ozon.CLIENT_ID'); //айди шопа
+        $apiKey = config('ozon.OZONTOKEN');; // ключ апи
+        $url = 'https://api-seller.ozon.ru'.$method;
+        $headers = array(
+            'Content-Type: application/json',
+            'Host: api-seller.ozon.ru',
+            'Client-Id: '.$clientId,
+            'Api-Key: '.$apiKey
+        ) ;
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers
+        );
+
+        curl_setopt_array($ch, $options);
+
+        $html = curl_exec($ch);
+
+        curl_close($ch);
+
+        if(strpos($html,'result') > 0){
+            $countItemsSumm = 0;
+            $arrayRes = json_decode($html, true);
+            foreach ( $arrayRes['result'] as $countItems){
+
+                $countItemsSumm += $countItems['participating_products_count'];
+
+            }
+            session(['countAction', $countItemsSumm]);
+            $html = json_decode($html, true);
+        }else{
+            return $html;
+        }
+
+        return $html['result'];
+    }
+
 }

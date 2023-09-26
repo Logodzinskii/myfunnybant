@@ -4,7 +4,7 @@
                     <div class="col card">
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                @foreach($res->images as $i=>$image)
+                                @foreach(json_decode($res->images,true) as $i=>$image)
                                     @if($i == 0)
                                 <div class="carousel-item active">
                                     @else
@@ -32,12 +32,31 @@
                             </div>
                             <div>
                                 <ul class="d-flex flex-wrap justify-content-between p-0 w-0">
-                                @foreach($res->attributes as $key=>$attribute)
-                                    <li class="card p-3 text-center"><span class="badge bg-secondary">{{ $key }}</span>{{ strip_tags($attribute) }}</li>
-                                @endforeach
-                                    <li>Номер: {{$res->colors}}</li>
+
+                                    <li class="card p-3 text-center">
+                                        <span class="badge bg-secondary">Описание: </span>
+                                        {{ strip_tags($res->description) }}
+                                    </li>
+                                    <li class="card p-3 text-center">
+                                        <span class="badge bg-secondary">Ширина: </span>
+                                        {{ $res->width }} mm
+                                    </li>
+                                    <li class="card p-3 text-center">
+                                        <span class="badge bg-secondary">Высота: </span>
+                                        {{ $res->height }} mm
+                                    </li>
+                                    <li class="card p-3 text-center">
+                                        <span class="badge bg-secondary">Глубина: </span>
+                                        {{ $res->depth }} mm
+                                    </li>
+                                    <li class="card p-3 text-center"><span class="badge bg-secondary">Цвета: </span>
+                                        @foreach(json_decode($res->colors, true) as $color)
+                                        {{$color}}
+                                        @endforeach
+                                    </li>
                                 </ul>
                             </div>
+                            <a href="{{route("seller.ozon", ['url'=>$res['name']])}}" style=""><x-main-button text="купить на сайте ozon.ru"></x-main-button></a>
                         </div>
                         </div>
                     </div>
