@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     @if(isset($res))
         <title>Myfunnybant {{$res['name']}}</title>
-        <META NAME="description" content={{strip_tags($res['attributes']['Описание'])}}>
+        <META NAME="description" content={{strip_tags($res['description'])}}>
     @else
         <title>Myfunnybant - аксессуары для волос</title>
         <META NAME="description" content="аксессуары для волос">

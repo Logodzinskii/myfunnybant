@@ -8,6 +8,7 @@
         </div>
         <div class="col-5">
             <x-likes></x-likes>
+
         </div>
     </div>
 </div>

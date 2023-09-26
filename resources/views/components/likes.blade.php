@@ -14,5 +14,6 @@
                 {{0}}
             </span>
             @endif
+        <div><a href="{{url('/actions/')}}" class="list-unstyled"><i class="bi-percent"></i>{{session()->has('1')? 'Товаров по акции ' . session()->all()['1'] : ''}} </a></div>
     </div>
 </div>

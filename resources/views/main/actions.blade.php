@@ -26,8 +26,9 @@
         </div>
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
-                    @foreach($action['product'] as $item)
-                    <div class="col" id="">
+                    @foreach($action['product'] as $items)
+                        @foreach($items as $item)
+                        <div class="col" >
                             <div class="card overflow-hidden" >
                                 <div class="card-body side d-flex position-relative justify-content-center overflow-hidden" style="height: 50vh">
                                     <div class="border-0 position-absolute top-0" style="min-height: 100px">
@@ -35,14 +36,14 @@
                                             <h5 class="text-center" >{{$item->name}}</h5>
                                         </div>
                                     </div>
-                                    @for($i=0; $i<=0; $i++)
+
                                         <div class="p-0 m-0 ">
-                                            <img src="{{$item->images[$i]['file_name']}}" alt="{{$item['name']}}">
+                                            <img src="{{json_decode($item->images,true)[0]['file_name']}}" alt="{{$item['name']}}">
                                         </div>
-                                    @endfor
+
                                     <div class="position-absolute bottom-0 end-0 d-flex flex-wrap">
                                         <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
-                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['attributes']['id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
+                                        <a href="{{isset(\App\Models\OzonShop::where('ozon_id', '=', $item['id'])->first()->url_chpu)? url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['id'])->first()->url_chpu]): ''}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
                                     </div>
 
                                 </div>
@@ -50,16 +51,17 @@
                                     <div class="price p-2 m-1 border-secondary"><s>{{isset($item->price[0])?$item->price[0]:null}} &#8381;</s> </div>
                                     <div class="action-price p-2 m-1 border-secondary"> {{isset($item->price[1])?$item->price[1]:null}} &#8381;</div>
                                     <div class="">
-                                        @if(session()->has('ozon_id') && array_search($item['attributes']['id'], session()->get('ozon_id')) !== false)
-                                            <i class="bi-like p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                        @if(session()->has('ozon_id') && array_search($item['id'], session()->get('ozon_id')) !== false)
+                                            <i class="bi-like p-3 like" data-heart="{{$item['id']}}"></i>
                                         @else
-                                            <i class="bi p-3 like" data-heart="{{$item['attributes']['id']}}"></i>
+                                            <i class="bi p-3 like" data-heart="{{$item['id']}}"></i>
                                         @endif
-                                        <span class="badge text-bg-secondary rounded-circle">{{$item['attributes']['like']}}</span>
+                                        <span class="badge text-bg-secondary rounded-circle">{{$item['like']}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     @endforeach
                 </div>
             </div>
