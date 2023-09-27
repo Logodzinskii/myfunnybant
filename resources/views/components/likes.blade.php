@@ -1,3 +1,28 @@
+<script type="text/javascript">
+    const clickButton = document.querySelector('.anime');
+    clickButton.addEventListener('mouseout', showMessage, {
+        capture: false,
+        once: false,
+        passive: false,
+    })
+    function showMessage(){
+        let animation = anime({
+            targets: '.anime',
+            translateX: 20,
+            endDelay: 200,
+            direction: 'alternate'
+        });
+    }
+
+    let animation = anime({
+        targets: '.staggering-easing-demo .el',
+        translateX: [50, 0],
+        delay: anime.stagger(300, {easing: 'easeOutQuad'}),
+    });
+
+
+
+</script>
 <div class="position-relative m-1">
     <div class="shadow rounded-1 p-1" >
         <p>Понравившиеся</p>

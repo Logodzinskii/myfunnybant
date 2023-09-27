@@ -14,4 +14,6 @@ class OzonShop extends Model
         'url_chpu',
         'like_count',
     ];
+
+
 }
