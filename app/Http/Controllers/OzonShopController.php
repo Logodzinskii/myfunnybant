@@ -66,4 +66,12 @@ class OzonShopController extends Controller
 
         return view('main.index', ['data'=>$offers]);
     }
+
+    public function find(Request $request)
+    {
+        $request->validate([
+            'funnel' => 'required|max:150',
+        ]);
+        return view('main.index', ['data'=>[OzonShopItem::search($request->get('funnel'))->get()]]);
+    }
 }

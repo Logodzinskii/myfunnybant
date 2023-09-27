@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class OzonShopItem extends Model
 {
     use HasFactory;
+    use SearchableTrait;
 
     protected $fillable=[
         'ozon_id',
@@ -22,5 +24,13 @@ class OzonShopItem extends Model
         'height',
         'depth',
         'material',
+    ];
+
+    protected $searchable = [
+        'columns' => [
+            'name'=>10,
+            'description' => 5,
+            'header'=>3,
+        ],
     ];
 }

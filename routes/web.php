@@ -47,6 +47,7 @@ Route::get('/sell/{url}', function($url){
 Route::get('my/like', [OzonShopController::class,'viewLike']);
 
 Route::post('addlike',[OzonShopController::class, 'addLike']);
+Route::post('find', [OzonShopController::class, 'find'])->name('find');
 
 Route::get('/actions/', [ActionOzonController::class, 'getItemsInActions']);
 /**

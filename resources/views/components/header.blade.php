@@ -1,7 +1,20 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
     <div class="container">
-        <a class="navbar-brand fs-1 text-uppercase" style="color: saddlebrown" href="{{ url('/') }}">
-            {{ __('Myfunnybant') }}
+        <div class="col-2">
+            <img src="{{asset('/images/logo/logo.png')}}" class="img-fluid" style="width: 8vw">
+        </div>
+        <a class="navbar-brand fs-1 text-uppercase staggering-easing-demo d-flex flex-wrap" style="color: saddlebrown" href="{{ url('/') }}">
+            <div class="el" >M</div>
+            <div class="el" >Y</div>
+            <div class="el" >F</div>
+            <div class="el" >U</div>
+            <div class="el" >N</div>
+            <div class="el" >N</div>
+            <div class="el" >Y</div>
+            <div class="el" >B</div>
+            <div class="el" >A</div>
+            <div class="el" >N</div>
+            <div class="el" >T</div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
