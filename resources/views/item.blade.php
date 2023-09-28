@@ -56,7 +56,12 @@
                                     </li>
                                 </ul>
                             </div>
+                            <div class="shadow bg-light d-flex flex-nowrap rounded-2">
+                                <div class="price p-1 border-secondary"><s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $res['ozon_id'])->first()->price}} &#8381;</s> </div>
+                                <div class="action-price p-1 h-2 border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $res['ozon_id'])->first()->action_price}} &#8381;</div>
+
                             <a href="{{route("seller.ozon", ['url'=>$res['name']])}}" style=""><x-main-button text="купить на сайте ozon.ru"></x-main-button></a>
+                            </div>
                         </div>
                         </div>
                     </div>
