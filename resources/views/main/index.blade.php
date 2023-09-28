@@ -37,9 +37,14 @@
                                     </div>
 
                                     <div class="position-absolute bottom-0 end-0 d-flex flex-wrap">
+                                        <div class="shadow bg-light d-flex flex-nowrap rounded-2">
+                                            <div class="price p-1  border-secondary"><s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item['ozon_id'])->first()->price}} &#8381;</s> </div>
+                                            <div class="action-price p-1  border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item['ozon_id'])->first()->action_price}} &#8381;</div>
+                                        </div>
                                         <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="ozon.ru"></x-main-button></a>
                                         <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['ozon_id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
                                     </div>
+
                                 <div class="position-absolute bottom-0 start-0">
                                     @if(session()->has('ozon_id') && array_search($item['ozon_id'], session()->get('ozon_id')) !== false)
                                         <i class="bi-like p-3 like" data-heart="{{$item['ozon_id']}}"></i>

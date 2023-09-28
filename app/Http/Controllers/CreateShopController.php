@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
+use App\Models\StatusPriceShopItems;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\This;
 
 class CreateShopController extends Controller
 {
     public function createShop($last_id = null)
     {
-        self::create();
+
+        $offers=[];
+        $offers = ['OzonShop'=>$this->create(),
+                   'Price'=>$this->createPrice(),
+                  ];
         $data = '{
         "filter": {
         "visibility": "IN_SALE"
@@ -21,18 +27,34 @@ class CreateShopController extends Controller
         }';
         $method = '/v3/products/info/attributes';
         $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
-
-        $offers=[];
-
         foreach ($arrOzonItems['result'] as $off){
             if((OzonShopItem::where('ozon_id', '=', $off['id'])->count() > 0))
             {
+                OzonShopItem::where('ozon_id', '=', $off['id'])
+                ->update(['ozon_id'=>$off['id'],
+                    'name'=>$off['name'],
+                    'images'=>json_encode($off['images']),
+                    'category'=>$off['category_id'],
+                    'type'=>StatGetOzon::attributeFilter($off['attributes'], 8229)[0],
+                    'header'=>StatGetOzon::attributeFilter($off['attributes'], 4180)[0],
+                    'description'=>StatGetOzon::attributeFilter($off['attributes'], 4191)[0],
+                    'colors'=>json_encode(StatGetOzon::attributeFilter($off['attributes'], 10096)),
+                    'width'=>$off['width'],
+                    'height'=>$off['height'],
+                    'depth'=>$off['depth'],
+                    'material'=>json_encode(StatGetOzon::attributeFilter($off['attributes'], 5309)),
+                    ]);
+                OzonShop::where('ozon_id', '=', $off['id'])
+                    ->update([
+                    'ozon_id'=>$off['id'],
+                    'url_chpu'=>StatGetOzon::chpuGenerator($off['name']),
+                    'like_count'=>0,
+                ]);
                 $offers[]=[
-                    $off['id']=>'уже есть в базе данных'
+                    $off['id']=>'update'
                 ];
 
             }else{
-
                 OzonShopItem::create([
                     'ozon_id'=>$off['id'],
                     'name'=>$off['name'],
@@ -47,7 +69,12 @@ class CreateShopController extends Controller
                     'depth'=>$off['depth'],
                     'material'=>json_encode(StatGetOzon::attributeFilter($off['attributes'], 5309)),
                 ]);
-                $offers[]=[$off['id']=>'создан'];
+                OzonShop::create([
+                    'ozon_id'=>$off['id'],
+                    'url_chpu'=>StatGetOzon::chpuGenerator($off['name']),
+                    'like_count'=>0,
+                ]);
+                $offers[]=[$off['id']=>'create'];
             }
 
         }
@@ -72,19 +99,90 @@ class CreateShopController extends Controller
         $arr = [];
         foreach ($arrOzonItems['result'] as $off){
 
-            $res = OzonShop::where('ozon_id', $off['id'])->get();
-
-            if((count($res) == 0))
+            if((OzonShop::where('ozon_id', '=', $off['id'])->count() > 0))
             {
-                $arr[] = OzonShop::create([
+                OzonShop::where('ozon_id', '=', $off['id'])
+                    ->update([
+                        'ozon_id'=>$off['id'],
+                        'url_chpu'=>StatGetOzon::chpuGenerator($off['name']),
+                        'like_count'=>0,
+                    ]);
+                $arr[] = ['Update at OzonShop' => $off['id']];
+            }else{
+                OzonShop::create([
                     'ozon_id'=>$off['id'],
                     'url_chpu'=>StatGetOzon::chpuGenerator($off['name']),
                     'like_count'=>0,
                 ]);
-            }else{
-                $arr[] = 'такой id уже есть: '. $off['id'];
+                $arr[] = ['Create at OzonShop' => $off['id']];
             }
         }
         return $arr;
+    }
+
+    protected function createPrice()
+    {
+        $data = '{
+        "filter": {
+        "visibility": "IN_SALE"
+        },
+        "limit": 1000,
+        "last_id": "",
+        "sort_dir": "DESC"
+        }';
+        $method = '/v3/products/info/attributes';
+
+        $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
+
+        $arr = [];
+        foreach ($arrOzonItems['result'] as $off){
+
+            if((StatusPriceShopItems::where('ozon_id', '=', $off['id'])->count() > 0))
+            {
+                $price = $this->GetPrice($off['id'])[0];
+                StatusPriceShopItems::where('ozon_id', '=', $off['id'])->
+                update([
+                    'ozon_id'=>$off['id'],
+                    'status'=>'update',
+                    'price'=>$price['price']['old_price'],
+                    'action_price'=>$price['price']['marketing_price'],
+                    'fbs'=>0,
+                    'fbo'=>0,
+                ]);
+                $arr[] = ['Update at Price' => $off['id']];
+            }else{
+                $price = $this->GetPrice($off['id'])[0];
+                StatusPriceShopItems::create([
+                    'ozon_id'=>$off['id'],
+                    'status'=>'create',
+                    'price'=>$price['price']['old_price'],
+                    'action_price'=>$price['price']['price'],
+                    'fbs'=>0,
+                    'fbo'=>0,
+                ]);
+
+                $arr[] = ['Create at Price' => $off['id']];
+            }
+        }
+        return $arr;
+    }
+    protected function GetPrice($product_id)
+    {
+        $data = '{
+            "filter": {
+
+            "product_id": [
+                "'.$product_id.'"
+            ],
+            "visibility": "ALL"
+            },
+            "last_id": "",
+            "limit": 100
+        }';
+        $method = '/v4/product/info/prices';
+
+        $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
+
+        return $arrOzonItems['result']['items'];
     }
 }

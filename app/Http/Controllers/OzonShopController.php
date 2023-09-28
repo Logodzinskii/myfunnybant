@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\ClickOzonLink;
+use App\Http\Controllers\StatGetOzon;
 use App\Models\Offers;
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ozonController;
-use App\Http\Controllers\StatGetOzon;
 
 class OzonShopController extends Controller
 {
