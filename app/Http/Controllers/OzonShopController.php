@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\ClickOzonLink;
+use App\Events\UserSearch;
 use App\Http\Controllers\StatGetOzon;
+use App\Listeners\UserSearchListener;
 use App\Models\Offers;
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
@@ -72,6 +74,10 @@ class OzonShopController extends Controller
         $request->validate([
             'funnel' => 'required|max:150',
         ]);
+
+        UserSearch::dispatch($request->get('funnel'));
+
         return view('main.index', ['data'=>[OzonShopItem::search($request->get('funnel'))->get()]]);
+
     }
 }
