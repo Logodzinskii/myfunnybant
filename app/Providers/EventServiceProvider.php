@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\ClickOzonLink;
 use App\Listeners\AddToDBVisitWebInformation;
 use App\Listeners\SendInformationOnClick;
+use App\Listeners\UserSearchListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,6 +25,7 @@ class EventServiceProvider extends ServiceProvider
         ClickOzonLink::class=>[
             //AddToDBVisitWebInformation::class,
             SendInformationOnClick::class,
+            UserSearchListener::class,
         ]
     ];
 
