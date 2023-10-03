@@ -75,7 +75,7 @@ class OzonShopController extends Controller
             'funnel' => 'required|max:150',
         ]);
 
-        UserSearch::dispatch($request->get('funnel'));
+        ClickOzonLink::dispatch($request->get('funnel'));
 
         return view('main.index', ['data'=>[OzonShopItem::search($request->get('funnel'))->get()]]);
 

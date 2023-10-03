@@ -25,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
         ClickOzonLink::class=>[
             //AddToDBVisitWebInformation::class,
             SendInformationOnClick::class,
-            UserSearchListener::class,
+            //UserSearchListener::class,
         ]
     ];
 

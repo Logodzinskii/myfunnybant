@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActionOzonController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OzonShopController;
@@ -71,3 +72,13 @@ Route::middleware(['auth','isAdmin'])->group(function() {
  */
 
 Route::get('parse',[ConcurentParserController::class, 'getUrl']);
+
+/**
+ * Cart
+ */
+
+Route::post('user/add/cart', [CartController::class, 'pushToCart'])->name('add.cart');
+Route::post('/user/update/quantity', [CartController::class, 'updateCart'])->middleware('auth');
+Route::post('/user/delete/cart', [CartController::class, 'deleteCart'])->middleware('auth');
+Route::post('/user/cart/total',[CartController::class, 'getCountCartItem']);
+Route::get('user/view/cart', [CartController::class, 'indexCart'])->middleware('auth');

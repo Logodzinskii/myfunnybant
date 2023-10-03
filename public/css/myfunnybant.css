@@ -100,8 +100,9 @@ img{
 
 }
 .price{
-    color: mediumvioletred;
+    color: #6f42c1;
 }
 .action-price{
-    color: #6f42c1;
+
+    color: mediumvioletred;
 }
