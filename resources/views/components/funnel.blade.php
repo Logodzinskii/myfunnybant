@@ -7,8 +7,8 @@
         <i class="bi-search"></i></button>
             <a href="{{url('user/view/cart')}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white" style="width:200px;font-size: 1.2em">
                 <i class="bi-cart4"></i>
-                <span id="total"></span> шт.
-                <span id="totalSum"></span>Р.
+                <span class="total"></span> шт.
+                <span class="totalSum"></span>Р.
             </a>
         </form>
         @foreach($errors->all() as $error)

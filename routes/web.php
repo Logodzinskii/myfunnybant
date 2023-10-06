@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ActionOzonController;
+use App\Http\Controllers\Admin\SaleItemsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
+use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -58,12 +60,17 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth','isAdmin'])->group(function() {
-    Route::get('/admin/show/all/items/', [\App\Http\Controllers\Admin\SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
-    Route::get('/admin/total/year/',[\App\Http\Controllers\Admin\SaleItemsController::class,'index'])->middleware('auth');
-    Route::get('/admin/sale/date/',[\App\Http\Controllers\Admin\SaleItemsController::class,'showDateBetween'])->middleware('auth');
-    Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
-    Route::get('/admin/maxlike',[\App\Http\Controllers\Admin\SaleItemsController::class, 'maxLike']);
+    Route::get('/admin/show/all/items/', [SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
+    Route::get('/admin/total/year/',[SaleItemsController::class,'index'])->middleware('auth');
+    Route::get('/admin/sale/date/',[SaleItemsController::class,'showDateBetween'])->middleware('auth');
+    Route::post('/admin/sale/sum/datebetween',[SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
+    Route::get('/admin/maxlike',[SaleItemsController::class, 'maxLike']);
     Route::get('/admin/createShop/', [CreateShopController::class, 'createShop']);
+
+    /**
+     * Работа с заказами
+     */
+    Route::get('/admin/view/offers',[OfferUserController::class,'index']);
 });
 
 /**
@@ -77,8 +84,16 @@ Route::get('parse',[ConcurentParserController::class, 'getUrl']);
  * Cart
  */
 
-Route::post('user/add/cart', [CartController::class, 'pushToCart'])->name('add.cart');
-Route::post('/user/update/quantity', [CartController::class, 'updateCart'])->middleware('auth');
-Route::post('/user/delete/cart', [CartController::class, 'deleteCart'])->middleware('auth');
+Route::post('user/add/cart', [CartController::class, 'pushToCart'])
+    ->name('add.cart');
+Route::post('/user/update/quantity', [CartController::class, 'updateCart'])
+    ->middleware('auth');
+Route::post('/user/delete/cart', [CartController::class, 'deleteCart'])
+    ->middleware('auth');
 Route::post('/user/cart/total',[CartController::class, 'getCountCartItem']);
-Route::get('user/view/cart', [CartController::class, 'indexCart'])->middleware('auth');
+Route::get('user/view/cart', [CartController::class, 'indexCart'])
+    ->middleware('auth');
+Route::post('/user/create/offer', [\App\Http\Controllers\UserCartController::class, 'createOffer'])
+    ->name('user.create.offer')
+    ->middleware('auth');
+Route::get('/user/send/mailtest', [\App\Http\Controllers\UserCartController::class,'sendMailTest']);

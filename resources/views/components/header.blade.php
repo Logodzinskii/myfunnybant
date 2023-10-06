@@ -92,12 +92,12 @@
                     id: 0
                 },
                 function (data) {
-                    $('#total').text(data[1] + ' шт. на ' + data[0] + 'Р');
+                    $('.total').text(data[1] + ' шт. на ' + data[0] + 'Р');
 
                     $('body').css('cursor', 'default');
 
-                    var roundLogEl = document.querySelector('#total');
-                    var roundLogElSum = document.querySelector('#totalSum');
+                    var roundLogEl = document.querySelector('.total');
+                    var roundLogElSum = document.querySelector('.totalSum');
                     anime({
                         targets: roundLogEl,
                         innerHTML: [0, data[1]],
