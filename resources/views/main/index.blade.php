@@ -3,22 +3,61 @@
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function (){
+            $(".eli").on('mouseover',function (){
+                let el = $(this);
+                let animation = anime({
+                    targets: [this],
+                    translateY: 5,
+                    delay: anime.stagger(70) // increase delay by 100ms for each elements.
+                });
+                var animateBackground = anime({
+                    targets: [this],
+                    backgroundColor: '#6610f2'
+                });
+            })
+            $(".eli").on('mouseout',function (){
+                let el = $(this);
+                let animation = anime({
+                    targets: [this],
+                    translateY: 0,
+                    delay: anime.stagger(100) // increase delay by 100ms for each elements.
+                });
+                var animateBackground = anime({
+                    targets: [this],
+                    backgroundColor: '#fff'
+                });
+            })
+            const height = $(window).height();
+            anime({
+                targets: '.down',
+                translateY: height-50,
+                delay: anime.stagger(1000, {start: 3000}) // increase delay by 100ms for each elements.
+            });
+            anime({
+                targets: '.down',
+                delay: 6000,
+                backgroundColor: '#6610f2',
+                color: '#fff',
+                border: '#fff',
+            });
 
         })
     </script>
-<section class="col-lg-12">
+<section class="col-lg-12 ">
+    <div class="position-fixed btn btn-outline-primary top-0 down" style="z-index: 999; "><i class="bi-send"></i></div>
+    <div class="position-fixed btn btn-outline-primary down" style="z-index: 999; top: -50px;"><i class="bi-envelope"></i></div>
     @foreach($data as $key=>$items)
-        <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3">
+        <div class="container  ">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3 basic-staggering-demo">
                 @foreach($items as $item)
-                    <div class="col" id="{{$key}}">
-                        <div class="card overflow-hidden" >
+                    <div class="col " id="{{$key}}">
+                        <div class="card overflow-hidden eli" >
                             <div class="card-body side d-flex justify-content-center overflow-hidden flex-wrap" style="min-height: 50vh">
                                 <div class="border-0 position-relative" style="min-height: 100px; width: 100%">
                                     <div class="position-absolute top-0" style="width: 100%; min-height: 60px; background-color: rgba(244, 232, 250, 0.7)">
-                                        <h5 class="text-center" >{{$item->name}}</h5>
+                                        <h5 class="text-center mainh" >{{$item->name}}</h5>
                                     </div>
-                                    <div class="p-0 m-0 ">
+                                    <div class="p-0 m-0 " style="min-height: 500px">
                                         <img src="{{json_decode($item->images, true)[0]['file_name']}}" alt="{{$item['name']}}">
                                     </div>
                                     <div class="position-absolute bottom-0 end-0">

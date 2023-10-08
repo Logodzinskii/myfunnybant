@@ -51,7 +51,7 @@ class ActionOzonController extends Controller
                 ];
             }
         }
-        //return $res;
+
         return view('main.actions', ['data'=>$res]);
     }
 }

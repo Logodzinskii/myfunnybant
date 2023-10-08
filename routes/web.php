@@ -97,3 +97,7 @@ Route::post('/user/create/offer', [\App\Http\Controllers\UserCartController::cla
     ->name('user.create.offer')
     ->middleware('auth');
 Route::get('/user/send/mailtest', [\App\Http\Controllers\UserCartController::class,'sendMailTest']);
+/**
+ * Просмотр товаров в корзине
+ */
+Route::get('/user/get/cart',[OfferUserController::class,'index'])->middleware('auth');
