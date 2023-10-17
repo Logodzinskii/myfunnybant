@@ -98,7 +98,6 @@ Route::controller(CartController::class)->group(function(){
     Route::post('/user/delete/cart', 'deleteCart');
     Route::post('/user/cart/total','getCountCartItem');
     Route::get('user/view/cart', 'indexCart');
-
 });
 
 Route::get('/security/',[CartController::class,'confirmLink']);

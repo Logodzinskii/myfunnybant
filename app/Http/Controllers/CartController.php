@@ -11,21 +11,30 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    protected string $user;
+    public $user;
 
     public function __construct()
     {
+
+    }
+
+    protected function getUser()
+    {
         if(Auth::check()) {
-            $user = Auth::user();
+            $sessId = Auth::user();
         }else{
-            $user = session()->getId();
+            if(session()->has('user')){
+                $sessId = session()->get('user');
+            }else{
+                $sessId = session(['user'=>session()->getId()]);
+            }
         }
-        $this->user = $user;
+        return $sessId;
     }
 
     public function pushToCart(Request $request)
     {
-            $userId = $this->user;
+            $userId = $this->getUser();
             $product = OzonShopItem::where('ozon_id', '=', $request->ozon_id)->firstOrFail();
 
             \Cart::session($userId)->add([
@@ -43,7 +52,7 @@ class CartController extends Controller
     public function indexCart()
     {
 
-        \Cart::session($this->user);
+        \Cart::session($this->getUser());
         $items = \Cart::getContent();
 
         return view('main.cart', ['cart'=>$items]);
@@ -51,7 +60,7 @@ class CartController extends Controller
 
     public function getCountCartItem()
     {
-        $userId = $this->user;
+        $userId = $this->getUser();
         $total = \Cart::session($userId)->getSubTotal();
         $totalQuantity = \Cart::session($userId)->getTotalQuantity();
 
@@ -62,7 +71,7 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
 
-        $userId = Auth::user();
+        $userId = $this->getUser();
         \Cart::session($userId)->update($request->id,
             [
                 'quantity' => $request->quantity,
@@ -73,7 +82,7 @@ class CartController extends Controller
 
     public function deleteCart(Request $request)
     {
-        $userId = Auth::user();
+        $userId = $this->getUser();
         \Cart::session($userId)->remove($request->id);
 
         return $request->id;
@@ -82,16 +91,15 @@ class CartController extends Controller
     public function confirmLink(Request $request)
     {
 
-            $hash = $request->link;
-            $res = UserCart::where('status_offer', '=', $hash)->get();
-            if(count($res)===0){
-                return 'denied';
-            }else{
-                UserCart::where('status_offer', '=', $hash)
-                    ->update(['status_offer'=>'awaiting payment']);
-                return redirect('/user/get/cart');
-            }
-
+        $hash = $request->link;
+        $res = UserCart::where('status_offer', '=', $hash)->get();
+        if(count($res)===0){
+            return 'denied';
+        }else{
+            UserCart::where('status_offer', '=', $hash)
+                ->update(['status_offer'=>'awaiting payment']);
+            return redirect('/user/get/cart');
+        }
 
     }
 
