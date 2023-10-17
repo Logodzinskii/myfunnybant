@@ -56,7 +56,7 @@
         </div>
         <div class="col-12">
             <i class="bi-bag-heart p-3" style="color: #6610f2; font-size: 2em"></i>
-            <span class="badge text-bg-secondary position-absolute rounded-circle">
+            <span class="badge text-bg-secondary position-absolute rounded-circle count-offer">
                 0
             </span>
         </div>

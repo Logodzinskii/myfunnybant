@@ -92,8 +92,8 @@
                     id: 0
                 },
                 function (data) {
-                    $('.total').text(data[1] + ' шт. на ' + data[0] + 'Р');
-
+                    $('.total').text(data[1] + ' шт.');
+                    $('.totalSum').text(data[0] + 'Р')
                     $('body').css('cursor', 'default');
 
                     var roundLogEl = document.querySelector('.total');

@@ -7,6 +7,7 @@ use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
+use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
@@ -58,46 +59,57 @@ Route::get('/actions/', [ActionOzonController::class, 'getItemsInActions']);
  */
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth','isAdmin'])->group(function() {
-    Route::get('/admin/show/all/items/', [SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
-    Route::get('/admin/total/year/',[SaleItemsController::class,'index'])->middleware('auth');
-    Route::get('/admin/sale/date/',[SaleItemsController::class,'showDateBetween'])->middleware('auth');
-    Route::post('/admin/sale/sum/datebetween',[SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
-    Route::get('/admin/maxlike',[SaleItemsController::class, 'maxLike']);
-    Route::get('/admin/createShop/', [CreateShopController::class, 'createShop']);
+    /**
+     * Маршруты для управления продажами с ярмарок администратором
+     */
+    Route::controller(SaleItemsController::class)->group(function(){
+        Route::get('/admin/show/all/items/',  'showAllSaleItems');
+        Route::get('/admin/total/year/','index');
+        Route::get('/admin/sale/date/','showDateBetween');
+        Route::post('/admin/sale/sum/datebetween','sumDateBetween')
+            ->name('sum.date.between');
+
+    })->middleware('auth');
+    /**
+     * Маршруты для управления онлайн магазином администратором
+     */
+    Route::controller(CreateShopController::class)->group(function(){
+        Route::get('/admin/maxlike', 'maxLike');
+        Route::get('/admin/createShop/', 'createShop');
+    });
 
     /**
-     * Работа с заказами
+     * Работа с заказами пользователей
      */
     Route::get('/admin/view/offers',[OfferUserController::class,'index']);
 });
 
-/**
- * Парсер
- *
- */
-
-Route::get('parse',[ConcurentParserController::class, 'getUrl']);
 
 /**
- * Cart
+ * Маршруты для работы с корзиной пользователем
  */
+Route::controller(CartController::class)->group(function(){
+    Route::post('user/add/cart','pushToCart')
+        ->name('add.cart');
+    Route::post('/user/update/quantity', 'updateCart');
+    Route::post('/user/delete/cart', 'deleteCart');
+    Route::post('/user/cart/total','getCountCartItem');
+    Route::get('user/view/cart', 'indexCart');
 
-Route::post('user/add/cart', [CartController::class, 'pushToCart'])
-    ->name('add.cart');
-Route::post('/user/update/quantity', [CartController::class, 'updateCart'])
-    ->middleware('auth');
-Route::post('/user/delete/cart', [CartController::class, 'deleteCart'])
-    ->middleware('auth');
-Route::post('/user/cart/total',[CartController::class, 'getCountCartItem']);
-Route::get('user/view/cart', [CartController::class, 'indexCart'])
-    ->middleware('auth');
-Route::post('/user/create/offer', [\App\Http\Controllers\UserCartController::class, 'createOffer'])
-    ->name('user.create.offer')
-    ->middleware('auth');
-Route::get('/user/send/mailtest', [\App\Http\Controllers\UserCartController::class,'sendMailTest']);
+});
+
+Route::get('/security/',[CartController::class,'confirmLink']);
 /**
- * Просмотр товаров в корзине
+ * Маршруты для работы с заказами пользователем
  */
-Route::get('/user/get/cart',[OfferUserController::class,'index'])->middleware('auth');
+Route::controller(UserCartController::class)->group(function(){
+    Route::post('/user/create/offer', 'createOffer')
+        ->name('user.create.offer');
+    Route::get('/user/send/mailtest', 'sendMailTest');
+    Route::get('/user/get/cart','index');
+    Route::post('/user/delete/offer','deleteOffer');
+    Route::get('/home','index');
+})->middleware('auth');
