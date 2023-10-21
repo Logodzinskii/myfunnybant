@@ -44,7 +44,8 @@
         <div class="col-12">
             <i class="bi-percent p-3" style="color: #6610f2; font-size: 2em"></i>
             <span class="badge text-bg-secondary position-absolute rounded-circle">
-                {{session()->has('1')?  session()->all()['1'] : '0'}}
+
+                {{session()->has('user_information')?  '1' : '0'}}
             </span>
         </div>
     </div>

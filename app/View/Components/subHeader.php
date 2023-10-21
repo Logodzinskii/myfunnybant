@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use GuzzleHttp\Psr7\Request;
 use Illuminate\View\Component;
 
 class subHeader extends Component
@@ -13,7 +14,7 @@ class subHeader extends Component
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

@@ -33,8 +33,8 @@ class CartReportUser
         $mail = new PHPMailer(true);
 
         try {
-            $userEmail = Auth::user()->email;
-            $userName  = Auth::user()->name;
+            $userEmail = $event->email;
+            $userName  = $event->name;
             //Server settings
             $mail->SMTPDebug = 0;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP

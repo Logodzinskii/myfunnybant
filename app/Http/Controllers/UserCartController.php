@@ -47,13 +47,16 @@ class UserCartController extends Controller
         }catch (ValidationException $e){
            die($e->getMessage());
         }
-
-        return '3';
         /**
-         * Проверим, создан ли уже заказ
+         * 1. Создаем пользователя.
+         * 2. Создаем заказ пользователя
+         * 3. Информацию с секретной ссылкой для подтверждения заказа высылаем на почту
+         * 4. ждем 2 дня перехода по ссылке пользователя
+         * 5. если подтвердил, то связываемся с покупателем утоняем заказ
+         * 6. отправляем реквизиты для оплаты (админка менеджера сайта)
          */
-
-        $offer = OfferUser::create([
+        return $request->session()->all();
+        /*$offer = OfferUser::create([
             'offer_id'=>uniqid(),
             'user_id'=>User::where('email', '=', Auth::user()->email)->firstOrFail()->id,
         ]);
@@ -70,7 +73,7 @@ class UserCartController extends Controller
                 'quantity' => $lid['quantity'],
                 'price' => $lid['price'],
                 'total_price' => $lid['quantity'] * $lid['price'],
-                'cdek_id' => '1',
+                'cdek_id' => $request->input('input_CDEK_id'),
                 'cdek_info' => $request->input('input_delivery_city') . ' ' .$request->input('input_delivery_adress_cdek'),
                 'delivery_price' => $request->input('input_delivery_price'),
                 'offer_id' => $offer_id,
@@ -102,13 +105,14 @@ class UserCartController extends Controller
 Проверьте правильность указанной информации о заказе. Если у Вас возникнут вопросы, свяжитесь с нашей службой поддержки по телефону #SUPPORT_PHONE# или по электронной почте #SUPPORT_EMAIL#.
 Посетите наш пункт выдачи заказов (ПВЗ) или курьерскую службу, указанную при оформлении заказа. Вам потребуется предъявить документ, удостоверяющий личность, и назвать номер Вашего заказа.
     После проверки Ваших документов сотрудник ПВЗ или курьер предоставит Вам Ваш заказ. Проверьте комплектацию и качество товаров, а также наличие всех необходимых документов (гарантийные талоны, инструкции и т.д.).
-При отсутствии претензий к качеству и комплектации товара, подпишите документы, подтверждающие получение заказа.</p>'*/
+При отсутствии претензий к качеству и комплектации товара, подпишите документы, подтверждающие получение заказа.</p>'
         CartConfirmEvent::dispatch($message.$link);
 
         $res = UserCart::where('user_id', '=', Auth::user()->id)->sum('quantity');
 
         return $res;
-        //return view('main.offer', ['result'=>$message.$confirm]);
+        //return view('main.offer', ['result'=>$message.$confirm]);*/
+
     }
 
     public function deleteOffer(Request $request)

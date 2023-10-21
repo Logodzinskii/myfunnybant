@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-<section class="container">
+<section class="container basket">
     <h1>Мои заказы</h1>
-    <div class="container d-flex flex-wrap">
+    <div class="container d-flex flex-wrap ">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-md-2 g-2">
             <div class="col">
                 <table class="table">
@@ -91,10 +91,10 @@
                     $('.delivery-city').html(arr[7]);
                     $('.delivery-adress-cdek').html(arr[1]['Address']);
                     $('.delivery-price').html(' Стоимость доставки ' +arr[6] + 'руб. доставка оплачивается в пункте выдачи СДЭК');
+                    $('.totalDelivery').html(arr[6]);
                     $('input[name=input_delivery_city]').val(arr[7]);
                     $('input[name=input_delivery_adress_cdek]').val(arr[1]['Address']);
                     $('input[name=input_delivery_price]').val(arr[6]);
-                    $('.totalDelivery').text(arr[6]);
                     $('input[name=input_CDEK_id]').val(arr[0]);
                     $('#message-delivery-denied').css('display','none');
                     $('#message-delivery-allow').removeClass('.disabled');
@@ -116,9 +116,11 @@
                     data: $(this).serialize(),
                     success: function( data ) {
                         $('.myerror').html('');
-                        $('.count-offer').html(data);
+                        //$('.count-offer').html(data);
                         console.log(data);
                         $('body').css('cursor','default');
+                        $('.modal').hide();
+                        $('.basket').html(data);
                     },
                     error: function (exception){
                         $('.myerror').html('');
@@ -128,8 +130,6 @@
                             $('.myerror').append('<span class="p-2 m-1 bg-warning h-4 rounded-3 shadow">'+ key + ': ' + value +'</span>');
                             $('body').css('cursor','default');
                         });
-                        //$('.myerror').html(exception['responseText'])
-                        //console.log(exception['responseText']);
                     }
                 });
                 e.preventDefault()
@@ -249,11 +249,15 @@
                     </div>
                     <div class="shadow p-2">
                         <form  method="post" name="offerForm">
+                           {{session()->exists('7qwRnvZ64KdxTJfZdz9rFF4tQb9BDXgUisJok7Nw_cart_items')?'1':'0'}}
+
                         <h2>Информация о получателе заказа</h2>
                         <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" required/></h3>
                         <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" required></h3>
                         <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" required></h3>
-
+                            @if (session('error'))
+                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @endif
                             <span class="myerror d-flex flex-wrap">
 
                             </span>
@@ -264,19 +268,6 @@
                             <input name="input_delivery_adress_cdek" type="hidden" value="" />
                             <input name="input_delivery_price" type="hidden" value="" />
                             <input name="input_CDEK_id" type="hidden" value="" />
-                            @php
-                                $arrOzonId = [];
-                                foreach ($cart as $lid){
-                                           $arrOzonId[] = [
-                                               'ozon_id'=>$lid->associatedModel['ozon_id'],
-                                               'quantity'=>$lid->quantity,
-                                               'price'=>$lid->price,
-                                               'total_price'=>$lid->quantity * $lid->price
-                                               ];
-
-                                }
-                            @endphp
-                            <input name="ozon_id" type="hidden" value="{{json_encode($arrOzonId)}}" />
                             <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Купить</button>
                         </form>
                     </div>

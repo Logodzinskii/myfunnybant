@@ -11,6 +11,7 @@ use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,6 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/sale/date/','showDateBetween');
         Route::post('/admin/sale/sum/datebetween','sumDateBetween')
             ->name('sum.date.between');
-
     })->middleware('auth');
     /**
      * Маршруты для управления онлайн магазином администратором
@@ -84,9 +84,8 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     /**
      * Работа с заказами пользователей
      */
-    Route::get('/admin/view/offers',[OfferUserController::class,'index']);
+    Route::get('/admin/view/offers',[AdminUserController::class,'index']);
 });
-
 
 /**
  * Маршруты для работы с корзиной пользователем
@@ -98,6 +97,13 @@ Route::controller(CartController::class)->group(function(){
     Route::post('/user/delete/cart', 'deleteCart');
     Route::post('/user/cart/total','getCountCartItem');
     Route::get('user/view/cart', 'indexCart');
+    Route::post('/user/create/offer', 'createOffer')
+        ->name('user.create.offer');
+    Route::get('/user/get/cart','index');
+    Route::get('/user/confirm', function (){
+        return view('user.confirm');
+    });
+    Route::post('/user/confirm/code', 'codeConfirm');
 });
 
 Route::get('/security/',[CartController::class,'confirmLink']);
@@ -105,10 +111,14 @@ Route::get('/security/',[CartController::class,'confirmLink']);
  * Маршруты для работы с заказами пользователем
  */
 Route::controller(UserCartController::class)->group(function(){
-    Route::post('/user/create/offer', 'createOffer')
-        ->name('user.create.offer');
+
     Route::get('/user/send/mailtest', 'sendMailTest');
-    Route::get('/user/get/cart','index');
+
     Route::post('/user/delete/offer','deleteOffer');
     Route::get('/home','index');
 })->middleware('auth');
+
+/**
+ * Маршруты счетчиков
+ */
+Route::get('/counter/',[CartController::class, 'counter'])->name('counter');

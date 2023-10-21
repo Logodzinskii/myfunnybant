@@ -12,7 +12,7 @@
                 });
                 var animateBackground = anime({
                     targets: [this],
-                    backgroundColor: '#6610f2'
+                    backgroundColor: 'grey'
                 });
             })
             $(".eli").on('mouseout',function (){
@@ -36,7 +36,7 @@
             anime({
                 targets: '.down',
                 delay: 6000,
-                backgroundColor: '#6610f2',
+                backgroundColor: 'grey',
                 color: '#fff',
                 border: '#fff',
             });

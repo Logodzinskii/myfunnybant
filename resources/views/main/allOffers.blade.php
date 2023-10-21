@@ -16,7 +16,9 @@
         })
     </script>
     <div class="container">
-
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
         @foreach($carts as $cart)
             @if(count(\App\Models\UserCart::where('offer_id','=',$cart->id)->groupBy('offer_id')->get())==0)
                 заказов нет
@@ -24,12 +26,12 @@
                 <div class="card ">
                     <ul class="card-header list-unstyled">
                         <li class="h4" style="color: #6610f2"><i class="bi-basket3"></i>Номер заказа: {{$cart->id}}</li>
-                        <li class="h4">Имя заказчика: {{\App\Models\User::where('id','=', $cart->user_id)->firstOrFail()->name}}</li>
-                        <li class="h4">Email: <a href="mailto:'{{\App\Models\User::where('id','=', $cart->user_id)->firstOrFail()->email}}'">{{\App\Models\User::where('id','=', $cart->user_id)->firstOrFail()->email}}</a></li>
-                        <li class="h4">Tel: </li>
-
-                        <li class="h4">Статус заказа: <b style="color: mediumvioletred">{{\App\Models\UserCart::where('offer_id','=',$cart->id)->groupBy('offer_id')->get()[0]->status_offer}}</b> <i style="color: #6610f2" class="bi-caret-down-square"></i> </li>
-
+                        <li class="h4">Имя заказчика: {{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->name}}</li>
+                        <li class="h4">Email: <a href="mailto:'{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}'">{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}</a></li>
+                        <li class="h4">Tel: {{$cart->tel}}</li>
+                        <li class="h4">Статус заказа: <b style="color: mediumvioletred">{{\App\Models\UserCart::where('offer_id','=',$cart->id)->groupBy('offer_id')->get()[0]->status_offer}}</b>
+                            <i style="color: #6610f2" class="bi-caret-down-square"></i>
+                        </li>
                     </ul>
                     <div class="m-1 container row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-md-2 g-2">
                         @foreach(\App\Models\UserCart::where('offer_id','=', $cart->id)->get() as $offer)
@@ -133,11 +135,11 @@
 
                 <!--<button type="button" class="btn text-light" style="background-color: #6610f2">
                     Удалить заказ <i class="bi-trash3 p-3 delete-cart" style="color: #ffffff; font-size: 2em;"></i>
-                </button>-->
+                </button>
                 <button type="button" class="btn text-light mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color: #6610f2">
                     Оплатить заказ <i class="bi-credit-card p-3" style="color: #ffffff; font-size: 2em"></i>
                     {{$totalSum}}
-                </button>
+                </button>-->
             </div>
     </div>
 @endsection

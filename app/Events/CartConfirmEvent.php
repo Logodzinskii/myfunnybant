@@ -14,15 +14,17 @@ class CartConfirmEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $message, $email, $name;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $email, $name)
     {
         $this->message = $message;
+        $this->email = $email;
+        $this->name = $name;
     }
 
     /**

@@ -1,6 +1,13 @@
 <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '/counter/',
+            success: function(res, status, xhr) {
+                $('.count-offer').text(res);
+            }
+        });
         $.post('/user/cart/total',
             {
                 "_token": $('meta[name="csrf-token"]').attr('content'),
@@ -128,6 +135,7 @@
                     let priceItem = $('body').find(`[data-price-item='` + idd + `']`).text();
                     $('body').find(`[data-idres='` + idd + `']`).text(data);
                     $('body').find(`[data-price='` + idd + `']`).text(data * parseInt(priceItem));
+                    $('input[name=newozon]').val(data);
                     total();
                 });
         }
@@ -174,6 +182,11 @@
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ms-auto">
+                @if(isset(Auth::user()->role) &&  Auth::user()->role === 1)
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/show/all/items/">Управление сайтом</a>
+                    </li>
+                @endif
                 <!-- Authentication Links -->
                 @guest
                     @if (Route::has('login'))
