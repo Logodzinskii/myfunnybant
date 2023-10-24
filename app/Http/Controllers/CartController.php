@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserCreateOffer;
 use App\Models\OfferUser;
 use App\Models\OzonShopItem;
 use App\Models\StatusPriceShopItems;
@@ -154,7 +155,7 @@ class CartController extends Controller
                         С уважением, Команда myfunnybant.ru</p>';
             CartConfirmEvent::dispatch($message, $email, $name);
 
-            return redirect('/user/get/cart');
+            return redirect('/user/confirm/');
         }
 
     }
@@ -200,7 +201,7 @@ class CartController extends Controller
         $email = $request->input('email');
         $name = $request->input('first_name');
         $tel = $request->input('tel');
-        $status = 'false';
+        $status = 'новый';
         $confirm = password_hash($email, PASSWORD_DEFAULT);
 
             $offer = OfferUser::create([
@@ -246,9 +247,6 @@ class CartController extends Controller
             $lidAdd->save();
         }
 
-        \Cart::session($session_user);
-        \Cart::session($session_user)->clear();
-
         $message = '<h1 style="color: #6f42c1"><b>Здравствуйте, '.$name.'!</b></h1>';
         $message .= '<p>Мы рады сообщить Вам о том, что Ваш заказ, успешно оформлен.</p>';
         $message .= '<p>Ниже приведены детали Вашего заказа:</p>';
@@ -263,13 +261,17 @@ class CartController extends Controller
         $confirm .= '<p>Зайдите в вашу электронную почту и перейдите по ссылке для подтверждения заказа и дальнейшей оплаты.</p>';
         $link = '<h2>Перейдите по ссылке для подтверждения заказа</h2>';
         $link .= 'https://myfunnybant/security/?link='.$hash;
-
-        //CartConfirmEvent::dispatch($message.$link, $email, $name);
-
+        $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. '';
+        CartConfirmEvent::dispatch($message.$link, $email, $name);
+        UserCreateOffer::dispatch($adminMessage);
         $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
-        return '<a href="/user/confirm/" class="btn btn-primary">На страницу подтверждения заказа</a>';
-        //return redirect('/user/confirm')->with('email',$email);
+        \Cart::session($session_user);
+        \Cart::session($session_user)->clear();
+
+        return response()->json([
+            'success'=>true,
+        ]);
 
     }
 

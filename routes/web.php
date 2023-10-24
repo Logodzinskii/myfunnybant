@@ -72,6 +72,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/sale/date/','showDateBetween');
         Route::post('/admin/sale/sum/datebetween','sumDateBetween')
             ->name('sum.date.between');
+
     })->middleware('auth');
     /**
      * Маршруты для управления онлайн магазином администратором
@@ -84,7 +85,10 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     /**
      * Работа с заказами пользователей
      */
-    Route::get('/admin/view/offers',[AdminUserController::class,'index']);
+    Route::get('/admin/view/offers/',[AdminUserController::class,'index']);
+    Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
+    Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
+    Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
 });
 
 /**

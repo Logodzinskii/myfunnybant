@@ -29,7 +29,7 @@
                         <li class="h4">Имя заказчика: {{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->name}}</li>
                         <li class="h4">Email: <a href="mailto:'{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}'">{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}</a></li>
                         <li class="h4">Tel: {{$cart->tel}}</li>
-                        <li class="h4">Статус заказа: <b style="color: mediumvioletred">{{\App\Models\UserCart::where('offer_id','=',$cart->id)->groupBy('offer_id')->get()[0]->status_offer}}</b>
+                        <li class="h4">Статус заказа: <b style="color: mediumvioletred">{{\App\Models\OfferUser::where('id','=',$cart->id)->get()[0]->status}}</b>
                             <i style="color: #6610f2" class="bi-caret-down-square"></i>
                         </li>
                     </ul>
@@ -41,8 +41,6 @@
                                 </div>
                                 <ul class="col-6 p-3 list-unstyled">
                                     <li class="h5">Номер позиции: {{$offer->id}}</li>
-                                    <li>User ID: {{$offer->user_id}}</li>
-                                    <li>Озон ID: {{$offer->ozon_id}}</li>
                                     <li class="h5">Количество: <b style="color: #6610f2">{{$offer->quantity}}</b></li>
                                     <li >Цена за единицу: {{$offer->price}}</li>
                                     <li class="h5">Итого: <b style="color: #6610f2">{{$offer->total_price}}</b></li>

@@ -2,6 +2,8 @@
 @section('content')
 <section class="container basket">
     <h1>Мои заказы</h1>
+    @if(count($cart)>0)
+
     <div class="container d-flex flex-wrap ">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-md-2 g-2">
             <div class="col">
@@ -115,12 +117,16 @@
                     type: "POST",
                     data: $(this).serialize(),
                     success: function( data ) {
-                        $('.myerror').html('');
-                        //$('.count-offer').html(data);
-                        console.log(data);
-                        $('body').css('cursor','default');
-                        $('.modal').hide();
-                        $('.basket').html(data);
+                        if(data.success === true){
+                            $('.myerror').html('');
+                            //$('.count-offer').html(data);
+                            console.log(data);
+                            $('body').css('cursor','default');
+                            $('.modal').hide();
+                            $('.basket').html(data);
+                            window.location.href = '{{url('/user/confirm/')}}';
+                        }
+
                     },
                     error: function (exception){
                         $('.myerror').html('');
@@ -279,5 +285,11 @@
             </div>
         </div>
     </div>
+    @else
+        <div>
+            <h2>Ваша корзина пуста</h2>
+            <a href="/">Перейти к покупкам</a>
+        </div>
+    @endif
 </div>
 @endsection
