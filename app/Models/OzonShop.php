@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class OzonShop extends Model
 {
+    /**
+     * Модель для подсчета количества лайков для товара
+     */
     use HasFactory;
 
     protected $fillable=[

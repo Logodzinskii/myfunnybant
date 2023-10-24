@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class saleitems extends Model
 {
+    /**
+     * Модель для внесения продаж менеджером магазина через телеграм
+     */
     use HasFactory;
 
     protected $fillable = [

@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\CartConfirmEvent;
 use App\Events\ClickOzonLink;
+use App\Events\UserCreateOffer;
 use App\Listeners\AddToDBVisitWebInformation;
+use App\Listeners\CartReportUser;
 use App\Listeners\SendInformationOnClick;
+use App\Listeners\UserCartListener;
 use App\Listeners\UserSearchListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -26,6 +30,12 @@ class EventServiceProvider extends ServiceProvider
             //AddToDBVisitWebInformation::class,
             SendInformationOnClick::class,
             UserSearchListener::class,
+        ],
+        CartConfirmEvent::class =>[
+            CartReportUser::class
+        ],
+        UserCreateOffer::class=>[
+            UserCartListener::class
         ]
     ];
 

@@ -136,46 +136,4 @@ class SaleItemsController extends Controller
             'allSales'=>$allSales,
         ]);
     }
-
-    public function maxLike()
-    {
-        $like = OzonShop::where('like_count', '>', 0)
-            ->orderBy('like_count', 'desc')
-            ->get();
-        $offers=[];
-        foreach ($like as $item)
-        {
-            $data = '{
-                "filter": {
-                    "product_id": [
-                        "'.$item->ozon_id.'"
-                    ],
-                    "visibility": "ALL"
-                },
-                "limit": 100,
-                "last_id": "okVsfA==«",
-                "sort_dir": "ASC"
-            }';
-            $method = '/v3/products/info/attributes';
-            $arrOzonItems = StatGetOzon::getOzonCurlHtml($data, $method);
-            $offers[] = new Offers([
-                'name'=>$arrOzonItems['result'][0]['name'],
-                'images'=>$arrOzonItems['result'][0]['images'],
-                //'attributes'=>$off['attributes'][0]['attribute_id'],
-                'attributes'=>[
-                    'id'=>$arrOzonItems['result'][0]['id'],
-                    'category'=> $arrOzonItems['result'][0]['category_id'],
-                    'type'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 8229),
-                    'header'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 4180),
-                    'description'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 4191),
-                    'colors'=>StatGetOzon::attributeFilter($arrOzonItems['result'][0]['attributes'], 10096),
-                    'like'=>$item['like_count'],
-                ],
-                'price'=>$item['like_count']
-            ]);
-        }
-
-        return view('admin.adminAllLike', ['data'=>[$offers]]);
-    }
-
 }

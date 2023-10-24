@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\ActionOzonController;
+use App\Http\Controllers\Admin\SaleItemsController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
+use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
+use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,19 +60,69 @@ Route::get('/actions/', [ActionOzonController::class, 'getItemsInActions']);
  */
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth','isAdmin'])->group(function() {
-    Route::get('/admin/show/all/items/', [\App\Http\Controllers\Admin\SaleItemsController::class, 'showAllSaleItems'])->middleware('auth');
-    Route::get('/admin/total/year/',[\App\Http\Controllers\Admin\SaleItemsController::class,'index'])->middleware('auth');
-    Route::get('/admin/sale/date/',[\App\Http\Controllers\Admin\SaleItemsController::class,'showDateBetween'])->middleware('auth');
-    Route::post('/admin/sale/sum/datebetween',[\App\Http\Controllers\Admin\SaleItemsController::class,'sumDateBetween'])->middleware('auth')->name('sum.date.between');
-    Route::get('/admin/maxlike',[\App\Http\Controllers\Admin\SaleItemsController::class, 'maxLike']);
-    Route::get('/admin/createShop/', [CreateShopController::class, 'createShop']);
+    /**
+     * Маршруты для управления продажами с ярмарок администратором
+     */
+    Route::controller(SaleItemsController::class)->group(function(){
+        Route::get('/admin/show/all/items/',  'showAllSaleItems');
+        Route::get('/admin/total/year/','index');
+        Route::get('/admin/sale/date/','showDateBetween');
+        Route::post('/admin/sale/sum/datebetween','sumDateBetween')
+            ->name('sum.date.between');
+
+    })->middleware('auth');
+    /**
+     * Маршруты для управления онлайн магазином администратором
+     */
+    Route::controller(CreateShopController::class)->group(function(){
+        Route::get('/admin/maxlike', 'maxLike');
+        Route::get('/admin/createShop/', 'createShop');
+    });
+
+    /**
+     * Работа с заказами пользователей
+     */
+    Route::get('/admin/view/offers/',[AdminUserController::class,'index']);
+    Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
+    Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
+    Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
 });
 
 /**
- * Парсер
- *
+ * Маршруты для работы с корзиной пользователем
  */
+Route::controller(CartController::class)->group(function(){
+    Route::post('user/add/cart','pushToCart')
+        ->name('add.cart');
+    Route::post('/user/update/quantity', 'updateCart');
+    Route::post('/user/delete/cart', 'deleteCart');
+    Route::post('/user/cart/total','getCountCartItem');
+    Route::get('user/view/cart', 'indexCart');
+    Route::post('/user/create/offer', 'createOffer')
+        ->name('user.create.offer');
+    Route::get('/user/get/cart','index');
+    Route::get('/user/confirm', function (){
+        return view('user.confirm');
+    });
+    Route::post('/user/confirm/code', 'codeConfirm');
+});
 
-Route::get('parse',[ConcurentParserController::class, 'getUrl']);
+Route::get('/security/',[CartController::class,'confirmLink']);
+/**
+ * Маршруты для работы с заказами пользователем
+ */
+Route::controller(UserCartController::class)->group(function(){
+
+    Route::get('/user/send/mailtest', 'sendMailTest');
+
+    Route::post('/user/delete/offer','deleteOffer');
+    Route::get('/home','index');
+})->middleware('auth');
+
+/**
+ * Маршруты счетчиков
+ */
+Route::get('/counter/',[CartController::class, 'counter'])->name('counter');

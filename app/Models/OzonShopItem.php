@@ -8,6 +8,9 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class OzonShopItem extends Model
 {
+    /**
+     * Модель для вывода информации о товаре на сайт
+     */
     use HasFactory;
     use SearchableTrait;
 

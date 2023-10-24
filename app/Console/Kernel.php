@@ -18,8 +18,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:VisitorCount')->hourly();
-        $schedule->command('app:ActionsOzon')->dailyAt('10:00');
+        //$schedule->command('app:VisitorCount')->everyMinute();
+        //$schedule->command('app:ActionsOzon')->dailyAt('10:00');
+        //$schedule->command('app:OzonChatList')->everySixHours();
+        //$schedule->command('app:analyticOzonReport')->hourly();
     }
 
     /**

@@ -5,10 +5,12 @@
             <input name="funnel" class="form-control me-2" type="search" placeholder="Напишите запрос. Например Розовый, или единорог, или зефирка" aria-label="Search" required>
             <button class="my-button btn btn-sm g-2 h-4 m-1 text-white" type="submit">
         <i class="bi-search"></i></button>
+            <a href="{{url('user/view/cart')}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white" style="width:200px;font-size: 1.2em">
+                <i class="bi-cart4"></i>
+                <span class="total"></span> шт.
+                <span class="totalSum"></span>Р.
+            </a>
         </form>
-        @error('funnel')
-        <div class="alert alert-danger">{{ $message }}</div>
-        @enderror
     </div>
 </div>
 

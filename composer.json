@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "4.2",
         "nicolaslopezj/searchable": "^1.13",
+        "phpmailer/phpmailer": "^6.8",
         "twbs/bootstrap": "5.0.1",
         "twbs/bootstrap-icons": "^1.10"
     },
