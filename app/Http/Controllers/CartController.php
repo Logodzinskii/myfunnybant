@@ -98,11 +98,18 @@ class CartController extends Controller
 
     public function getCountCartItem()
     {
-        $userId = $this->getUser();
-        $total = \Cart::session($userId)->getSubTotal();
-        $totalQuantity = \Cart::session($userId)->getTotalQuantity();
+        try{
 
-        return [$total,$totalQuantity];
+            $userId = $this->getUser();
+            $total = \Cart::session($userId)->getSubTotal();
+            $totalQuantity = \Cart::session($userId)->getTotalQuantity();
+
+            return [$total,$totalQuantity];
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
+
     }
 
 
@@ -167,6 +174,17 @@ class CartController extends Controller
      */
     public function createOffer(Request $request)
     {
+        try{
+
+            CartConfirmEvent::dispatch('asd', 'alexanderlogodzinsky@yandex.ru', 'asd');
+
+            return 'done';
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
+
+
         try{
             $validated = $request->validate([
                 'first_name'=>'required|min:3|max:255',

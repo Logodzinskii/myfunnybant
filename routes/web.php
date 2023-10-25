@@ -99,7 +99,7 @@ Route::controller(CartController::class)->group(function(){
         ->name('add.cart');
     Route::post('/user/update/quantity', 'updateCart');
     Route::post('/user/delete/cart', 'deleteCart');
-    Route::post('/user/cart/total','getCountCartItem');
+    Route::post('/user/cart/total','getCountCartItem')->name('get.total');
     Route::get('user/view/cart', 'indexCart');
     Route::post('/user/create/offer', 'createOffer')
         ->name('user.create.offer');

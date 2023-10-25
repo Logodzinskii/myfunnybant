@@ -8,7 +8,7 @@
                 $('.count-offer').text(res);
             }
         });
-        $.post('/user/cart/total',
+        $.post('{{route('get.total')}}',
             {
                 "_token": $('meta[name="csrf-token"]').attr('content'),
                 id: 0
@@ -93,7 +93,7 @@
 
         function total() {
             $('body').css('cursor', 'progress');
-            $.post('/user/cart/total',
+            $.post('{{route('get.total')}}',
                 {
                     "_token": $('meta[name="csrf-token"]').attr('content'),
                     id: 0
