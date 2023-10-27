@@ -7,6 +7,7 @@ use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
+use App\Http\Controllers\User\VisitorsController;
 use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -126,3 +127,6 @@ Route::controller(UserCartController::class)->group(function(){
  * Маршруты счетчиков
  */
 Route::get('/counter/',[CartController::class, 'counter'])->name('counter');
+
+
+Route::get('/visitor/session', [VisitorsController::class, 'visitor']);
