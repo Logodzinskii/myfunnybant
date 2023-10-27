@@ -130,3 +130,15 @@ Route::get('/counter/',[CartController::class, 'counter'])->name('counter');
 
 
 Route::get('/visitor/session', [VisitorsController::class, 'visitor']);
+Route::get('/visitor/setname/', function (){
+    $visitor = new VisitorsController('petr','mail@mail.com', '8999-999-99-00');
+
+    $visitor->setNameVisitors('petr','mail@mail.com', '8999-999-99-00');
+    return $visitor->getVisitor();
+});
+
+Route::get('/visitor/delete/', function (){
+    $visitor = new VisitorsController('petr','mail@mail.com', '8999-999-99-00');
+    $visitor->deleteVisitor();
+    return 'done';
+});

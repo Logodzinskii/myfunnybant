@@ -255,12 +255,10 @@
                     </div>
                     <div class="shadow p-2">
                         <form  method="post" name="offerForm">
-                           {{session()->exists('7qwRnvZ64KdxTJfZdz9rFF4tQb9BDXgUisJok7Nw_cart_items')?'1':'0'}}
-
                         <h2>Информация о получателе заказа</h2>
-                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" required/></h3>
-                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" required></h3>
-                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" required></h3>
+                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('1')?session('1')['name']:''}}" required/></h3>
+                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" {{session()->exists('1')?session('1')['email']:''}} required ></h3>
+                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" {{session()->exists('1')?session('1')['tel']:''}} required></h3>
                             @if (session('error'))
                                 <div class="alert alert-danger">{{ session('error') }}</div>
                             @endif

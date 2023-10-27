@@ -15,32 +15,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\CartConfirmEvent;
 use Exception;
+use App\Http\Controllers\User\VisitorsController;
 
 class CartController extends Controller
 {
-    public $user;
+    public $visitor;
 
     public function __construct()
     {
-
+        $this->visitor = new VisitorsController('','','');
     }
 
     protected function getUser()
     {
         if(Auth::check()) {
+
             $sessId = Auth::user();
+
         }else{
-            if(session()->has('user')){
-                $sessId = session()->get('user');
-            }else{
-                $sessId = session('user',session()->getId());
-            }
+
+           $sessId = $this->visitor->getSessionVisitor();
+
         }
         return $sessId;
     }
 
     public function pushToCart(Request $request)
     {
+
             $userId = $this->getUser();
             $product = OzonShopItem::where('ozon_id', '=', $request->ozon_id)->firstOrFail();
 
@@ -174,16 +176,6 @@ class CartController extends Controller
      */
     public function createOffer(Request $request)
     {
-        try{
-
-            CartConfirmEvent::dispatch('asd', 'alexanderlogodzinsky@yandex.ru', 'asd');
-
-            return 'done';
-        }catch (Exception $exception)
-        {
-            return $exception->getMessage();
-        }
-
 
         try{
             $validated = $request->validate([
@@ -195,12 +187,7 @@ class CartController extends Controller
                 'input_delivery_price'=>'required|numeric|',
                 'input_CDEK_id'=>'required|min:2|max:255',
             ]);
-            session(['user_information', [
-                'session_user' => $this->getUser(),
-                'email' => $request->input('email'),
-                'name' => $request->input('first_name'),
-                'tel' => $request->input('tel'),
-            ]]);
+
         }catch (ValidationException $e){
             die($e->getMessage());
         }
@@ -220,6 +207,9 @@ class CartController extends Controller
         $name = $request->input('first_name');
         $tel = $request->input('tel');
         $status = 'новый';
+
+        $this->visitor->setNameVisitors($name, $email, $tel);
+
         $confirm = password_hash($email, PASSWORD_DEFAULT);
 
             $offer = OfferUser::create([
