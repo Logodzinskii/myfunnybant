@@ -284,7 +284,7 @@
         </div>
     </div>
     @else
-        <div>
+        <div class="basket-null">
             <h2>Ваша корзина пуста</h2>
             <a href="/">Перейти к покупкам</a>
         </div>

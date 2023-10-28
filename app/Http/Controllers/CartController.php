@@ -17,16 +17,17 @@ use App\Events\CartConfirmEvent;
 use Exception;
 use App\Http\Controllers\User\VisitorsController;
 use App\Http\Controllers\User\DeliveryController;
-use App\Http\Controllers\User\BasketController;
 
 class CartController extends Controller
 {
-    public $visitor, $delivery, $basket;
+    public $visitor, $delivery;
 
     public function __construct()
     {
+
         $this->visitor = new VisitorsController('','','');
         $this->delivery = new DeliveryController('', '', '', '');
+
     }
 
     protected function getUser()
@@ -117,7 +118,6 @@ class CartController extends Controller
 
     }
 
-
     public function updateCart(Request $request)
     {
         $userId = $this->getUser();
@@ -134,12 +134,13 @@ class CartController extends Controller
         try{
             $userId = $this->getUser();
             \Cart::session($userId)->remove($request->id);
+
         }catch (Exception $exception)
         {
             return $exception->getMessage();
         }
 
-        return $request->id;
+        return ['id'=>$request->id, 'count'=>\Cart::session($userId)->getTotalQuantity()];
     }
 
     /**

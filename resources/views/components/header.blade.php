@@ -146,7 +146,12 @@
                     id: $(this).data("delete")
                 },
                 function (data) {
-                    $('body').find(`[data-delete='` + data + `']`).parent().parent().remove();
+                    console.log(data);
+                    $('body').find(`[data-delete='` + data.id + `']`).parent().parent().remove();
+                    if(data.count === 0)
+                    {
+                        window.location.replace('/');
+                    }
                     total();
                 });
         })
