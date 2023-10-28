@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ozonController extends Controller
 {
 
     public function index()
     {
-        return view('main.index', ['data'=>[OzonShopItem::all()]]);
+        return view('main.index', [
+            'data'=>[DB::table('ozon_shop_items')
+                            ->orderBy('updated_at','desc')
+                            ->orderBy('category', 'desc')
+                            ->get()
+            ]
+        ]);
     }
 
     public function showItem(Request $request, $offer_chpu = null)
