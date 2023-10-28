@@ -16,14 +16,17 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\CartConfirmEvent;
 use Exception;
 use App\Http\Controllers\User\VisitorsController;
+use App\Http\Controllers\User\DeliveryController;
+use App\Http\Controllers\User\BasketController;
 
 class CartController extends Controller
 {
-    public $visitor;
+    public $visitor, $delivery, $basket;
 
     public function __construct()
     {
         $this->visitor = new VisitorsController('','','');
+        $this->delivery = new DeliveryController('', '', '', '');
     }
 
     protected function getUser()
@@ -128,8 +131,13 @@ class CartController extends Controller
 
     public function deleteCart(Request $request)
     {
-        $userId = $this->getUser();
-        \Cart::session($userId)->remove($request->id);
+        try{
+            $userId = $this->getUser();
+            \Cart::session($userId)->remove($request->id);
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
 
         return $request->id;
     }
@@ -209,7 +217,7 @@ class CartController extends Controller
         $status = 'новый';
 
         $this->visitor->setNameVisitors($name, $email, $tel);
-
+        $this->delivery->setDelivery($request->input('input_delivery_city'), $request->input('input_delivery_adress_cdek'), $request->input('input_delivery_price'), $request->input('input_CDEK_id'));
         $confirm = password_hash($email, PASSWORD_DEFAULT);
 
             $offer = OfferUser::create([
@@ -274,9 +282,9 @@ class CartController extends Controller
         UserCreateOffer::dispatch($adminMessage);
         $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
-        \Cart::session($session_user);
+        /*\Cart::session($session_user);
         \Cart::session($session_user)->clear();
-
+         */
         return response()->json([
             'success'=>true,
         ]);

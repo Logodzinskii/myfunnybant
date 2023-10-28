@@ -256,9 +256,9 @@
                     <div class="shadow p-2">
                         <form  method="post" name="offerForm">
                         <h2>Информация о получателе заказа</h2>
-                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('1')?session('1')['name']:''}}" required/></h3>
-                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" {{session()->exists('1')?session('1')['email']:''}} required ></h3>
-                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" {{session()->exists('1')?session('1')['tel']:''}} required></h3>
+                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('user')?session('user')['name']:''}}" required/></h3>
+                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" value="{{session()->exists('user')?session('user')['email']:''}}" required ></h3>
+                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" value="{{session()->exists('user')?session('user')['tel']:''}}" required></h3>
                             @if (session('error'))
                                 <div class="alert alert-danger">{{ session('error') }}</div>
                             @endif
@@ -268,10 +268,10 @@
 
                             <h3><span style="color: red">*</span> - обязательно для заполнения</h3>
                             @csrf
-                            <input name="input_delivery_city" type="hidden" value="" />
-                            <input name="input_delivery_adress_cdek" type="hidden" value="" />
-                            <input name="input_delivery_price" type="hidden" value="" />
-                            <input name="input_CDEK_id" type="hidden" value="" />
+                            <input name="input_delivery_city" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_city']:''}}" />
+                            <input name="input_delivery_adress_cdek" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_adress_cdek']:''}}" />
+                            <input name="input_delivery_price" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_price']:''}}" />
+                            <input name="input_CDEK_id" type="hidden" value="{{session()->exists('delivery')?session('delivery')['CDEK_id']:''}}" />
                             <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Купить</button>
                         </form>
                     </div>

@@ -16,14 +16,11 @@ class VisitorsController extends Controller
 
 
         }else{
-            session([
-                'user',
-                'session' => session()->getId(),
-                [
+            session()->put('user',[
                     'name'  => 'Пользователь',
                     'email' => '',
                     'tel'   => '',
-                ]
+                    'session' => session()->getId(),
             ]);
         }
         $this->visitor = [
@@ -41,25 +38,38 @@ class VisitorsController extends Controller
 
     public function visitor()
     {
-        return response()->json($this->visitor, 200);
+        $arr = session()->all();
+
+        foreach ($arr as $key=>$item)
+        {
+            $cart = [];
+            if(strpos($key, 'cart')>0 && count($item)>0 )
+            {
+                $cart = [$key => $item];
+            }
+
+        }
+        return count($cart)>0? ($cart) : 0;
+        //return response()->json(session('1DkjYnU0Dstrrq1LNMNG2GfWGvLtKlGzrHgKe9mD_cart_items'),200);
     }
 
     public function setNameVisitors($name, $email, $tel)
     {
-        session()->put('1',[
+        session()->put('user',[
             'name'  => $name,
             'email' => $email,
             'tel'   => $tel,
+            'session' => session()->getId(),
         ]);
     }
 
     public function getSessionVisitor()
     {
-        return session('session');
+        return session('user')['session'];
     }
     public function getVisitor()
     {
-        return session('1');
+        return session('user');
     }
 
     public function deleteVisitor()
