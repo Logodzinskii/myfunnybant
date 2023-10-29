@@ -66,7 +66,7 @@
                                         @else
                                             <i class="bi p-3 like" data-heart="{{$item->ozon_id}}"></i>
                                         @endif
-                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle start-0">{{\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->like_count}}</span>
+                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle" style="left:25px">{{\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->like_count}}</span>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-wrap justify-content-around">

@@ -10,14 +10,26 @@ use Illuminate\Support\Facades\DB;
 class ozonController extends Controller
 {
 
-    public function index()
+    public function index( $funnel = null)
     {
+        if(($funnel != null))
+        {
+            $data  = [DB::table('ozon_shop_items')
+                ->where('category', '=', $funnel)
+                ->orderBy('ozon_id','desc')
+                ->get()
+            ];
+        }else{
+            $data = [DB::table('ozon_shop_items')
+                ->orderBy('ozon_id','desc')
+                ->get()
+            ];
+            $funnel = '';
+        }
+
         return view('main.index', [
-            'data'=>[DB::table('ozon_shop_items')
-                            ->orderBy('updated_at','desc')
-                            ->orderBy('category', 'desc')
-                            ->get()
-            ]
+            'data'=> $data,
+            'link'=> $funnel,
         ]);
     }
 
