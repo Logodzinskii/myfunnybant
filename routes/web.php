@@ -2,10 +2,9 @@
 
 use App\Http\Controllers\ActionOzonController;
 use App\Http\Controllers\Admin\SaleItemsController;
+use App\Http\Controllers\Admin\shop\productsShopController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
-use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
 use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
@@ -25,10 +24,9 @@ use App\Http\Controllers\Admin\AdminUserController;
 */
 
 Route::get('/', [ozonController::class, 'index']);
+Route::get('/filter/{funnel}',[ozonController::class, 'index']);
 
 Route::get('/shop/{offer_chpu}', [ozonController::class, 'showItem'])->name('shop');
-
-Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
 
 Route::get('/sell/{url}', function($url){
 
@@ -72,7 +70,6 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/sale/date/','showDateBetween');
         Route::post('/admin/sale/sum/datebetween','sumDateBetween')
             ->name('sum.date.between');
-
     })->middleware('auth');
     /**
      * Маршруты для управления онлайн магазином администратором
@@ -89,6 +86,11 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
     Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
     Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
+
+    /**
+     * Работа с товарами магазина
+     */
+    Route::get('/admin/show/all/products', [productsShopController::class,'index']);
 });
 
 /**
@@ -99,14 +101,12 @@ Route::controller(CartController::class)->group(function(){
         ->name('add.cart');
     Route::post('/user/update/quantity', 'updateCart');
     Route::post('/user/delete/cart', 'deleteCart');
-    Route::post('/user/cart/total','getCountCartItem');
-    Route::get('user/view/cart', 'indexCart');
+    Route::post('/user/cart/total','getCountCartItem')->name('get.total');
+    Route::get('/user/view/cart', 'indexCart');
     Route::post('/user/create/offer', 'createOffer')
         ->name('user.create.offer');
     Route::get('/user/get/cart','index');
-    Route::get('/user/confirm', function (){
-        return view('user.confirm');
-    });
+    Route::get('/user/confirm', 'codeConfirm');
     Route::post('/user/confirm/code', 'codeConfirm');
 });
 

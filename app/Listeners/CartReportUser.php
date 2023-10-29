@@ -30,6 +30,7 @@ class CartReportUser
      */
     public function handle(CartConfirmEvent $event)
     {
+
         $mail = new PHPMailer(true);
 
         try {
@@ -40,8 +41,8 @@ class CartReportUser
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'mail.hosting.reg.ru';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = config('mail.mailers.smtp.MAIL_USERNAME');                     //SMTP username
-            $mail->Password   = config('mail.mailers.smtp.MAIL_PASSWORD');                               //SMTP password
+            $mail->Username   = 'noreply@myfunnybant.ru';                     //SMTP username
+            $mail->Password   = 'hT0zP9qV5stL2aL2';                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 

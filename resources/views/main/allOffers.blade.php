@@ -29,8 +29,33 @@
                         <li class="h4">Имя заказчика: {{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->name}}</li>
                         <li class="h4">Email: <a href="mailto:'{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}'">{{\App\Models\OfferUser::where('session_user','=', $cart->session_user)->firstOrFail()->email}}</a></li>
                         <li class="h4">Tel: {{$cart->tel}}</li>
-                        <li class="h4">Статус заказа: <b style="color: mediumvioletred">{{\App\Models\OfferUser::where('id','=',$cart->id)->get()[0]->status}}</b>
-                            <i style="color: #6610f2" class="bi-caret-down-square"></i>
+                        <li class="h4">Статус заказа:
+                            <ul>
+                                @php
+                                $arr = [
+                                    'Новый',
+                                    'Подтвержден',
+                                    'Оплата получена',
+                                    'Посылка отправлена',
+                                ];
+                                $i = 0;
+                                @endphp
+                                @foreach($arr as $key => $item)
+                                        @if(\App\Models\OfferUser::where('id','=',$cart->id)->get()[0]->status == $item)
+                                        <li style="color: mediumvioletred">{{$item}}</li>
+
+                                    @else
+                                        @if($i >= $key)
+                                        <li style="color: green">{{$item}}</li>
+                                            @php
+                                                $i++
+                                            @endphp
+                                        @else
+                                            <li style="color: grey">{{$item}}</li>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                            </ul>
                         </li>
                     </ul>
                     <div class="m-1 container row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-md-2 g-2">

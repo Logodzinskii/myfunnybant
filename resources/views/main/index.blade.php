@@ -58,31 +58,35 @@
                                         <h5 class="text-center mainh" >{{$item->name}}</h5>
                                     </div>
                                     <div class="p-0 m-0 " style="min-height: 500px">
-                                        <img src="{{json_decode($item->images, true)[0]['file_name']}}" alt="{{$item['name']}}">
+                                        <img src="{{json_decode($item->images, true)[0]['file_name']}}" alt="{{$item->name}}">
                                     </div>
                                     <div class="position-absolute bottom-0 end-0">
-                                        @if(session()->has('ozon_id') && array_search($item['ozon_id'], session()->get('ozon_id')) !== false)
-                                            <i class="bi-like p-3 like" data-heart="{{$item['ozon_id']}}"></i>
+                                        @if(session()->has('ozon_id') && array_search($item->ozon_id, session()->get('ozon_id')) !== false)
+                                            <i class="bi-like p-3 like" data-heart="{{$item->ozon_id}}"></i>
                                         @else
-                                            <i class="bi p-3 like" data-heart="{{$item['ozon_id']}}"></i>
+                                            <i class="bi p-3 like" data-heart="{{$item->ozon_id}}"></i>
                                         @endif
-                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle start-0">{{\App\Models\OzonShop::where('ozon_id', '=', $item['ozon_id'])->first()->like_count}}</span>
+                                        <span class="badge text-bg-secondary position-absolute top-0 rounded-circle" style="left:25px">{{\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->like_count}}</span>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-wrap justify-content-around">
                                     <div class="d-flex flex-wrap justify-content-around">
-                                        <a href="{{route("seller.ozon", ['url'=>$item['name']])}}"><x-main-button text="купить на ozon.ru"></x-main-button></a>
-                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item['ozon_id'])->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
+                                        <a href="{{route("seller.ozon", ['url'=>$item->name])}}"><x-main-button text="купить на ozon.ru"></x-main-button></a>
+                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
                                     </div>
                                     <div>
                                         <div class="shadow bg-light d-flex flex-nowrap rounded-2" style="font-size: 2em">
-                                            <div class="price p-1  border-secondary"><s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item['ozon_id'])->first()->price}} &#8381;</s> </div>
-                                            <div class="action-price p-1  border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item['ozon_id'])->first()->action_price}} &#8381;</div>
+                                            <div class="price p-1  border-secondary">
+                                                <s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->price}} &#8381;</s>
+                                            </div>
+                                            <div class="action-price p-1  border-secondary">
+                                                {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->action_price}} &#8381;
+                                            </div>
                                             <form method="post" action="{{route('add.cart')}}">
                                                 @csrf
-                                                <input type="hidden" name="ozon_id" value="{{$item['ozon_id']}}" />
+                                                <input type="hidden" name="ozon_id" value="{{$item->ozon_id}}" />
                                             </form>
-                                            <div class="add-cart my-button btn btn-sm g-2 h-4 m-1 text-white" data-add-cart="{{$item['ozon_id']}}"><i class="bi-basket3"></i></div>
+                                            <div class="add-cart my-button btn btn-sm g-2 h-4 m-1 text-white" data-add-cart="{{$item->ozon_id}}"><i class="bi-basket3"></i></div>
                                         </div>
                                     </div>
                                 </div>
