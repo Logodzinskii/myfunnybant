@@ -28,8 +28,6 @@ Route::get('/filter/{funnel}',[ozonController::class, 'index']);
 
 Route::get('/shop/{offer_chpu}', [ozonController::class, 'showItem'])->name('shop');
 
-Route::post('/information/', [ozonController::class, 'showItemPost'])->name('shop.information');
-
 Route::get('/sell/{url}', function($url){
 
     $fullUrl = \Illuminate\Support\Facades\Request::userAgent();
@@ -72,7 +70,6 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/sale/date/','showDateBetween');
         Route::post('/admin/sale/sum/datebetween','sumDateBetween')
             ->name('sum.date.between');
-
     })->middleware('auth');
     /**
      * Маршруты для управления онлайн магазином администратором
@@ -109,9 +106,7 @@ Route::controller(CartController::class)->group(function(){
     Route::post('/user/create/offer', 'createOffer')
         ->name('user.create.offer');
     Route::get('/user/get/cart','index');
-    Route::get('/user/confirm', function (){
-        return view('user.confirm');
-    });
+    Route::get('/user/confirm', 'codeConfirm');
     Route::post('/user/confirm/code', 'codeConfirm');
 });
 

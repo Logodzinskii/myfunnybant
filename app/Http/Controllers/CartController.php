@@ -173,7 +173,7 @@ class CartController extends Controller
                         С уважением, Команда myfunnybant.ru</p>';
             CartConfirmEvent::dispatch($message, $email, $name);
 
-            return redirect('/user/confirm/');
+            return view('user.confirm',['data'=>'На вашу электронную почту направлено сообщение для подтверждения заказа']);
         }
 
     }
@@ -211,11 +211,11 @@ class CartController extends Controller
         try{
         $session_user = $this->getUser();
         $offer_id = 'default';
-        $user_id = 'default';
+        $user_id = $session_user;
         $email = $request->input('email');
         $name = $request->input('first_name');
         $tel = $request->input('tel');
-        $status = 'новый';
+        $status = 'Новый';
 
         $this->visitor->setNameVisitors($name, $email, $tel);
         $this->delivery->setDelivery($request->input('input_delivery_city'), $request->input('input_delivery_adress_cdek'), $request->input('input_delivery_price'), $request->input('input_CDEK_id'));
@@ -278,14 +278,14 @@ class CartController extends Controller
         $confirm .= '<p>Зайдите в вашу электронную почту и перейдите по ссылке для подтверждения заказа и дальнейшей оплаты.</p>';
         $link = '<h2>Перейдите по ссылке для подтверждения заказа</h2>';
         $link .= 'https://myfunnybant/security/?link='.$hash;
-        $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. '';
+        $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
         CartConfirmEvent::dispatch($message.$link, $email, $name);
         UserCreateOffer::dispatch($adminMessage);
         $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
-        /*\Cart::session($session_user);
+        \Cart::session($session_user);
         \Cart::session($session_user)->clear();
-         */
+
         return response()->json([
             'success'=>true,
         ]);
@@ -294,6 +294,8 @@ class CartController extends Controller
 
     public function codeConfirm(Request $request)
     {
+        $info = 'На вашу электронную почту направлено сообщение с реквизитами для оплаты';
+        return view('user.confirm',['data'=>$info]);
         try{
             $validated = $request->validate([
                 'code'=>'required|min:4|max:4',

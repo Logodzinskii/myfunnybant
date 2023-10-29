@@ -59,11 +59,12 @@
         })
     </script>
     <div class="container">
-        <div class="m-3 bg-light shadow rounded-2 p-2">
+        <div class="ms-3 me-3 bg-light shadow rounded-2 p-2">
             <form method="post" action="{{url('/admin/view/offers')}}">
                 @csrf
-                <div class="form-check form-check-inline">
+
                     @foreach(\Illuminate\Support\Facades\DB::table('offer_users')->groupBy('status')->get() as $key=>$status)
+                    <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio{{$key}}" value="{{$status->status}}">
                         <label class="form-check-label ms-3 me-3" for="inlineRadio{{$key}}">
                                     {{$status->status}}
@@ -71,8 +72,8 @@
                             {{\App\Models\OfferUser::where('status','=',$status->status)->count()}}
                             </span>
                         </label>
+                    </div>
                     @endforeach
-                </div>
                 <button type="submit" class="btn btn-outline-primary" >Применить</button>
         </form>
     </div>
@@ -161,7 +162,13 @@
         <option value="Покупатель отказался">Покупатель отказался</option>
         <option value="Оплата не поступила">Оплата не поступила</option>
     </select>
-    <div class="error " data-warning="{{$cart->id}}"></div>
+    <hr>
+    @if($cart->confirm == 'подтвержден')
+        <div class="bg-success rounded-2 p-2">{{$cart->confirm}}</div>
+    @else
+       <div class="bg-warning rounded-2 p-2">Не подтвержден</div>
+    @endif
+    <div class="error rounded-2 p-2" data-warning="{{$cart->id}}"></div>
 </td>
 <td>
     <form class="track" method="post" action="{{url('/admin/track/add')}}" data-track-id="{{$cart->id}}">
@@ -170,7 +177,7 @@
         <input type="hidden" name="id" value="{{$cart->id}}">
         <button type="submit">отправить</button>
     </form>
-    <div class="track-message" data-track-message="{{$cart->id}}"></div>
+    <div class="track-message rounded-2 p-2" data-track-message="{{$cart->id}}"></div>
 </td>
 </tr>
 @endforeach

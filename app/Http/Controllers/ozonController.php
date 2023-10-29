@@ -29,7 +29,6 @@ class ozonController extends Controller
 
         return view('main.index', [
             'data'=> $data,
-            'link'=> $funnel,
         ]);
     }
 

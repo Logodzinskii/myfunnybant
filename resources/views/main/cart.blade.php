@@ -143,7 +143,7 @@
             });
         })
     </script>
-    <button class="btn btn-primary offer-start">
+    <button class="my-button btn btn-sm g-2 h-4 m-1 text-white offer-start">
         Продолжить оформление заказа
     </button>
 </section>
@@ -163,13 +163,13 @@
                                 1. Выбор пункта доставки СДЭК
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="flex-wrap d-flex justify-content-between">
                                    <div class="col">
                                        <input type="text" name="pvz" placeholder="Код ПВЗ">
                                        <input type="text" name="address" placeholder="Адрес ПВЗ">
-                                       <div id="forpvz" style="height:450px; max-width: 500px"></div>
+                                       <div id="forpvz" style="height:550px; max-width: 500px"></div>
                                    </div>
                                     <div class="shadow p-1 m-1 col">
                                         <h2>Доставка:</h2>
@@ -178,9 +178,6 @@
                                         <p>В нашем интернет-магазине Myfunnybant имеется несколько вариантов доставки:</p>
                                         <ul>
                                             <li>ТК СДЭК до пункта выдачи заказов</li>
-                                            <li>ТК СДЭК курьером по Вашему адресу</li>
-                                            <li>Почтой России <i>(Оплата за услуги доставки Почтой России
-                                                    будет включена в стоимость заказа (100% предоплата))</i></li>
                                         </ul>
                                         <p>Стоимость доставки рассчитывается индивидуально для каждого заказа и зависит от веса и Вашего местонахождения.
                                             Оплата за услуги доставки ТК СДЭК осуществляется при получении заказа.
@@ -281,7 +278,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
