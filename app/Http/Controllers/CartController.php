@@ -161,19 +161,11 @@ class CartController extends Controller
             $email = $res[0]->email;
             $name = $res[0]->name;
             $message = '<h2 style="color: #6f42c1">Благодарим Вас за подтверждение нашего заказа!</h2>';
-            $message .='<p>Мы ценим Ваше доверие и стремимся предоставить Вам наилучший сервис. Для оплаты заказа мы направили реквизиты нашей карты Сбербанка :</p>';
-             $message .= '<h2 style="color: mediumvioletred">5555-5555-5555-5555-5555</h2>';
-            $message .=  '<p>В назначении платежа, пожалуйста укажите номер заказа:</p>';
-                 $message .='<h2 style="color: mediumvioletred">'.$res[0]->id.'</h2>';
-            $message .=
-              '<p>После отправки Вашего заказа мы пришлём Вам номер трека компании СДЭК для отслеживания
-                        в течение 24 часов после оплаты заказа.
-             Ожидайте получения Вашего заказа в ближайшее время.
-              Если у Вас возникнут вопросы или пожелания, пожалуйста, не стесняйтесь обращаться к нам.
-                        С уважением, Команда myfunnybant.ru</p>';
+            $message .='<p>Мы ценим Ваше доверие и стремимся предоставить Вам наилучший сервис. Для оплаты заказа мы направили реквизиты нашей карты Сбербанка после того как проверим и соберем заказ</p>';
+            $message .='<p>С уважением, Команда <a href="https://myfunnybant.ru">myfunnybant.ru</a></p>';
             CartConfirmEvent::dispatch($message, $email, $name);
 
-            return view('user.confirm',['data'=>'На вашу электронную почту направлено сообщение для подтверждения заказа']);
+            return view('user.confirm',['data'=>'На вашу электронную почту будет направлено сообщение с реквизитами для оплаты, после сборки заказа']);
         }
 
     }
@@ -269,7 +261,7 @@ class CartController extends Controller
         $message .= '<p>Ниже приведены детали Вашего заказа:</p>';
         $message .= '<ul><li class="h4"> Номер заказа: <b style="color: mediumvioletred"> '.$offer_id.'</b></li>';
         $message .= '<li>Дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at.'</li>';
-        $message .= '<li class="h4">Сумма заказа:<b style="color: mediumvioletred">#TOTAL#</b> </li></ul>';
+        //$message .= '<li class="h4">Сумма заказа:<b style="color: mediumvioletred">#TOTAL#</b> </li></ul>';
         $message .= '<h2 style="color: #6f42c1"><b>Информация о доставке</b></h2>';
         $message .= '<ul><li class="h4">Город доставки:<b style="color: mediumvioletred"> '.$request->input('input_delivery_city').'</b></li>';
         $message .= '<li class="h4">Адрес доставки:<b style="color: mediumvioletred"> '.$request->input('input_delivery_adress_cdek').'</b></li>';
@@ -294,22 +286,8 @@ class CartController extends Controller
 
     public function codeConfirm(Request $request)
     {
-        $info = 'На вашу электронную почту направлено сообщение с реквизитами для оплаты';
+        $info = 'На вашу электронную почту направлено сообщение для подтверждения заказа';
         return view('user.confirm',['data'=>$info]);
-        try{
-            $validated = $request->validate([
-                'code'=>'required|min:4|max:4',
-            ]);
-            $res = OfferUser::where('offer_id', '=', $request->input('code'))->get();
-            if(count($res)>0){
-
-                return redirect('/user/confirm/')->with('result', 'success');
-            }else{
-                return redirect('/user/confirm/')->with('denied', 'not found');
-            }
-        }catch (ValidationException $e){
-            return back()->withError($e->getMessage())->withInput();
-        }
     }
 
 }

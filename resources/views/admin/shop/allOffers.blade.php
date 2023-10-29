@@ -157,6 +157,7 @@
     <select class="select form-select" aria-label="Default select example" data-offer-id="{{$cart->id}}">
         <option value="{{$cart->status}}">{{$cart->status}}</option>
         <option value="Новый">Новый</option>
+        <option value="Подтвержден">Подтвержден</option>
         <option value="Оплата получена">Оплата получена</option>
         <option value="Посылка отправлена">Посылка отправлена</option>
         <option value="Покупатель отказался">Покупатель отказался</option>
