@@ -30,6 +30,7 @@ class CartReportUser
      */
     public function handle(CartConfirmEvent $event)
     {
+
         $mail = new PHPMailer(true);
 
         try {

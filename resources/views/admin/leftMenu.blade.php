@@ -47,6 +47,15 @@
                         <li><a class="dropdown-item" href="/admin/maxlike">Все</a></li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Товары магазина
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/admin/show/all/products">Все</a></li>
+                        <li><a class="dropdown-item" href="/admin/edit/price">Управление ценами</a></li>
+                    </ul>
+                </li>
             </ul>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">

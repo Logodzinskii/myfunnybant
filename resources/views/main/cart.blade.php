@@ -25,17 +25,18 @@
                             <th scope="row">{{$lid->id}}</th>
                             <td class="w-25">{{$lid->associatedModel['name']}}</td>
                             <td class="w-25"><img src="{{json_decode($lid->associatedModel['images'],true)[0]['file_name']}}" class="img-thumbnail" /></td>
-                            <td><div class="updateQuantity d-flex flex-wrap justify-content-center"  style="color: #6610f2; font-size: 1.4em">
+                            <td>
+                                <div class="updateQuantity d-flex flex-nowrap justify-content-center"  style="color: #6610f2; font-size: 1.2em">
+                                    <span class="update minus" data-id="{{$lid->id}}">
+                                        <i class="bi-dash-circle m-1"></i>
+                                    </span>
                                     <div>
-                                        <span data-idres="{{$lid->id}}">{{$lid->quantity}}</span>
+                                        <span class="m-1 text-center" data-idres="{{$lid->id}}">{{$lid->quantity}}</span>
                                     </div>
                                     <div>
-                                <span class="update plus" data-id="{{$lid->id}}">
-                                    <i class="bi-plus-circle m-3 "></i>
-                                </span>
-                                        <span class="update minus" data-id="{{$lid->id}}">
-                                    <i class="bi-dash-circle"></i>
-                                </span>
+                                    <span class="update plus" data-id="{{$lid->id}}">
+                                        <i class="bi-plus-circle m-1 "></i>
+                                    </span>
                                     </div>
                                 </div>
                             </td>
@@ -142,7 +143,7 @@
             });
         })
     </script>
-    <button class="btn btn-primary offer-start">
+    <button class="my-button btn btn-sm g-2 h-4 m-1 text-white offer-start">
         Продолжить оформление заказа
     </button>
 </section>
@@ -162,38 +163,36 @@
                                 1. Выбор пункта доставки СДЭК
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <input type="text" name="pvz" placeholder="Код ПВЗ">
-                                <input type="text" name="address" placeholder="Адрес ПВЗ">
-                                <div id="forpvz" style="height:500px;"></div>
-                            </div>
-                            <div>
-                                <div class="shadow p-1 m-1">
-                                    <h2>Доставка:</h2>
-                                    <p>Уважаемые покупатели!</p>
-                                    <p>Мы осуществляем доставку товаров для рукоделия по ВСЕЙ РОССИИ.</p>
-                                    <p>В нашем интернет-магазине Myfunnybant имеется несколько вариантов доставки:</p>
-                                    <ul>
-                                        <li>ТК СДЭК до пункта выдачи заказов</li>
-                                        <li>ТК СДЭК курьером по Вашему адресу</li>
-                                        <li>Почтой России <i>(Оплата за услуги доставки Почтой России
-                                                будет включена в стоимость заказа (100% предоплата))</i></li>
-                                    </ul>
-                                    <p>Стоимость доставки рассчитывается индивидуально для каждого заказа и зависит от веса и Вашего местонахождения.
-                                        Оплата за услуги доставки ТК СДЭК осуществляется при получении заказа.
-                                        Обращаем Ваше внимание, что наш интернет-магазин не несет ответственность за сроки доставки Почтой России и ТК СДЭК.
-                                        Сроки могут быть уменьшены или увеличены в связи с загруженностью той или иной транспортной компании.
-                                    </p>
-                                    <p id="message-delivery-denied">Для примерного расчета стоимости доставки ТК СДЭК
-                                        выберите пункт выдачи на карте
-                                    </p>
-                                    <div id="message-delivery-allow" class="disabled">
-                                        <div class="delivery-city h3"></div>
-                                        <div class="delivery-adress-cdek h3"></div>
-                                        <div class="delivery-price h3"></div>
+                                <div class="flex-wrap d-flex justify-content-between">
+                                   <div class="col">
+                                       <input type="text" name="pvz" placeholder="Код ПВЗ">
+                                       <input type="text" name="address" placeholder="Адрес ПВЗ">
+                                       <div id="forpvz" style="height:550px; max-width: 500px"></div>
+                                   </div>
+                                    <div class="shadow p-1 m-1 col">
+                                        <h2>Доставка:</h2>
+                                        <p>Уважаемые покупатели!</p>
+                                        <p>Мы осуществляем доставку товаров для рукоделия по ВСЕЙ РОССИИ.</p>
+                                        <p>В нашем интернет-магазине Myfunnybant имеется несколько вариантов доставки:</p>
+                                        <ul>
+                                            <li>ТК СДЭК до пункта выдачи заказов</li>
+                                        </ul>
+                                        <p>Стоимость доставки рассчитывается индивидуально для каждого заказа и зависит от веса и Вашего местонахождения.
+                                            Оплата за услуги доставки ТК СДЭК осуществляется при получении заказа.
+                                            Обращаем Ваше внимание, что наш интернет-магазин не несет ответственность за сроки доставки Почтой России и ТК СДЭК.
+                                            Сроки могут быть уменьшены или увеличены в связи с загруженностью той или иной транспортной компании.
+                                        </p>
+                                        <p id="message-delivery-denied">Для примерного расчета стоимости доставки ТК СДЭК
+                                            выберите пункт выдачи на карте
+                                        </p>
+                                        <div id="message-delivery-allow" class="disabled">
+                                            <div class="delivery-city h3"></div>
+                                            <div class="delivery-adress-cdek h3"></div>
+                                            <div class="delivery-price h3"></div>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -255,12 +254,10 @@
                     </div>
                     <div class="shadow p-2">
                         <form  method="post" name="offerForm">
-                           {{session()->exists('7qwRnvZ64KdxTJfZdz9rFF4tQb9BDXgUisJok7Nw_cart_items')?'1':'0'}}
-
                         <h2>Информация о получателе заказа</h2>
-                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" required/></h3>
-                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" required></h3>
-                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" required></h3>
+                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('user')?session('user')['name']:''}}" required/></h3>
+                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" value="{{session()->exists('user')?session('user')['email']:''}}" required ></h3>
+                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" value="{{session()->exists('user')?session('user')['tel']:''}}" required></h3>
                             @if (session('error'))
                                 <div class="alert alert-danger">{{ session('error') }}</div>
                             @endif
@@ -270,10 +267,10 @@
 
                             <h3><span style="color: red">*</span> - обязательно для заполнения</h3>
                             @csrf
-                            <input name="input_delivery_city" type="hidden" value="" />
-                            <input name="input_delivery_adress_cdek" type="hidden" value="" />
-                            <input name="input_delivery_price" type="hidden" value="" />
-                            <input name="input_CDEK_id" type="hidden" value="" />
+                            <input name="input_delivery_city" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_city']:''}}" />
+                            <input name="input_delivery_adress_cdek" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_adress_cdek']:''}}" />
+                            <input name="input_delivery_price" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_price']:''}}" />
+                            <input name="input_CDEK_id" type="hidden" value="{{session()->exists('delivery')?session('delivery')['CDEK_id']:''}}" />
                             <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Купить</button>
                         </form>
                     </div>
@@ -281,12 +278,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
     @else
-        <div>
+        <div class="basket-null">
             <h2>Ваша корзина пуста</h2>
             <a href="/">Перейти к покупкам</a>
         </div>

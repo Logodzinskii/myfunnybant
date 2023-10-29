@@ -15,32 +15,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\CartConfirmEvent;
 use Exception;
+use App\Http\Controllers\User\VisitorsController;
+use App\Http\Controllers\User\DeliveryController;
 
 class CartController extends Controller
 {
-    public $user;
+    public $visitor, $delivery;
 
     public function __construct()
     {
+
+        $this->visitor = new VisitorsController('','','');
+        $this->delivery = new DeliveryController('', '', '', '');
 
     }
 
     protected function getUser()
     {
         if(Auth::check()) {
+
             $sessId = Auth::user();
+
         }else{
-            if(session()->has('user')){
-                $sessId = session()->get('user');
-            }else{
-                $sessId = session('user',session()->getId());
-            }
+
+           $sessId = $this->visitor->getSessionVisitor();
+
         }
         return $sessId;
     }
 
     public function pushToCart(Request $request)
     {
+
             $userId = $this->getUser();
             $product = OzonShopItem::where('ozon_id', '=', $request->ozon_id)->firstOrFail();
 
@@ -69,11 +75,11 @@ class CartController extends Controller
     {
         try {
             if(Auth::user()){
-                $cart = OfferUser::where('email','=',Auth::user()->email)->get();
-                $totalSum = UserCart::where('user_id','=',$cart[0]->session_user)->get();
+                $cart = OfferUser::where('email', '=', Auth::user()->email)->get();
+                $totalSum = UserCart::where('user_id', '=', $cart[0]->session_user)->get();
             }else{
-                $cart = OfferUser::where('session_user','=',$this->getUser())->get();
-                $totalSum = UserCart::where('user_id','=',$this->getUser())->get();
+                $cart = OfferUser::where('session_user', '=', $this->getUser())->get();
+                $totalSum = UserCart::where('user_id', '=', $this->getUser())->get();
             }
 
             return response()->view('main.allOffers', ['carts'=>$cart,
@@ -98,13 +104,19 @@ class CartController extends Controller
 
     public function getCountCartItem()
     {
-        $userId = $this->getUser();
-        $total = \Cart::session($userId)->getSubTotal();
-        $totalQuantity = \Cart::session($userId)->getTotalQuantity();
+        try{
 
-        return [$total,$totalQuantity];
+            $userId = $this->getUser();
+            $total = \Cart::session($userId)->getSubTotal();
+            $totalQuantity = \Cart::session($userId)->getTotalQuantity();
+
+            return [$total,$totalQuantity];
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
+
     }
-
 
     public function updateCart(Request $request)
     {
@@ -119,10 +131,16 @@ class CartController extends Controller
 
     public function deleteCart(Request $request)
     {
-        $userId = $this->getUser();
-        \Cart::session($userId)->remove($request->id);
+        try{
+            $userId = $this->getUser();
+            \Cart::session($userId)->remove($request->id);
 
-        return $request->id;
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
+
+        return ['id'=>$request->id, 'count'=>\Cart::session($userId)->getTotalQuantity()];
     }
 
     /**
@@ -143,19 +161,11 @@ class CartController extends Controller
             $email = $res[0]->email;
             $name = $res[0]->name;
             $message = '<h2 style="color: #6f42c1">Благодарим Вас за подтверждение нашего заказа!</h2>';
-            $message .='<p>Мы ценим Ваше доверие и стремимся предоставить Вам наилучший сервис. Для оплаты заказа мы направили реквизиты нашей карты Сбербанка :</p>';
-             $message .= '<h2 style="color: mediumvioletred">5555-5555-5555-5555-5555</h2>';
-            $message .=  '<p>В назначении платежа, пожалуйста укажите номер заказа:</p>';
-                 $message .='<h2 style="color: mediumvioletred">'.$res[0]->id.'</h2>';
-            $message .=
-              '<p>После отправки Вашего заказа мы пришлём Вам номер трека компании СДЭК для отслеживания
-                        в течение 24 часов после оплаты заказа.
-             Ожидайте получения Вашего заказа в ближайшее время.
-              Если у Вас возникнут вопросы или пожелания, пожалуйста, не стесняйтесь обращаться к нам.
-                        С уважением, Команда myfunnybant.ru</p>';
+            $message .='<p>Мы ценим Ваше доверие и стремимся предоставить Вам наилучший сервис. Для оплаты заказа мы направили реквизиты нашей карты Сбербанка после того как проверим и соберем заказ</p>';
+            $message .='<p>С уважением, Команда <a href="https://myfunnybant.ru">myfunnybant.ru</a></p>';
             CartConfirmEvent::dispatch($message, $email, $name);
 
-            return redirect('/user/confirm/');
+            return view('user.confirm',['data'=>'На вашу электронную почту будет направлено сообщение с реквизитами для оплаты, после сборки заказа']);
         }
 
     }
@@ -167,6 +177,7 @@ class CartController extends Controller
      */
     public function createOffer(Request $request)
     {
+
         try{
             $validated = $request->validate([
                 'first_name'=>'required|min:3|max:255',
@@ -177,12 +188,7 @@ class CartController extends Controller
                 'input_delivery_price'=>'required|numeric|',
                 'input_CDEK_id'=>'required|min:2|max:255',
             ]);
-            session(['user_information', [
-                'session_user' => $this->getUser(),
-                'email' => $request->input('email'),
-                'name' => $request->input('first_name'),
-                'tel' => $request->input('tel'),
-            ]]);
+
         }catch (ValidationException $e){
             die($e->getMessage());
         }
@@ -197,11 +203,14 @@ class CartController extends Controller
         try{
         $session_user = $this->getUser();
         $offer_id = 'default';
-        $user_id = 'default';
+        $user_id = $session_user;
         $email = $request->input('email');
         $name = $request->input('first_name');
         $tel = $request->input('tel');
-        $status = 'новый';
+        $status = 'Новый';
+
+        $this->visitor->setNameVisitors($name, $email, $tel);
+        $this->delivery->setDelivery($request->input('input_delivery_city'), $request->input('input_delivery_adress_cdek'), $request->input('input_delivery_price'), $request->input('input_CDEK_id'));
         $confirm = password_hash($email, PASSWORD_DEFAULT);
 
             $offer = OfferUser::create([
@@ -252,7 +261,7 @@ class CartController extends Controller
         $message .= '<p>Ниже приведены детали Вашего заказа:</p>';
         $message .= '<ul><li class="h4"> Номер заказа: <b style="color: mediumvioletred"> '.$offer_id.'</b></li>';
         $message .= '<li>Дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at.'</li>';
-        $message .= '<li class="h4">Сумма заказа:<b style="color: mediumvioletred">#TOTAL#</b> </li></ul>';
+        //$message .= '<li class="h4">Сумма заказа:<b style="color: mediumvioletred">#TOTAL#</b> </li></ul>';
         $message .= '<h2 style="color: #6f42c1"><b>Информация о доставке</b></h2>';
         $message .= '<ul><li class="h4">Город доставки:<b style="color: mediumvioletred"> '.$request->input('input_delivery_city').'</b></li>';
         $message .= '<li class="h4">Адрес доставки:<b style="color: mediumvioletred"> '.$request->input('input_delivery_adress_cdek').'</b></li>';
@@ -261,7 +270,7 @@ class CartController extends Controller
         $confirm .= '<p>Зайдите в вашу электронную почту и перейдите по ссылке для подтверждения заказа и дальнейшей оплаты.</p>';
         $link = '<h2>Перейдите по ссылке для подтверждения заказа</h2>';
         $link .= 'https://myfunnybant/security/?link='.$hash;
-        $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. '';
+        $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
         CartConfirmEvent::dispatch($message.$link, $email, $name);
         UserCreateOffer::dispatch($adminMessage);
         $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
@@ -277,20 +286,8 @@ class CartController extends Controller
 
     public function codeConfirm(Request $request)
     {
-        try{
-            $validated = $request->validate([
-                'code'=>'required|min:4|max:4',
-            ]);
-            $res = OfferUser::where('offer_id', '=', $request->input('code'))->get();
-            if(count($res)>0){
-
-                return redirect('/user/confirm/')->with('result', 'success');
-            }else{
-                return redirect('/user/confirm/')->with('denied', 'not found');
-            }
-        }catch (ValidationException $e){
-            return back()->withError($e->getMessage())->withInput();
-        }
+        $info = 'На вашу электронную почту направлено сообщение для подтверждения заказа';
+        return view('user.confirm',['data'=>$info]);
     }
 
 }

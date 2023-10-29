@@ -8,7 +8,7 @@
                 $('.count-offer').text(res);
             }
         });
-        $.post('/user/cart/total',
+        $.post('{{route('get.total')}}',
             {
                 "_token": $('meta[name="csrf-token"]').attr('content'),
                 id: 0
@@ -93,7 +93,7 @@
 
         function total() {
             $('body').css('cursor', 'progress');
-            $.post('/user/cart/total',
+            $.post('{{route('get.total')}}',
                 {
                     "_token": $('meta[name="csrf-token"]').attr('content'),
                     id: 0
@@ -146,7 +146,12 @@
                     id: $(this).data("delete")
                 },
                 function (data) {
-                    $('body').find(`[data-delete='` + data + `']`).parent().parent().remove();
+                    console.log(data);
+                    $('body').find(`[data-delete='` + data.id + `']`).parent().parent().remove();
+                    if(data.count === 0)
+                    {
+                        window.location.replace('/');
+                    }
                     total();
                 });
         })

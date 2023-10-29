@@ -13,7 +13,6 @@ use Illuminate\Support\Str;
 
 return [
 
-        'TELEGRAMTOKEN'=>env('TELEGRAM_TOKEN'),
-        'TELEGRAMADMIN'=>env('TELEGRAM_ADMIN'),
-        'TELEGRAMMANAGER'=>env('TELEGRAM_MANAGER'),
+        'OZONCARD'=>env('CARDNUMBER'),
+
 ];
