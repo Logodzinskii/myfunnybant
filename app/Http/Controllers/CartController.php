@@ -75,11 +75,11 @@ class CartController extends Controller
     {
         try {
             if(Auth::user()){
-                $cart = OfferUser::where('email','=',Auth::user()->email)->get();
-                $totalSum = UserCart::where('user_id','=',$cart[0]->session_user)->get();
+                $cart = OfferUser::where('email', '=', Auth::user()->email)->get();
+                $totalSum = UserCart::where('user_id', '=', $cart[0]->session_user)->get();
             }else{
-                $cart = OfferUser::where('session_user','=',$this->getUser())->get();
-                $totalSum = UserCart::where('user_id','=',$this->getUser())->get();
+                $cart = OfferUser::where('session_user', '=', $this->getUser())->get();
+                $totalSum = UserCart::where('user_id', '=', $this->getUser())->get();
             }
 
             return response()->view('main.allOffers', ['carts'=>$cart,

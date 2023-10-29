@@ -3,12 +3,8 @@
 use App\Http\Controllers\ActionOzonController;
 use App\Http\Controllers\Admin\SaleItemsController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\ConcurentParserController;
 use App\Http\Controllers\CreateShopController;
-use App\Http\Controllers\OfferUserController;
 use App\Http\Controllers\OzonShopController;
-use App\Http\Controllers\User\DeliveryController;
-use App\Http\Controllers\User\VisitorsController;
 use App\Http\Controllers\UserCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -102,7 +98,7 @@ Route::controller(CartController::class)->group(function(){
     Route::post('/user/update/quantity', 'updateCart');
     Route::post('/user/delete/cart', 'deleteCart');
     Route::post('/user/cart/total','getCountCartItem')->name('get.total');
-    Route::get('user/view/cart', 'indexCart');
+    Route::get('/user/view/cart', 'indexCart');
     Route::post('/user/create/offer', 'createOffer')
         ->name('user.create.offer');
     Route::get('/user/get/cart','index');
@@ -128,32 +124,3 @@ Route::controller(UserCartController::class)->group(function(){
  * Маршруты счетчиков
  */
 Route::get('/counter/',[CartController::class, 'counter'])->name('counter');
-
-
-Route::get('/visitor/session', function (){
-    $visitor = new VisitorsController('petr','mail@mail.com', '8999-999-99-00');
-
-    //$visitor->setNameVisitors('petr','mail@mail.com', '8999-999-99-00');
-    return $visitor->visitor();
-});
-Route::get('/visitor/setname/', function (){
-    $visitor = new VisitorsController('petr','mail@mail.com', '8999-999-99-00');
-
-    //$visitor->setNameVisitors('petr','mail@mail.com', '8999-999-99-00');
-    return $visitor->getVisitor();
-});
-
-Route::get('/visitor/delete/', function (){
-    $visitor = new VisitorsController('petr','mail@mail.com', '8999-999-99-00');
-    $visitor->deleteVisitor();
-    return 'done';
-});
-Route::get('/delivery/', function (){
-    $delivery = new DeliveryController('a','a', 'a','a');
-    $delivery->setDelivery('a','a', 'a','a');
-    return $delivery->getDelivery();
-});
-Route::get('/basket/', function (){
-    $basket = new \App\Http\Controllers\User\BasketController('CBv7ceThrRnnObnr8yN23bL6UwrTOctfj5GQmAe6');
-    return $basket->getCountItem();
-});
