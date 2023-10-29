@@ -76,8 +76,12 @@
                                     </div>
                                     <div>
                                         <div class="shadow bg-light d-flex flex-nowrap rounded-2" style="font-size: 2em">
-                                            <div class="price p-1  border-secondary"><s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->price}} &#8381;</s> </div>
-                                            <div class="action-price p-1  border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->action_price}} &#8381;</div>
+                                            <div class="price p-1  border-secondary">
+                                                <s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->price}} &#8381;</s>
+                                            </div>
+                                            <div class="action-price p-1  border-secondary">
+                                                {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->action_price}} &#8381;
+                                            </div>
                                             <form method="post" action="{{route('add.cart')}}">
                                                 @csrf
                                                 <input type="hidden" name="ozon_id" value="{{$item->ozon_id}}" />

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActionOzonController;
 use App\Http\Controllers\Admin\SaleItemsController;
+use App\Http\Controllers\Admin\shop\productsShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OzonShopController;
@@ -87,6 +88,11 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
     Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
     Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
+
+    /**
+     * Работа с товарами магазина
+     */
+    Route::get('/admin/show/all/products', [productsShopController::class,'index']);
 });
 
 /**
