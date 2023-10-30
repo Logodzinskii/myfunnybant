@@ -241,19 +241,25 @@ class CartController extends Controller
 
         foreach ($arr as $lid)
         {
-            $lidAdd = UserCart::create([
-                'ozon_id' => $lid['associatedModel']['ozon_id'],
-                'user_id' => $session_user,
-                'quantity' => $lid['quantity'],
-                'price' => $lid['price'],
-                'total_price' => $lid['quantity'] * $lid['price'],
-                'cdek_id' => $request->input('input_CDEK_id'),
-                'cdek_info' => $request->input('input_delivery_city') . ' ' .$request->input('input_delivery_adress_cdek'),
-                'delivery_price' => $request->input('input_delivery_price'),
-                'offer_id' => $offer_id,
-                'status_offer'=>'ожидает оплаты'
-            ]);
-            $lidAdd->save();
+            try{
+                $lidAdd = UserCart::create([
+                    'ozon_id' => $lid['associatedModel']['ozon_id'],
+                    'user_id' => $session_user,
+                    'quantity' => $lid['quantity'],
+                    'price' => $lid['price'],
+                    'total_price' => $lid['quantity'] * $lid['price'],
+                    'cdek_id' => $request->input('input_CDEK_id'),
+                    'cdek_info' => $request->input('input_delivery_city') . ' ' .$request->input('input_delivery_adress_cdek'),
+                    'delivery_price' => $request->input('input_delivery_price'),
+                    'offer_id' => $offer_id,
+                    'status_offer'=>'ожидает оплаты'
+                ]);
+                $lidAdd->save();
+            }catch (Exception $exception)
+            {
+                return $exception->getMessage();
+            }
+
         }
 
         $message = '<h1 style="color: #6f42c1"><b>Здравствуйте, '.$name.'!</b></h1>';
@@ -269,14 +275,19 @@ class CartController extends Controller
         $confirm = '<h2>Для подтверждения заказа, на электронную почту '.$email.' направлена ссылка.</h2>';
         $confirm .= '<p>Зайдите в вашу электронную почту и перейдите по ссылке для подтверждения заказа и дальнейшей оплаты.</p>';
         $link = '<h2>Перейдите по ссылке для подтверждения заказа</h2>';
-        $link .= 'https://myfunnybant/security/?link='.$hash;
+        $link .= 'https://myfunnybant.ru/security/?link='.$hash;
         $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
-        CartConfirmEvent::dispatch($message.$link, $email, $name);
-        UserCreateOffer::dispatch($adminMessage);
-        $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
+        try{
+            CartConfirmEvent::dispatch($message.$link, $email, $name);
+            UserCreateOffer::dispatch($adminMessage);
+            $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
-        \Cart::session($session_user);
-        \Cart::session($session_user)->clear();
+            \Cart::session($session_user);
+            \Cart::session($session_user)->clear();
+        }catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
 
         return response()->json([
             'success'=>true,

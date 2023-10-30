@@ -7,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CreateShopController;
 use App\Http\Controllers\OzonShopController;
 use App\Http\Controllers\UserCartController;
+use App\Http\Controllers\yandex\YandexYmlGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
@@ -126,3 +127,9 @@ Route::controller(UserCartController::class)->group(function(){
  * Маршруты счетчиков
  */
 Route::get('/counter/',[CartController::class, 'counter'])->name('counter');
+
+/** yml feed
+ *
+ */
+
+Route::get('/yml/', [YandexYmlGenerator::class, 'createYmlFile']);

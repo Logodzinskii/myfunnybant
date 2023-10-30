@@ -166,12 +166,12 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="flex-wrap d-flex justify-content-between">
-                                   <div class="col">
+                                   <div >
                                        <input type="text" name="pvz" placeholder="Код ПВЗ">
                                        <input type="text" name="address" placeholder="Адрес ПВЗ">
                                        <div id="forpvz" style="height:550px; max-width: 500px"></div>
                                    </div>
-                                    <div class="shadow p-1 m-1 col">
+                                    <div class="shadow p-1 m-1 ">
                                         <h2>Доставка:</h2>
                                         <p>Уважаемые покупатели!</p>
                                         <p>Мы осуществляем доставку товаров для рукоделия по ВСЕЙ РОССИИ.</p>
