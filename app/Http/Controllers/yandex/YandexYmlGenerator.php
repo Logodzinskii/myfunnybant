@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
 use App\Models\StatusPriceShopItems;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -35,11 +36,8 @@ class YandexYmlGenerator extends Controller
         $out .= '</currencies>' . "\r\n";
 
 // Список категорий магазина:
-// id     - ID категории
-// parent - ID родительской категории
-// name   - Название категории
-        //$sth = $dbh->prepare("SELECT `id`, `parent`, `name` FROM `category`");
-        //$sth->execute();
+
+
         $category =OzonShopItem::where('id','>','0')
                     ->groupBy('type')
                     ->get();
@@ -54,9 +52,7 @@ class YandexYmlGenerator extends Controller
         $out .= '</categories>' . "\r\n";
 
 // Вывод товаров:
-        //$sth = $dbh->prepare("SELECT * FROM `prods`");
-        //$sth->execute();
-        //$prods = $sth->fetchAll(PDO::FETCH_ASSOC);
+
 
         $prods = OzonShopItem::where('id','>','0')
         ->get();
@@ -66,12 +62,12 @@ class YandexYmlGenerator extends Controller
             $out .= '<offer id="' . $row->id . '">' . "\r\n";
 
             // URL страницы товара на сайте магазина
-            $out .= '<url>https://myfunnybant.ru/shop/' . OzonShop::where('ozon_id','=',$row->ozon_id)->get()[0]->url_chpu . '</url>' . "\r\n";
+            $out .= '<url>https://myfunnybant.ru/shop/' . OzonShop::select('url_chpu')->where('ozon_id','=',$row->ozon_id)->firstOrFail()->url_chpu . '</url>' . "\r\n";
 
             // Цена, предполагается что в БД хранится цена и цена со скидкой
 
-                $out .= '<price>' . StatusPriceShopItems::where('ozon_id','=',$row->ozon_id)->get()[0]->action_price . '</price>' . "\r\n";
-                $out .= '<oldprice>' . StatusPriceShopItems::where('ozon_id','=',$row->ozon_id)->get()[0]->price . '</oldprice>' . "\r\n";
+                $out .= '<price>' . StatusPriceShopItems::select('action_price')->where('ozon_id','=',$row->ozon_id)->first()->action_price . '</price>' . "\r\n";
+                $out .= '<oldprice>' . StatusPriceShopItems::select('price')->where('ozon_id','=',$row->ozon_id)->first()->price . '</oldprice>' . "\r\n";
 
 
             // Валюта товара
@@ -82,8 +78,8 @@ class YandexYmlGenerator extends Controller
 
             // Изображения товара, до 10 ссылок
             $out .= '<picture>'.json_decode($row->images,true)[0]['file_name'].'</picture>' . "\r\n";
-            $out .= '<picture>https://example.com/img/2.jpg</picture>' . "\r\n";
-
+            $out .= '<picture>'.json_decode($row->images,true)[1]['file_name'].'</picture>' . "\r\n";
+            $out .= '<picture>'.json_decode($row->images,true)[2]['file_name'].'</picture>' . "\r\n";
             // Название товара
             $out .= '<name>'.$row->header.'</name>' . "\r\n";
 
@@ -97,7 +93,15 @@ class YandexYmlGenerator extends Controller
         $out .= '</yml_catalog>' . "\r\n";
 
         header('Content-Type: text/xml; charset=utf-8');
-        return $out;
+        try{
+            mkdir('yml',0777,true);
+            \Illuminate\Support\Facades\File::put('yml/feed_01.yml', $out);
+
+        }catch (\Exception  $exeption)
+        {
+            return $exeption->getMessage();
+        }
+
 
     }
 }
