@@ -17,6 +17,7 @@ use App\Events\CartConfirmEvent;
 use Exception;
 use App\Http\Controllers\User\VisitorsController;
 use App\Http\Controllers\User\DeliveryController;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -200,7 +201,9 @@ class CartController extends Controller
          * 5. если подтвердил, то связываемся с покупателем утоняем заказ
          * 6. отправляем реквизиты для оплаты (админка менеджера сайта)
          */
+
         try{
+            DB::beginTransaction();
         $session_user = $this->getUser();
         $offer_id = 'default';
         $user_id = $session_user;
@@ -225,10 +228,7 @@ class CartController extends Controller
             ]);
             $offer->save();
             $offer_id = $offer->id;
-        }catch (Exception $e)
-        {
-            return back()->withError($e->getMessage())->withInput();
-        }
+
 
         $hash = $confirm;
 
@@ -241,7 +241,7 @@ class CartController extends Controller
 
         foreach ($arr as $lid)
         {
-            try{
+
                 $lidAdd = UserCart::create([
                     'ozon_id' => $lid['associatedModel']['ozon_id'],
                     'user_id' => $session_user,
@@ -255,10 +255,6 @@ class CartController extends Controller
                     'status_offer'=>'ожидает оплаты'
                 ]);
                 $lidAdd->save();
-            }catch (Exception $exception)
-            {
-                return $exception->getMessage();
-            }
 
         }
 
@@ -277,21 +273,24 @@ class CartController extends Controller
         $link = '<h2>Перейдите по ссылке для подтверждения заказа</h2>';
         $link .= 'https://myfunnybant.ru/security/?link='.$hash;
         $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
-        try{
+
             CartConfirmEvent::dispatch($message.$link, $email, $name);
             UserCreateOffer::dispatch($adminMessage);
             $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
             \Cart::session($session_user);
             \Cart::session($session_user)->clear();
+            DB::commit();
+            return response()->json([
+                'success'=>true,
+            ]);
         }catch (Exception $exception)
         {
-            return $exception->getMessage();
+            DB::rollBack();
+            return response()->json([
+                'success'=>false,
+            ]);
         }
-
-        return response()->json([
-            'success'=>true,
-        ]);
 
     }
 
