@@ -39,15 +39,17 @@ class CartController extends Controller
 
         }else{
 
-
             $arr=[];
             foreach (session()->all() as $key=>$name){
 
                 $arr[] = $key;
             }
             if(count($arr)>5){
+
                 $sessId = explode('_', $arr[5])[0];
+
             }else{
+
                 $sessId = $this->visitor->getSessionVisitor();
             }
 
@@ -61,7 +63,7 @@ class CartController extends Controller
         $userId = $this->getUser();
         $product = OzonShopItem::where('ozon_id', '=', $request->ozon_id)->firstOrFail();
 
-        \Cart::session($userId)->add([
+        \Cart::session('_token')->add([
             'id'=>$product->id,
             'user_id' => $userId,
             'name' => $product->name,
@@ -76,7 +78,7 @@ class CartController extends Controller
     public function indexCart()
     {
 
-        \Cart::session($this->getUser());
+        \Cart::session('_token');
         $items = \Cart::getContent();
         return view('main.cart', ['cart'=>$items]);
 
@@ -89,30 +91,42 @@ class CartController extends Controller
             if(Auth::user()){
                 $cart = OfferUser::where('email', '=', Auth::user()->email)->get();
                 $totalSum = UserCart::where('user_id', '=', $cart[0]->session_user)->get();
+            }elseif (strlen(session('user')['email'])>0){
+                $cart = OfferUser::where('email', '=', session('user')['email'])->get();
+                $totalSum = UserCart::where('user_id', '=', $cart[0]->user_id)->get();
             }else{
-                $cart = OfferUser::where('session_user', '=', $this->getUser())->get();
-                $totalSum = UserCart::where('user_id', '=', $this->getUser())->get();
+                $cart = OfferUser::where('email', '=', session('user')['email'])->get();
+                return response()->view('main.allOffers', ['carts'=>$cart,
+                    'totalQuantity'=>0,
+                    'totalSum'=>0]);
             }
-
-
             return response()->view('main.allOffers', ['carts'=>$cart,
                 'totalQuantity'=>$totalSum->sum('quantity'),
                 'totalSum'=>$totalSum->sum('total_price')]);
         }catch (Exception $e){
-            return back()->withError($e->getMessage())->withInput();
+                return $e->getMessage() . session('user')['email'];
         }
     }
 
     public function counter()
     {
-        if(Auth::user()){
-            $cart = OfferUser::where('email','=',Auth::user()->email)->get();
-            $totalSum = UserCart::where('user_id','=',$cart[0]->session_user)->get();
-        }else{
-            $totalSum = UserCart::where('user_id','=',$this->getUser())->get();
+        try{
+            if(Auth::user()){
+                $cart = OfferUser::where('email','=',Auth::user()->email)->get();
+                $totalSum = UserCart::where('user_id','=',$cart[0]->session_user)->sum('quantity');
+            }elseif (strlen(session('user')['email'])>0){
+                $totalSum = UserCart::where('user_id','=',$this->getUser())->get();
+                $cart = OfferUser::where('email', '=', session('user')['email'])->get();
+                $totalSum = UserCart::where('user_id', '=', $cart->first()->user_id)->sum('quantity');
+            }else{
+                return 0;
+            }
+
+            return $totalSum;
+        }catch (Exception $exception){
+            return 0;
         }
 
-        return $totalSum->sum('quantity');
     }
 
     public function getCountCartItem()
@@ -120,13 +134,13 @@ class CartController extends Controller
         try{
 
             $userId = $this->getUser();
-            $total = \Cart::session($userId)->getSubTotal();
-            $totalQuantity = \Cart::session($userId)->getTotalQuantity();
+            $total = \Cart::session('_token')->getSubTotal();
+            $totalQuantity = \Cart::session('_token')->getTotalQuantity();
 
             return [$total,$totalQuantity];
         }catch (Exception $exception)
         {
-            return $exception->getMessage();
+            return 'CartController' . $exception->getMessage() . $this->getUser();
         }
 
     }
@@ -134,7 +148,7 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
         $userId = $this->getUser();
-        \Cart::session($userId)->update($request->id,
+        \Cart::session('_token')->update($request->id,
             [
                 'quantity' => $request->quantity,
             ]);
@@ -146,14 +160,14 @@ class CartController extends Controller
     {
         try{
             $userId = $this->getUser();
-            \Cart::session($userId)->remove($request->id);
+            \Cart::session('_token')->remove($request->id);
 
         }catch (Exception $exception)
         {
             return $exception->getMessage();
         }
 
-        return ['id'=>$request->id, 'count'=>\Cart::session($userId)->getTotalQuantity()];
+        return ['id'=>$request->id, 'count'=>\Cart::session('_token')->getTotalQuantity()];
     }
 
     /**
@@ -226,7 +240,7 @@ class CartController extends Controller
 
             $this->visitor->setNameVisitors($name, $email, $tel);
             $this->delivery->setDelivery($request->input('input_delivery_city'), $request->input('input_delivery_adress_cdek'), $request->input('input_delivery_price'), $request->input('input_CDEK_id'));
-            \Cart::session($user_id);
+            \Cart::session('_token');
             $items = \Cart::getContent();
             $this->cart = $items;
             $confirm = password_hash($email, PASSWORD_DEFAULT);
@@ -282,12 +296,12 @@ class CartController extends Controller
             $link .= 'https://myfunnybant.ru/security/?link='.$hash;
             $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
 
-            CartConfirmEvent::dispatch($message.$link, $email, $name);
-            UserCreateOffer::dispatch($adminMessage);
+            //CartConfirmEvent::dispatch($message.$link, $email, $name);
+            //UserCreateOffer::dispatch($adminMessage);
             $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
-            \Cart::session($session_user);
-            \Cart::session($session_user)->clear();
+            \Cart::session('_token');
+            \Cart::session('_token')->clear();
             $this->visitor->setNameVisitors($name,$email,$tel);
             DB::commit();
             return response()->json([

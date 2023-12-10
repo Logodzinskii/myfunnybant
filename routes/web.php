@@ -133,3 +133,12 @@ Route::get('/counter/',[CartController::class, 'counter'])->name('counter');
  */
 
 Route::get('/yml/', [YandexYmlGenerator::class, 'createYmlFile']);
+Route::get('/session/out', function (){
+    session()->flush();
+    return print_r(session()->all());
+});
+Route::get('/session/token', function (){
+    \Cart::session('_token');
+    $items = \Cart::getContent();
+    return $items;
+});
