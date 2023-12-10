@@ -18,7 +18,7 @@ class YandexYmlGenerator extends Controller
     {
 
         try{
-            $this->deleteYml();
+
 // Подключение к БД
             //$dbh = new PDO('mysql:dbname=db_name;host=localhost', 'логин', 'пароль');
 
@@ -99,9 +99,15 @@ class YandexYmlGenerator extends Controller
             header('Content-Type: text/xml; charset=utf-8');
             //\Illuminate\Support\Facades\File::delete('/yml/feed_01.yml');
 
-            Storage::makeDirectory('../public/yml');
-            Storage::put('../public/yml/feed_01.yml', $out);
-            echo asset('../public/feed_01.yml');
+            try {
+                Storage::disk('yml')->put('/feed_01.yml', $out);
+                echo 'done';
+            }catch (Exception $exception)
+            {
+                echo 'error' . $exception->getMessage();
+            }
+
+
             //\Illuminate\Support\Facades\File::put('/yml/feed_01.yml', $out);
 
         }catch (\Exception  $exeption)
@@ -111,14 +117,5 @@ class YandexYmlGenerator extends Controller
 
 
     }
-
-    protected function deleteYml()
-    {
-        try{
-            \Illuminate\Support\Facades\File::deleteDirectory('../public/yml');
-
-        }catch (Exception $e){
-            return 'error' . $e;
-        }
-    }
+    
 }

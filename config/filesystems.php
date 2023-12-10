@@ -56,6 +56,14 @@ return [
             'throw' => false,
         ],
 
+        'yml' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/yml'),
+            'url' => env('APP_URL').'/yml',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
