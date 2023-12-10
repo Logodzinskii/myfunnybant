@@ -78,7 +78,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::controller(CreateShopController::class)->group(function(){
         Route::get('/admin/maxlike', 'maxLike');
         Route::get('/admin/createShop/', 'createShop');
-    });
+    })->middleware('auth');;
 
     /**
      * Работа с заказами пользователей

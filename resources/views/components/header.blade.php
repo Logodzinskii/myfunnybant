@@ -189,20 +189,20 @@
             <ul class="navbar-nav ms-auto">
                 @if(isset(Auth::user()->role) &&  Auth::user()->role === 1)
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/show/all/items/">Управление сайтом</a>
+                        <a class="nav-link" href="/admin/dashboard/">Управление сайтом</a>
                     </li>
                 @endif
                 <!-- Authentication Links -->
                 @guest
                     @if (Route::has('login'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Войти') }}</a>
                         </li>
                     @endif
 
                     @if (Route::has('register'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Зарегистрироваться') }}</a>
                         </li>
                     @endif
                 @else
@@ -214,7 +214,7 @@
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
+                                {{ __('Выйти') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
