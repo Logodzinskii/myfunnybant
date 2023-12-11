@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\yandex\YandexYmlGenerator;
 use App\Models\Offers;
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
@@ -79,6 +80,8 @@ class CreateShopController extends Controller
             }
 
         }
+        $yml = New YandexYmlGenerator();
+        $yml->createYmlFile();
         return $offers;
 
     }
