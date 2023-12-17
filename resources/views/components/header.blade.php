@@ -189,7 +189,7 @@
             <ul class="navbar-nav ms-auto">
                 @if(isset(Auth::user()->role) &&  Auth::user()->role === 1)
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/dashboard/">Управление сайтом</a>
+                        <a class="nav-link" href="/home">Управление сайтом</a>
                     </li>
                 @endif
                 <!-- Authentication Links -->

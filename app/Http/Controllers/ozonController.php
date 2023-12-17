@@ -20,12 +20,12 @@ class ozonController
             $data  = [DB::table('ozon_shop_items')
                 ->where('category', '=', $funnel)
                 ->orderBy('ozon_id','desc')
-                ->get()
+                ->paginate(20)
             ];
         }else{
             $data = [DB::table('ozon_shop_items')
                 ->orderBy('ozon_id','desc')
-                ->get()
+                ->paginate(20)
             ];
             $funnel = '';
         }
