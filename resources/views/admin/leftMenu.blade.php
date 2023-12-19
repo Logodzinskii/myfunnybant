@@ -29,6 +29,7 @@
                         <li><a class="dropdown-item" href="/admin/total/year/">Статистика</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/admin/sale/date/">За период</a></li>
+                        <li><a class="dropdown-item" href="/admin/finance/show">Сравнительные графики</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
