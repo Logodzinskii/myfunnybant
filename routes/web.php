@@ -71,6 +71,8 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/sale/date/','showDateBetween');
         Route::post('/admin/sale/sum/datebetween','sumDateBetween')
             ->name('sum.date.between');
+        Route::get('/admin/finance/ozon', 'ozonFinance')
+            ->name('admin.finance.ozon');
     })->middleware('auth');
     /**
      * Маршруты для управления онлайн магазином администратором
