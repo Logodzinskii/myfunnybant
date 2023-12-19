@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\SaleItemsController;
 use App\Http\Controllers\Admin\shop\productsShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CreateShopController;
+use App\Http\Controllers\FinanceOzonController;
 use App\Http\Controllers\OzonShopController;
 use App\Http\Controllers\UserCartController;
 use App\Http\Controllers\yandex\YandexYmlGenerator;
@@ -74,6 +75,11 @@ Route::middleware(['auth','isAdmin'])->group(function() {
         Route::get('/admin/finance/ozon', 'ozonFinance')
             ->name('admin.finance.ozon');
     })->middleware('auth');
+
+    Route::controller(FinanceOzonController::class)->group(function(){
+        Route::get('/admin/finance/read/csv', 'readCsv');
+        Route::get('/admin/finance/show', 'showFinanceReport');
+    });
     /**
      * Маршруты для управления онлайн магазином администратором
      */
