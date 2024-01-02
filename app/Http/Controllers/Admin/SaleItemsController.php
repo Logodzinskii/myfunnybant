@@ -13,6 +13,7 @@ use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use function PHPUnit\Framework\isEmpty;
 
 class SaleItemsController extends Controller
@@ -159,5 +160,14 @@ class SaleItemsController extends Controller
             return $financeReport;
         }
 
+    }
+
+    public function editDateSale(Request $request)
+    {
+        $newDate = $request->date;
+        $id = $request->id;
+        saleitems::where('id',$id)
+                   ->update(['date_sale'=>$newDate]);
+        return $newDate;
     }
 }

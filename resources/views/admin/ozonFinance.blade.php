@@ -2,7 +2,6 @@
 @section('content')
     <script type="text/javascript">
         $(document).ready(function () {
-
             itogo('sale_qty');
             itogo('sale_amount');
             itogo('return_qty');

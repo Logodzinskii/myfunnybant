@@ -13,7 +13,7 @@ class FinanceOzonController extends Controller
     public function readCsv()
     {
         $datas = [];
-        if (($open = fopen(storage_path() . '\app\csv\test1.csv', "r")) !== FALSE) {
+        if (($open = fopen(storage_path() . '\app\csv\test5.csv', "r")) !== FALSE) {
 
             while (($data = fgetcsv($open, 1000, ";")) !== FALSE) {
                 $datas[] = $data;
@@ -21,30 +21,45 @@ class FinanceOzonController extends Controller
 
             fclose($open);
         }
-
+        //return $datas;
         foreach ($datas as $rows)
         {
             financeOzon::create([
                 'name'=>$rows[0],
                 'article'=>$rows[1],
                 'month'=>$rows[2],
-                'year'=>'2023',
-                'item'=>$rows[3],
-                'sale_price'=>$rows[4]
+                'year'=>$rows[3],
+                'item'=>$rows[4],
+                'sale_price'=>$rows[5]
             ]);
 
-            echo '<p>'. $rows[0] .' - '.$rows[1].' - '.$rows[2].' - '.$rows[3].' - '.$rows[4].'</p>' ;
+            echo '<p>'. $rows[0] .' - '.$rows[1].' - '.$rows[2].' - '.$rows[3].' - '.$rows[4]. ' - '.$rows[5].'</p>' ;
         }
 
     }
 
-    public function showFinanceReport(MonthlSellerChart $chart)
+    public function showFinanceReport(MonthlSellerChart $chart, Request $request)
     {
+        $get_year = substr($request->dat, 0, 4);
+        $today = new \DateTime('now');
 
-        $month = financeOzon::select('sale_price')
-            ->where('month','=','февраль')
+        $dat = strlen($get_year)>0?$get_year : $today->format("Y");
+        $yearOzon = financeOzon::select('sale_price')
+            ->where('year','=',$dat)
             ->sum('sale_price');
 
-        return view('admin.charts.main', ['chart' => $chart->build()]);
+        $sum = 0;
+        $arr = saleitems::selectRaw('count_items * sale_price AS total')
+            ->whereYear('date_sale', $dat)
+            ->get();
+
+        foreach ($arr as $i)
+        {
+            $sum+= $i['total'];
+        }
+
+        return view('admin.charts.main', ['chart' => $chart->build($dat),
+                                                'ozonYear'=>$yearOzon,
+                                                'salesYear'=>$sum]);
     }
 }

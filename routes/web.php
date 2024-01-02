@@ -74,6 +74,8 @@ Route::middleware(['auth','isAdmin'])->group(function() {
             ->name('sum.date.between');
         Route::get('/admin/finance/ozon', 'ozonFinance')
             ->name('admin.finance.ozon');
+        Route::post('/admin/sale/edit/date', 'editDateSale')
+            ->name('edit.date.sale');
     })->middleware('auth');
 
     Route::controller(FinanceOzonController::class)->group(function(){

@@ -15,70 +15,71 @@ class MonthlSellerChart
         $this->chart = $chart;
     }
 
-    public function build(): \ArielMejiaDev\LarapexCharts\LineChart
+    public function build($year): \ArielMejiaDev\LarapexCharts\LineChart
     {
 
         return $this->chart->lineChart()
-            ->setTitle('В 2023.')
+            ->setTitle('В '. $year)
             ->setSubtitle('Продажи на озон')
             ->addData('Продано ozon', [
-                $this->monthSum('Январь'),
-                $this->monthSum('Февраль'),
-                $this->monthSum('Март'),
-                $this->monthSum('Апрель'),
-                $this->monthSum('Май'),
-                $this->monthSum('Июнь'),
-                $this->monthSum('Июль'),
-                $this->monthSum('Август'),
-                $this->monthSum('Сентябрь'),
-                $this->monthSum('Октябрь'),
-                $this->monthSum('Ноябрь'),
-                $this->monthSum('Декабрь'),
+                $this->monthSum('Январь',$year),
+                $this->monthSum('Февраль',$year),
+                $this->monthSum('Март',$year),
+                $this->monthSum('апрель',$year),
+                $this->monthSum('Май',$year),
+                $this->monthSum('Июнь',$year),
+                $this->monthSum('Июль',$year),
+                $this->monthSum('Август',$year),
+                $this->monthSum('Сентябрь',$year),
+                $this->monthSum('Октябрь',$year),
+                $this->monthSum('Ноябрь',$year),
+                $this->monthSum('Декабрь',$year),
                 ])
             ->addData('Продано ярмарки', [
-                $this->monthSumSales('01'),
-                $this->monthSumSales('02'),
-                $this->monthSumSales('03'),
-                $this->monthSumSales('04'),
-                $this->monthSumSales('05'),
-                $this->monthSumSales('06'),
-                $this->monthSumSales('07'),
-                $this->monthSumSales('08'),
-                $this->monthSumSales('09'),
-                $this->monthSumSales('10'),
-                $this->monthSumSales('11'),
-                $this->monthSumSales('12'),
+                $this->monthSumSales('01',$year),
+                $this->monthSumSales('02',$year),
+                $this->monthSumSales('03',$year),
+                $this->monthSumSales('04',$year),
+                $this->monthSumSales('05',$year),
+                $this->monthSumSales('06',$year),
+                $this->monthSumSales('07',$year),
+                $this->monthSumSales('08',$year),
+                $this->monthSumSales('09',$year),
+                $this->monthSumSales('10',$year),
+                $this->monthSumSales('11',$year),
+                $this->monthSumSales('12',$year),
             ])
             ->addData('Продано всего', [
-                $this->monthSum('Январь') + $this->monthSumSales('01'),
-                $this->monthSum('Февраль') + $this->monthSumSales('02'),
-                $this->monthSum('Март') + $this->monthSumSales('03'),
-                $this->monthSum('Апрель') + $this->monthSumSales('04'),
-                $this->monthSum('Май') + $this->monthSumSales('05'),
-                $this->monthSum('Июнь') + $this->monthSumSales('06'),
-                $this->monthSum('Июль') + $this->monthSumSales('07'),
-                $this->monthSum('Август') + $this->monthSumSales('08'),
-                $this->monthSum('Сентябрь') + $this->monthSumSales('09'),
-                $this->monthSum('Октябрь') + $this->monthSumSales('10'),
-                $this->monthSum('Ноябрь') + $this->monthSumSales('11'),
-                $this->monthSum('Декабрь') + $this->monthSumSales('12'),
+                $this->monthSum('Январь',$year) + $this->monthSumSales('01',$year),
+                $this->monthSum('Февраль',$year) + $this->monthSumSales('02',$year),
+                $this->monthSum('Март',$year) + $this->monthSumSales('03',$year),
+                $this->monthSum('Апрель',$year) + $this->monthSumSales('04',$year),
+                $this->monthSum('Май',$year) + $this->monthSumSales('05',$year),
+                $this->monthSum('Июнь',$year) + $this->monthSumSales('06',$year),
+                $this->monthSum('Июль',$year) + $this->monthSumSales('07',$year),
+                $this->monthSum('Август',$year) + $this->monthSumSales('08',$year),
+                $this->monthSum('Сентябрь',$year) + $this->monthSumSales('09',$year),
+                $this->monthSum('Октябрь',$year) + $this->monthSumSales('10',$year),
+                $this->monthSum('Ноябрь',$year) + $this->monthSumSales('11',$year),
+                $this->monthSum('Декабрь',$year) + $this->monthSumSales('12',$year),
             ])
             ->setXAxis(['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']);
     }
 
-    private function monthSum($month){
+    private function monthSum($month, $year){
         $month = financeOzon::select('sale_price')
             ->where('month','=',$month)
+            ->where('year', '=', $year)
             ->sum('sale_price');
         return $month;
     }
 
-    private function monthSumSales($month)
+    private function monthSumSales($month, $year)
     {
         $sum = 0;
         $arr = saleitems::selectRaw('count_items * sale_price AS total')
             ->whereMonth('date_sale', $month)
-            ->whereYear('date_sale', '2023')
+            ->whereYear('date_sale', $year)
             ->get();
 
         foreach ($arr as $i)
