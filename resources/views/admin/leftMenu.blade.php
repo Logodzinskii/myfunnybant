@@ -18,7 +18,7 @@
                     <a class="nav-link active" aria-current="page" href="/">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/createShop/">Обновить товары с озон</a>
+                    <a class="nav-link active" aria-current="page" href="/home">Dash Board</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -29,6 +29,15 @@
                         <li><a class="dropdown-item" href="/admin/total/year/">Статистика</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/admin/sale/date/">За период</a></li>
+                        <li><a class="dropdown-item" href="/admin/finance/show">Сравнительные графики</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Ozon
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/admin/finance/ozon">Озон финансовые отчеты</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -54,6 +63,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/admin/show/all/products">Все</a></li>
                         <li><a class="dropdown-item" href="/admin/edit/price">Управление ценами</a></li>
+                        <li><a class="dropdown-item" href="/admin/createShop/">Обновить товары с озон</a></li>
                     </ul>
                 </li>
             </ul>

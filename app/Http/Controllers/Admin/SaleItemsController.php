@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Console\Commands\getOzonData;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\StatGetOzon;
 use App\Models\Offers;
@@ -12,6 +13,7 @@ use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use function PHPUnit\Framework\isEmpty;
 
 class SaleItemsController extends Controller
@@ -135,5 +137,37 @@ class SaleItemsController extends Controller
             'date_stop'=>$request['date_stop'],
             'allSales'=>$allSales,
         ]);
+    }
+
+    public function ozonFinance(Request $request)
+    {
+
+        $get_month = substr($request->dat, 0, 7);
+        $today = new \DateTime('now');
+        $today = $today->modify('-1 month');
+        $dat = strlen($get_month)>0?$get_month : $today->format("Y-m");
+
+        $data = '{
+        "date": "'.$dat.'"
+        }';
+        //return var_dump($data);
+        $method = '/v1/finance/realization';
+        $financeReport = getOzonData::getResponseOzon($data,$method, '');
+        if(isset(json_decode($financeReport,true)['result'])){
+            return view('admin/ozonFinance', ['financeReport' => (json_decode($financeReport,true)['result'])]);
+        }else
+        {
+            return $financeReport;
+        }
+
+    }
+
+    public function editDateSale(Request $request)
+    {
+        $newDate = $request->date;
+        $id = $request->id;
+        saleitems::where('id',$id)
+                   ->update(['date_sale'=>$newDate]);
+        return $newDate;
     }
 }
