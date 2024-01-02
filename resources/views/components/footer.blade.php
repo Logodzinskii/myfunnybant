@@ -78,10 +78,10 @@
                         Ссылки:
                     </h6>
                     <p>
-                        <a href="#!" class="text-reset">Индивидуальный заказ</a>
+                        <a href="/privacy" class="text-reset">Политика обработки персональных данных</a>
                     </p>
                     <p>
-                        <a href="#!" class="text-reset">Оплата и доставка</a>
+                        <a href="/user/view/cart" class="text-reset">Оплата и доставка</a>
                     </p>
                 </div>
                 <!-- Grid column -->
