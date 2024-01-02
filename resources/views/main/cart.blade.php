@@ -271,7 +271,19 @@
                             <input name="input_delivery_adress_cdek" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_adress_cdek']:''}}" />
                             <input name="input_delivery_price" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_price']:''}}" />
                             <input name="input_CDEK_id" type="hidden" value="{{session()->exists('delivery')?session('delivery')['CDEK_id']:''}}" />
-                            <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Купить</button>
+                            <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-secondary" disabled>Купить</button>
+                            <input type="checkbox" name="privacy" id="privacy"> <a href="/privacy" >Ознакомлен с политикой обработки персональных данных</a>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#privacy').on('click',function (){
+                                        if(this.checked){
+                                            $('#сreateOffer').prop('disabled', false)
+                                        }else {
+                                            $('#сreateOffer').prop('disabled', true)
+                                        }
+                                    })
+                                })
+                            </script>
                         </form>
                     </div>
                 </div>

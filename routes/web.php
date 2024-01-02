@@ -152,3 +152,7 @@ Route::get('/session/token', function (){
     $items = \Cart::getContent();
     return $items;
 });
+
+Route::get('/privacy', function (){
+    return view('privacy');
+});
