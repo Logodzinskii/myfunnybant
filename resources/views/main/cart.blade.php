@@ -90,7 +90,6 @@
 
                     var obj = info;
                     var arr = Object.keys(obj).map(function (key) { return obj[key]; });
-                    console.log(arr);
                     $('.delivery-city').html(arr[7]);
                     $('.delivery-adress-cdek').html(arr[1]['Address']);
                     $('.delivery-price').html(' Стоимость доставки ' +arr[6] + 'руб. доставка оплачивается в пункте выдачи СДЭК');
@@ -101,9 +100,17 @@
                     $('input[name=input_CDEK_id]').val(arr[0]);
                     $('#message-delivery-denied').css('display','none');
                     $('#message-delivery-allow').removeClass('.disabled');
-
+                    const bsCollapse = new bootstrap.Collapse('#collapseThree', {
+                        show:true
+                    })
                 }
             });
+            $('.confirm').on('click', function (e) {
+                e.preventDefault();
+                const bsCollapse = new bootstrap.Collapse('#collapse3', {
+                    show:true
+                })
+            })
             $('.offer-start').on('click',function(){
 
                 $('.modal').show();
@@ -169,7 +176,7 @@
                                    <div >
                                        <input type="text" name="pvz" placeholder="Код ПВЗ">
                                        <input type="text" name="address" placeholder="Адрес ПВЗ">
-                                       <div id="forpvz" style="height:550px; max-width: 500px"></div>
+                                       <div id="forpvz" style="height:80vh; width: 85vw"></div>
                                    </div>
                                     <div class="shadow p-1 m-1 ">
                                         <h2>Доставка:</h2>
@@ -184,14 +191,6 @@
                                             Обращаем Ваше внимание, что наш интернет-магазин не несет ответственность за сроки доставки Почтой России и ТК СДЭК.
                                             Сроки могут быть уменьшены или увеличены в связи с загруженностью той или иной транспортной компании.
                                         </p>
-                                        <p id="message-delivery-denied">Для примерного расчета стоимости доставки ТК СДЭК
-                                            выберите пункт выдачи на карте
-                                        </p>
-                                        <div id="message-delivery-allow" class="disabled">
-                                            <div class="delivery-city h3"></div>
-                                            <div class="delivery-adress-cdek h3"></div>
-                                            <div class="delivery-price h3"></div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -200,92 +199,113 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                2. Оплата
+                                2. Подтверждение заказа
                             </button>
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <h2>Оплата</h2>
-                                <p>Реквизиты на оплату высылаем на Ваш e-mail
-                                    ПОСЛЕ сборки Вашего заказа (в течение 24 часов после оформления заказа на сайте)
-                                </p>
+                            <div class="accordion-body d-flex justify-content-between flex-wrap row row-cols-1 row-cols-sm-2">
+                                <div class="col">
+                                    <div class="shadow p-1 m-1">
+                                        <div class="">
+                                            <span><b>Ваш заказ в</b></span>
+                                            <span><b>Интернет-магазине Myfunnybant.ru</b></span>
+                                            <hr>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Всего товаров</span>
+                                                <span class="total" style="color: mediumvioletred; size: 2em"></span>
+                                            </div>
+                                            <hr>
+                                            <div class="d-flex justify-content-between">
+                                                <span>На сумму</span>
+                                                <span class="totalSum" style="color: mediumvioletred; size: 2em"></span>
+                                            </div>
+                                            <hr>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Доставка СДЭК <br> (оплачивается при получении)
+                                                <p id="message-delivery-denied">Для примерного расчета стоимости доставки ТК СДЭК
+                                                    выберите пункт выдачи на карте
+                                                </p>
+                                                <div id="message-delivery-allow" class="disabled">
+                                                    <div class="delivery-city"></div>
+                                                    <div class="delivery-adress-cdek "></div>
+                                                    <div class="delivery-price "></div>
+                                                </div>
+                                                </span>
+                                                <span class="totalDelivery" style="color: mediumvioletred; size: 2em">Выберите на карте</span>
 
-                                <p>Мы работаем по 100% предоплате.</p>
-
-                                <p>МИНИМАЛЬНОЙ СУММЫ ЗАКАЗА НЕТ.</p>
-
-                                E-mail: <a href="mailto:veronika-manager@mail.ru" >veronika-manager@mail.ru</a>
-
-                                <p>Режим работы:</p>
-                                <p>Приём заказов — ЕЖЕДНЕВНО.</p>
-                                <p>Сборка и отгрузка заказов: Пн-пт с 10.00 до 20.00.</p>
-
-                                <p>ЗАКАЗЫ, НЕОПЛАЧЕННЫЕ В ТЕЧЕНИЕ 2-Х РАБОЧИХ ДНЕЙ, АВТОМАТИЧЕСКИ АННУЛИРУЮТСЯ</p>
+                                            </div>
+                                            <hr>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Итого <br> к переводу на карту</span>
+                                                <span class="totalSum" style="color: mediumvioletred; size: 2em"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col shadow">
+                                    <h2>Оплата</h2>
+                                    <p>Реквизиты на оплату высылаем на Ваш e-mail
+                                        ПОСЛЕ сборки Вашего заказа (в течение 24 часов после оформления заказа на сайте)
+                                    </p>
+                                    <p>Мы работаем по 100% предоплате.</p>
+                                    <p>МИНИМАЛЬНОЙ СУММЫ ЗАКАЗА НЕТ.</p>
+                                    E-mail: <a href="mailto:veronika-manager@mail.ru" >veronika-manager@mail.ru</a>
+                                    <p>Режим работы:</p>
+                                    <p>Приём заказов — ЕЖЕДНЕВНО.</p>
+                                    <p>Сборка и отгрузка заказов: Пн-пт с 10.00 до 20.00.</p>
+                                    <p>ЗАКАЗЫ, НЕОПЛАЧЕННЫЕ В ТЕЧЕНИЕ 2-Х РАБОЧИХ ДНЕЙ, АВТОМАТИЧЕСКИ АННУЛИРУЮТСЯ</p>
+                                </div>
                             </div>
+                            <a href="#" class="my-button btn btn-sm g-2 h-4 m-1 text-white confirm">Подтвердить заказ и пункт доставки СДЭК</a>
                         </div>
                     </div>
-                </div>
-                <div class="container d-flex justify-content-between flex-wrap m-3 p-1">
-                    <div class="shadow p-1 m-1">
-                        <div class="">
-                            <span><b>Ваш заказ в</b></span>
-                            <span><b>Интернет-магазине Myfunnybant.ru</b></span>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span>Всего товаров</span>
-                                <span class="total" style="color: mediumvioletred; size: 2em"></span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span>На сумму</span>
-                                <span class="totalSum" style="color: mediumvioletred; size: 2em"></span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span>Доставка СДЭК <br> (оплачивается при получении)</span>
-                                <span class="totalDelivery" style="color: mediumvioletred; size: 2em">Выберите на карте</span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span>Итого <br> к переводу на карту</span>
-                                <span class="totalSum" style="color: mediumvioletred; size: 2em"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="shadow p-2">
-                        <form  method="post" name="offerForm">
-                        <h2>Информация о получателе заказа</h2>
-                        <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('user')?session('user')['name']:''}}" required/></h3>
-                        <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" value="{{session()->exists('user')?session('user')['email']:''}}" required ></h3>
-                        <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" value="{{session()->exists('user')?session('user')['tel']:''}}" required></h3>
-                            @if (session('error'))
-                                <div class="alert alert-danger">{{ session('error') }}</div>
-                            @endif
-                            <span class="myerror d-flex flex-wrap">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                3. Покупка
+                            </button>
+                        </h2>
+                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body d-flex justify-content-between flex-wrap row row-cols-1 row-cols-sm-2">
+                                <div class="container d-flex justify-content-between flex-wrap m-3 p-1">
+
+                                    <div class="shadow p-2">
+                                        <form  method="post" name="offerForm">
+                                            <h2>Информация о получателе заказа</h2>
+                                            <h3>Имя<span style="color: red">*</span>: <input name="first_name" type="text" placeholder="Имя" value="{{session()->exists('user')?session('user')['name']:''}}" required/></h3>
+                                            <h3>e-mail<span style="color: red">*</span>: <input name="email" type="email" placeholder="example@gmail.com" value="{{session()->exists('user')?session('user')['email']:''}}" required ></h3>
+                                            <h3>Телефон<span style="color: red">*</span>: <input name="tel" type="tel" placeholder="XXXXXXXXXX" value="{{session()->exists('user')?session('user')['tel']:''}}" required></h3>
+                                            @if (session('error'))
+                                                <div class="alert alert-danger">{{ session('error') }}</div>
+                                            @endif
+                                            <span class="myerror d-flex flex-wrap">
 
                             </span>
 
-                            <h3><span style="color: red">*</span> - обязательно для заполнения</h3>
-                            @csrf
-                            <input name="input_delivery_city" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_city']:''}}" />
-                            <input name="input_delivery_adress_cdek" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_adress_cdek']:''}}" />
-                            <input name="input_delivery_price" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_price']:''}}" />
-                            <input name="input_CDEK_id" type="hidden" value="{{session()->exists('delivery')?session('delivery')['CDEK_id']:''}}" />
-                            <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-secondary" disabled>Купить</button>
-                            <input type="checkbox" name="privacy" id="privacy"> <a href="/privacy" >Ознакомлен с политикой обработки персональных данных</a>
-                            <script type="text/javascript">
-                                $(document).ready(function () {
-                                    $('#privacy').on('click',function (){
-                                        if(this.checked){
-                                            $('#сreateOffer').prop('disabled', false)
-                                        }else {
-                                            $('#сreateOffer').prop('disabled', true)
-                                        }
-                                    })
-                                })
-                            </script>
-                        </form>
-                    </div>
+                                            <h3><span style="color: red">*</span> - обязательно для заполнения</h3>
+                                            @csrf
+                                            <input name="input_delivery_city" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_city']:''}}" />
+                                            <input name="input_delivery_adress_cdek" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_adress_cdek']:''}}" />
+                                            <input name="input_delivery_price" type="hidden" value="{{session()->exists('delivery')?session('delivery')['delivery_price']:''}}" />
+                                            <input name="input_CDEK_id" type="hidden" value="{{session()->exists('delivery')?session('delivery')['CDEK_id']:''}}" />
+                                            <button id="сreateOffer" type="submit" class="my-button btn btn-sm g-2 h-4 m-1 text-secondary" disabled>Купить</button>
+                                            <input type="checkbox" name="privacy" id="privacy"> <a href="/privacy" >Ознакомлен с политикой обработки персональных данных</a>
+                                            <script type="text/javascript">
+                                                $(document).ready(function () {
+                                                    $('#privacy').on('click',function (){
+                                                        if(this.checked){
+                                                            $('#сreateOffer').prop('disabled', false)
+                                                        }else {
+                                                            $('#сreateOffer').prop('disabled', true)
+                                                        }
+                                                    })
+                                                })
+                                            </script>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
             <div class="modal-footer">
