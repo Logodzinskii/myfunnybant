@@ -50,62 +50,14 @@
         <div class="container  ">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-3 g-3 basic-staggering-demo">
                 @foreach($items as $item)
-                    <div class="col " id="{{$key}}">
-                        <div class=" overflow-hidden eli" style="height: 75vh">
-                            <div class="card-body side d-flex justify-content-center overflow-hidden flex-wrap" style="">
-                                <div class="border-0">
-                                    <div class="position-relative" style=" height: 10vh">
-                                        <div class="card-gradient position-absolute top-0" style="width: 100%; height: 100%"></div>
-                                        <h5 class="text-center position-absolute top-0" >{{$item->name}}</h5>
-                                    </div>
-
-                                    <div class="p-0 m-0" style="height: 50vh; overflow: hidden">
-                                        <img src="{{json_decode($item->images, true)[0]['file_name']}}" class="mx-auto d-block img-fluid" alt="{{$item->name}}">
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-wrap justify-content-around bg-light rounded-2" style="height: 15vh">
-                                    <div class="w-100 d-flex justify-content-center">
-                                        <div class="d-flex flex-nowrap rounded-2" style="font-size: 2em">
-                                            <div class="price p-1  border-secondary">
-                                                <s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->price}} &#8381;</s>
-                                            </div>
-                                            <div class="action-price p-1  border-secondary">
-                                                {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $item->ozon_id)->first()->action_price}} &#8381;
-                                            </div>
-                                            <form method="post" action="{{route('add.cart')}}">
-                                                @csrf
-                                                <input type="hidden" name="ozon_id" value="{{$item->ozon_id}}" />
-                                            </form>
-                                        </div>
-                                        <div class="ps-4 pt-3">
-                                            @if(session()->has('ozon_id') && array_search($item->ozon_id, session()->get('ozon_id')) !== false)
-                                                <i class="bi-like p-3 like" data-heart="{{$item->ozon_id}}"></i>
-                                            @else
-                                                <i class="bi p-3 like" data-heart="{{$item->ozon_id}}"></i>
-                                            @endif
-                                            <span class="badge text-bg-secondary rounded-circle" style="left:25px">{{\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->like_count}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-wrap justify-content-around">
-                                        <a href="{{route("seller.ozon", ['url'=>$item->name])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">в ozon.ru</a>
-                                        <a href="{{url("shop", ['offer_chpu'=>\App\Models\OzonShop::where('ozon_id', '=', $item->ozon_id)->first()->url_chpu])}}" class="my-button btn btn-sm g-2 h-4 m-1 text-white">Подробнее</a>
-                                        <div class="add-cart my-button btn btn-sm g-2 h-4 m-1 text-white" data-add-cart="{{$item->ozon_id}}">
-                                            <i class="bi-basket3"></i>
-                                            В корзину
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-card header="{{$item->name}}" img="{{json_decode($item->images, true)[0]['file_name']}}" key="{{$key}}" ozonid="{{$item->ozon_id}}"></x-card>
                 @endforeach
             </div>
         </div>
     @endforeach
     <div class="container mt-5 mb-5 d-flex justify-content-center flex-wrap">
-
         {{$data[0]->links()}}
-
     </div>
 </section>
 @endsection
+

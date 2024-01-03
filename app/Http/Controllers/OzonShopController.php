@@ -62,7 +62,8 @@ class OzonShopController extends Controller
             if(session()->has('ozon_id'))
             {
                 foreach (session()->get('ozon_id') as $off){
-                    $offers[] = OzonShopItem::where('ozon_id', $off)->get();
+                    $offers[] = OzonShopItem::where('ozon_id', $off)
+                        ->paginate(20);
                 }
             }
 
