@@ -56,7 +56,9 @@
         </div>
     @endforeach
     <div class="container mt-5 mb-5 d-flex justify-content-center flex-wrap">
+
         {{$data[0]->links()}}
+
     </div>
 </section>
 @endsection
