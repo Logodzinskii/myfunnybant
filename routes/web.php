@@ -27,7 +27,9 @@ use App\Http\Controllers\Admin\AdminUserController;
 
 Route::get('/', [ozonController::class, 'index']);
 Route::get('/filter/{funnel}',[ozonController::class, 'index']);
-
+Route::get('/filter/colors/{funnel}',[ozonController::class, 'color']);
+Route::get('/filter/material/{funnel}',[ozonController::class, 'material']);
+Route::get('/filter/price/{funnel}',[ozonController::class, 'price']);
 Route::get('/shop/{offer_chpu}', [ozonController::class, 'showItem'])->name('shop');
 
 Route::get('/sell/{url}', function($url){
