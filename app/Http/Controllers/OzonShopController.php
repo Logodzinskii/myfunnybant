@@ -78,7 +78,13 @@ class OzonShopController extends Controller
 
         ClickOzonLink::dispatch($request->get('funnel'));
 
-        return view('main.index', ['data'=>[OzonShopItem::search($request->get('funnel'))->get()]]);
+        return view('main.index', [
+            'data'=>
+                [
+                    OzonShopItem::search($request->get('funnel'))
+                        ->paginate(20)
+                ]
+        ]);
 
     }
 }
