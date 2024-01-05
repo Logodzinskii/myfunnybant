@@ -36,19 +36,55 @@ class ozonController
 
     public function color($funnel)
     {
-        $colors = OzonShopItem::whereJsonContains('colors',$funnel)
+        $colors = OzonShopItem::select('colors','ozon_id')
             ->get();
+        $arr = [];
 
-        return $colors;
+        foreach ($colors as $color)
+        {
+            foreach (json_decode($color->colors,true) as $color1)
+            {
+                if($color1 == $funnel){
+                    $arr[]= $color->ozon_id;
+                }
+            }
+        }
 
         return view('main.index', [
             'data'=>
                 [
-                    OzonShopItem::search('json_contains(destinations, \'["' . $funnel . '"]\')')
+                    OzonShopItem::whereIn('ozon_id',$arr)
                         ->paginate(20)
                 ]
         ]);
     }
+
+    public function material($funnel)
+    {
+        $materials = OzonShopItem::select('material','ozon_id')
+            ->get();
+        $arr = [];
+
+        foreach ($materials as $material)
+        {
+            foreach (json_decode($material->material,true) as $material1)
+            {
+                if($material1 == $funnel){
+                    $arr[]= $material->ozon_id;
+                }
+            }
+        }
+
+        return view('main.index', [
+            'data'=>
+                [
+                    OzonShopItem::whereIn('ozon_id',$arr)
+                        ->paginate(20)
+                ]
+        ]);
+    }
+
+
 
     public function showItem(Request $request, $offer_chpu = null)
     {
