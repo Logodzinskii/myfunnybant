@@ -79,6 +79,19 @@
                     @endforeach
                 </ul>
             </div>
+            <div class="nav-item dropdown m-3">
+                <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi-funnel-fill rounded-2 text-light m-2 p-2" style="background-color: #6610f2; size: 2em"></i>По цене
+                </a>
+                <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{url('/filter/price/max')}}">Сначала дорогие</a>
+                        </li>
+                    <li>
+                        <a class="dropdown-item" href="{{url('/filter/price/min')}}">Сначала недорогие</a>
+                    </li>
+                </ul>
+            </div>
         </form>
     </div>
 </div>

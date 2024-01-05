@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OzonShop;
 use App\Models\OzonShopItem;
+use App\View\Components\funnel;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +85,19 @@ class ozonController
         ]);
     }
 
-
+    public function price($funnel)
+    {
+        return view('main.index', [
+            'data'=>
+                [
+                    DB::table('ozon_shop_items')
+                        ->join('status_price_shop_items','ozon_shop_items.ozon_id', '=', 'status_price_shop_items.ozon_id')
+                        ->select('ozon_shop_items.*', 'status_price_shop_items.action_price')
+                        ->orderBy('status_price_shop_items.action_price',$funnel == 'max'?'desc':'asc')
+                        ->paginate(20)
+                ]
+        ]);
+    }
 
     public function showItem(Request $request, $offer_chpu = null)
     {
