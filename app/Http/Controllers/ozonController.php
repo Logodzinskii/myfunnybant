@@ -12,7 +12,6 @@ class ozonController
 {
     public $responseOzonArray = [];
 
-
     public function index( $funnel = null)
     {
         if(($funnel != null))
@@ -34,6 +33,23 @@ class ozonController
             'data'=> $data,
         ]);
     }
+
+    public function color($funnel)
+    {
+        $colors = OzonShopItem::whereJsonContains('colors',$funnel)
+            ->get();
+
+        return $colors;
+
+        return view('main.index', [
+            'data'=>
+                [
+                    OzonShopItem::search('json_contains(destinations, \'["' . $funnel . '"]\')')
+                        ->paginate(20)
+                ]
+        ]);
+    }
+
     public function showItem(Request $request, $offer_chpu = null)
     {
         if($offer_chpu == null){
@@ -43,9 +59,9 @@ class ozonController
         }else{
             $offer_id = OzonShop::where('url_chpu', '=', $offer_chpu)->first();
             $offer_id = $offer_id->ozon_id;
-
         }
 
         return view('item', ['res'=>OzonShopItem::where('ozon_id', '=', $offer_id)->first()]);
     }
+
 }

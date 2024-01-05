@@ -27,6 +27,32 @@
                     @endforeach
                 </ul>
             </div>
+            <div class="nav-item dropdown m-3">
+                <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi-funnel-fill rounded-2 text-light m-2 p-2" style="background-color: #6610f2; size: 2em"></i>Цвета
+                </a>
+                <ul class="dropdown-menu overflow-scroll" style="height: 80vh">
+                    @php
+                        $newArr = [];
+                    @endphp
+                    @foreach(\Illuminate\Support\Facades\DB::table('ozon_shop_items')->orderBy('colors', 'desc')->groupBy('colors')->get() as $colors)
+                            @php
+                                $arr = json_decode($colors->colors,true);
+
+                                        foreach ($arr as $arrString)
+                                            {
+                                                $string = explode(' ', $arrString);
+                                                $newArr[] = implode(' ', $string);
+                                            }
+                            @endphp
+                    @endforeach
+                    @foreach(array_unique($newArr) as $color)
+                        <li>
+                            <a class="dropdown-item" href="{{url('/filter/colors/'.$color)}}">{{$color}}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </form>
     </div>
 </div>
