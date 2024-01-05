@@ -56,18 +56,11 @@
                     <h6 class="text-uppercase fw-bold mb-4">
                         Работы
                     </h6>
-                    <p>
-                        <a href="#!" class="text-reset">Заколки</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Банты</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Чокеры</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Резинки</a>
-                    </p>
+                    @foreach(\Illuminate\Support\Facades\DB::table('ozon_shop_items')->orderBy('created_at', 'desc')->groupBy('category')->get() as $category)
+                        <p>
+                            <a class="text-reset" href="{{url('/filter/'.$category->category)}}">{{$category->type}}</a>
+                        </p>
+                    @endforeach
                 </div>
                 <!-- Grid column -->
 
