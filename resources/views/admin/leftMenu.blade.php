@@ -30,6 +30,7 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/admin/sale/date/">За период</a></li>
                         <li><a class="dropdown-item" href="/admin/finance/show">Сравнительные графики</a></li>
+                        <li><a class="dropdown-item" href="/admin/finance/load/ozon/csv">Загрузить CSV с озон</a> </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
