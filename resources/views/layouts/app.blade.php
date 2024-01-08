@@ -61,6 +61,16 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <!-- Yandex.RTB R-A-2544919-1 -->
+        <script>
+            window.yaContextCb.push(()=>{
+                Ya.Context.AdvManager.render({
+                    "blockId": "R-A-2544919-1",
+                    "type": "floorAd",
+                    "platform": "touch"
+                })
+            })
+        </script>
         <x-footer></x-footer>
     </div>
 </body>
