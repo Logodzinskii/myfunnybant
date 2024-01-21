@@ -18,7 +18,7 @@ class UserCartController extends Controller
 {
     public function index()
     {
-        if(Auth::user()->getAuthIdentifier()===67){
+        if(Auth::user()->getAuthIdentifier()===1){
             return view('admin.panel.index');
         }
         if(!Auth::check()){
