@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ozonController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\Pages\PageContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +106,16 @@ Route::middleware(['auth','isAdmin'])->group(function() {
      * Работа с товарами магазина
      */
     Route::get('/admin/show/all/products', [productsShopController::class,'index']);
+
+    /**
+     * создание блогов на сайте
+     */
+    Route::controller(BlogsController::class)->group(function(){
+        Route::get('/admin/blog/maker', 'index');
+        Route::post('/admin/create/blog','create')->name('create.blog.post');
+        Route::post('/admin/blog/save/image','saveImage')->name('blog.save.image');
+    });
+    
 });
 
 /**
@@ -158,3 +170,9 @@ Route::get('/session/token', function (){
 Route::get('/privacy', function (){
     return view('privacy');
 });
+
+/**
+ * blog page
+ */
+
+ Route::get('/blogs', [PageContentController::class, 'index']);
