@@ -14,7 +14,6 @@ class CreateShopController extends Controller
 {
     public function createShop($last_id = null)
     {
-
         $offers=[];
         $offers = ['OzonShop'=>$this->create(),
                    'Price'=>$this->createPrice(),

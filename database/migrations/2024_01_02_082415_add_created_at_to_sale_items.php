@@ -13,9 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('saleitems', function (Blueprint $table) {
-            $table->timestamps();
-        });
+        
     }
 
     /**
@@ -25,9 +23,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('saleitems', function (Blueprint $table) {
-            $table->dropColumn('created_at');
-            $table->dropColumn('updated_at');
-        });
+        
     }
 };
