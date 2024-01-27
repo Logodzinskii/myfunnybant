@@ -176,3 +176,4 @@ Route::get('/privacy', function (){
  */
 
  Route::get('/blogs', [PageContentController::class, 'index']);
+ Route::get('/blog/{chpu}', [PageContentController::class, 'blog']);

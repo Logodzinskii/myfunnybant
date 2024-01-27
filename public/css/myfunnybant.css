@@ -114,3 +114,7 @@ img{
     background: linear-gradient(to right, #fbc7d4, #9796f0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     z-index: -1;
 }
+
+a {
+    color: #6f42c1 !important;
+}
