@@ -106,7 +106,9 @@
             save()
             {
                 let previwe = $('#previwe');
-                $('.form-control').val(previwe.html());
+
+                $('#blog').val(previwe.html());
+
             }
         };
         
@@ -142,13 +144,36 @@
         <button class="btn btn-primary addHeader">Добавить заголовок</button> 
         <button class="btn btn-primary addImage">Добавить картинку</button>
         <button class="btn btn-primary addText">Добавить текст</button>
-        <button class="btn btn-primary saveblock">Сохранить страницу</button> 
-        <form action="{{route('create.blog.post')}}" method="post">
+
+        <button class="btn btn-primary saveblock">К отправке</button> 
+        <form action="{{route('create.blog.post')}}" method="post" class="pt-3 pb-3" name="form">
             @csrf
+        <div class="card text-start bg-light">
+            <div class="card-body d-flex justyfy-content-center flex-wrap">
+                <div class="col-md-4 p-2">
+                    <label for="" class="form-label">Author</label>
+                    <input type="text" name="blog_author_name" class="form-control" value="" required />
+                </div>
+                <div class="col-md-4 p-2">
+                    <label for="" class="form-label">Ссылки на автора</label>
+                    <input type="text" name="blog_author_link" class="form-control" value="" required />
+                </div>
+                <div class="col-md-4 p-2">
+                    <label for="" class="form-label">Название страницы Seo meta-tag</label>
+                    <input type="text" name="blog_header" class="form-control" value="" required />
+                </div>
+                <div class="col-md-4 p-2">
+                    <label for="" class="form-label">Описание seo meta-tag</label>
+                    <input type="text" name="blog_desrypion" class="form-control" value="" required />
+                </div>
+            </div>
+        </div>       
+
         <div class="mb-3">
             <label for="blog" class="form-label"></label>
             <textarea class="form-control" name="blog" id="blog" rows="6"></textarea>
         </div>
+
         <button type="submit" class="btn btn-primary">Отправить на сервер</button>
         </form> 
         <h2>Ввод информации</h2>

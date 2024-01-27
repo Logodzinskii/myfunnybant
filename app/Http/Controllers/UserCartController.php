@@ -14,13 +14,21 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 use Darryldecode\Cart\Cart;
 
+use function PHPUnit\Framework\isNull;
+
 class UserCartController extends Controller
 {
     public function index()
-    {
-        if(Auth::user()->role===1){
+
+    { 
+        $isAdmin = Auth::user()->role ?? 0;
+
+        if($isAdmin === 1){
+            
+
             return view('admin.panel.index');
         }
+        
         if(!Auth::check()){
             return redirect('login');
         }else{
