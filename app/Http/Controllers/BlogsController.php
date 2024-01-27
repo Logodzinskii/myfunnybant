@@ -17,6 +17,7 @@ class BlogsController extends Controller
 
     public function create(Request $request)
     {
+
         $blogs = blogs::create([
             'blog_author_name'=>$request->blog_author_name,
             'blog_author_link'=>$request->blog_author_link,
@@ -26,6 +27,7 @@ class BlogsController extends Controller
         ]);
 
         return view('blog.blog',['data'=>blogs::all()]);
+
     }
 
     public function saveImage(Request $request)
