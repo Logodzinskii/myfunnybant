@@ -71,7 +71,8 @@
                         Блоги
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/admin/blog/maker">Главная</a></li>
+                        <li><a class="dropdown-item" href="/admin/blog/maker/list">Все посты</a></li>
+                        <li><a class="dropdown-item" href="/admin/blog/maker">Добавить</a></li>
                     </ul>
                 </li>
             </ul>

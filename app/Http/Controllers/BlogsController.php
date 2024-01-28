@@ -6,7 +6,7 @@ use App\Models\blogs;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 class BlogsController extends Controller
 {
     //CRUD from blog
@@ -14,6 +14,12 @@ class BlogsController extends Controller
     {
         return view('admin.adminblog.blogMaker');
     }
+    public function list()
+    {
+        return view('admin.adminblog.adminBlogList', ['blogs'=>DB::table('blogs')
+        ->paginate(20)]);
+    }
+
 
     public function create(Request $request)
     {
@@ -26,6 +32,15 @@ class BlogsController extends Controller
         ]);
 
         return view('blog.blog',['data'=>blogs::all()]);
+    }
+
+    public function delete(Request $request)
+    {
+        $blog = blogs::find($request->id);
+        $blog->delete();
+        
+        return view('admin.adminblog.adminBlogList', ['blogs'=>DB::table('blogs')
+        ->paginate(20)]);
     }
 
     public function saveImage(Request $request)
