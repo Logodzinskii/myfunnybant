@@ -34,6 +34,7 @@ class BlogsController extends Controller
 
         return view('blog.blog',['data'=>blogs::all()]);
 
+
     }
 
     public function delete(Request $request)
@@ -43,6 +44,7 @@ class BlogsController extends Controller
         
         return view('admin.adminblog.adminBlogList', ['blogs'=>DB::table('blogs')
         ->paginate(20)]);
+
     }
 
     public function saveImage(Request $request)
