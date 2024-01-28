@@ -23,7 +23,7 @@
 
 
 
-    <!-- Yandex.Metrika counter 
+    <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();
@@ -37,10 +37,10 @@
             accurateTrackBounce:true,
             webvisor:true
         });
-    </script>-->
-    <!--<noscript><div><img src="https://mc.yandex.ru/watch/84655657" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-     /Yandex.Metrika counter -->
-    <!-- Google tag (gtag.js) 
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/84655657" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SVJMVRECBB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -48,10 +48,10 @@
         gtag('js', new Date());
 
         gtag('config', 'G-SVJMVRECBB');
-    </script>-->
-    <!-- Yandex.RTB 
+    </script>
+    <!-- Yandex.RTB -->
     <script>window.yaContextCb=window.yaContextCb||[]</script>
-    <script src="https://yandex.ru/ads/system/context.js" async></script>-->
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
 </head>
 <body>
     <div id="app">
@@ -61,6 +61,16 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <!-- Yandex.RTB R-A-2544919-1 -->
+        <script>
+            window.yaContextCb.push(()=>{
+                Ya.Context.AdvManager.render({
+                    "blockId": "R-A-2544919-1",
+                    "type": "floorAd",
+                    "platform": "touch"
+                })
+            })
+        </script>
         <x-footer></x-footer>
     </div>
 </body>

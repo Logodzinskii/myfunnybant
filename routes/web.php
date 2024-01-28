@@ -86,6 +86,11 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::controller(FinanceOzonController::class)->group(function(){
         Route::get('/admin/finance/read/csv', 'readCsv');
         Route::get('/admin/finance/show', 'showFinanceReport');
+        Route::get('/admin/finance/load/ozon/csv',function (){
+            return view('admin.charts.csvloader');
+        });
+        Route::post('/admin/finance/load/ozon/csv/file', 'loadCsv')
+            ->name('file.upload.post');
     });
     /**
      * Маршруты для управления онлайн магазином администратором
@@ -178,7 +183,11 @@ Route::get('/privacy', function (){
  * blog page
  */
 
+
  Route::get('/blogs', [PageContentController::class, 'index']);
  Route::get('/blog/{chpu}', [PageContentController::class, 'blog']);
 
- Route::get('/vk/post/{count}/{startPosition}',[VkParserController::class, 'getVkPosts']);
+
+ /**
+  * Route::get('/vk/post/{count}/{startPosition}',[VkParserController::class, 'getVkPosts']);
+*/

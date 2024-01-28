@@ -7,12 +7,14 @@ use App\Models\financeOzon;
 use App\Models\saleitems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Exception;
 
 class FinanceOzonController extends Controller
 {
     public function readCsv()
     {
         $datas = [];
+
         if (($open = fopen(storage_path() . '\app\csv\test5.csv', "r")) !== FALSE) {
 
             while (($data = fgetcsv($open, 1000, ";")) !== FALSE) {
@@ -35,6 +37,29 @@ class FinanceOzonController extends Controller
 
             echo '<p>'. $rows[0] .' - '.$rows[1].' - '.$rows[2].' - '.$rows[3].' - '.$rows[4]. ' - '.$rows[5].'</p>' ;
         }
+
+    }
+
+    public function loadCsv(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt',
+        ]);
+        $datas = [];
+
+        $fileName = time().'.'.$request->file->getClientOriginalName();
+
+        $request->file->move(storage_path() . '/app/csv/', $fileName);
+
+        if (($open = fopen(storage_path() . '\app\csv\/'.$fileName , "r")) !== FALSE) {
+
+            while (($data = fgetcsv($open, 1000, ";")) !== FALSE) {
+                $datas[] = $data;
+            }
+
+            fclose($open);
+        }
+        return $datas;
 
     }
 

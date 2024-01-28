@@ -113,7 +113,9 @@
             save()
             {
                 let previwe = $('#previwe');
+
                 $('#blog').val(previwe.html());
+
             }
         };
         
@@ -154,6 +156,7 @@
         <button class="btn btn-primary addImage">Добавить картинку альбомную</button>
         <button class="btn btn-primary addImageBook">Добавить картинку книжный формат</button>
         <button class="btn btn-primary addText">Добавить текст</button>
+
         <button class="btn btn-primary saveblock">К отправке</button> 
         <form action="{{route('create.blog.post')}}" method="post" class="pt-3 pb-3" name="form">
             @csrf
@@ -177,11 +180,12 @@
                 </div>
             </div>
         </div>       
+
         <div class="mb-3">
             <label for="blog" class="form-label"></label>
             <textarea class="form-control" name="blog" id="blog" rows="6"></textarea>
         </div>
-        
+
         <button type="submit" class="btn btn-primary">Отправить на сервер</button>
         </form> 
         <h2>Ввод информации</h2>

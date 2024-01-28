@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+
 use App\Http\Controllers\StatGetOzon;
 use App\Models\blogs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class PageContentController extends Controller
 {
     public function index()
     {
+
         return view('blog.blogList', ['blogs'=>DB::table('blogs')
                                                 ->paginate(20)]);
     }
@@ -26,5 +29,6 @@ class PageContentController extends Controller
         
         return view('blog.blog', ['data'=>blogs::where('id', '=', $id)
                                                             ->get()]);
+
     }
 }
