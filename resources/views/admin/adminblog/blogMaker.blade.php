@@ -31,7 +31,7 @@
                     $('#output'+ id).text(this.value);
                 });
             }
-            layoutImage()
+            layoutImage(orientation)
             {
                 let id = this.id;
                 let addImgInput = '<div><input type="file" name="" id="myImage'+id+'" class="form-control" placeholder="Выберите картинку"/></div>';
@@ -47,6 +47,8 @@
                     var myFormData = new FormData();
                     myFormData.append('image', this.files[0]);
 
+                    
+
                     $.ajax({
                         url: '/admin/blog/save/image',
                         type: 'POST',
@@ -56,7 +58,12 @@
                         data: myFormData,
                         success: function(data){                        
                             //console.log(data);
-                            let image = '<figure class="figure">';
+                            let image = '';
+                            if(orientation === 'album'){
+                                image = image + '<figure class="figure">';
+                            }else{
+                                image = image + '<figure class="figure col-6">';
+                            }
                             image = image + '<img id="imputImg'+id+'" name="image" src="#" class="figure-img img-fluid rounded" alt="your image" />';
                             image = image + '<figcaption class="figure-caption"></figcaption>';
                             image = image + '</figure>';   
@@ -120,7 +127,11 @@
         });
         $('.addImage').on('click', function(){
             let block = new Block(uniqId());
-            block.layoutImage();
+            block.layoutImage('album');
+        });
+        $('.addImageBook').on('click', function(){
+            let block = new Block(uniqId());
+            block.layoutImage('book');
         });
         $('.addText').on('click', function(){
             let block = new Block(uniqId());
@@ -142,7 +153,8 @@
     </div>
     <div class="card-body">
         <button class="btn btn-primary addHeader">Добавить заголовок</button> 
-        <button class="btn btn-primary addImage">Добавить картинку</button>
+        <button class="btn btn-primary addImage">Добавить картинку альбомную</button>
+        <button class="btn btn-primary addImageBook">Добавить картинку книжный формат</button>
         <button class="btn btn-primary addText">Добавить текст</button>
 
         <button class="btn btn-primary saveblock">К отправке</button> 
