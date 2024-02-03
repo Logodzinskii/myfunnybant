@@ -118,7 +118,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
      */
     Route::controller(BlogsController::class)->group(function(){
         Route::get('/admin/blog/maker', 'index');
-        Route::get('/admin/blog/maker/list', 'list');
+        Route::get('/admin/blog/maker/list', 'list')->name('list.admin.blog');
         Route::get('/admin/blog/maker/delete/{id}', 'delete')->name('delete.blog.post');
         Route::post('/admin/create/blog','create')->name('create.blog.post');
         Route::post('/admin/blog/save/image','saveImage')->name('blog.save.image');

@@ -22,5 +22,16 @@
     </div>  
 
     @endforeach
+    <!-- Yandex.RTB R-A-2544919-2 -->
+    <div id="yandex_rtb_R-A-2544919-2"></div>
+    <script>
+    window.yaContextCb.push(()=>{
+        Ya.Context.AdvManager.render({
+            "blockId": "R-A-2544919-2",
+            "renderTo": "yandex_rtb_R-A-2544919-2",
+            "type": "feed"
+        })
+    })
+    </script>
 </div>
 @endsection
