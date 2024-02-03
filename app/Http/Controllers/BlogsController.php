@@ -34,6 +34,7 @@ class BlogsController extends Controller
 
         return view('blog.blog',['data'=>blogs::all()]);
 
+
     }
 
     public function delete(Request $request)
@@ -56,7 +57,9 @@ class BlogsController extends Controller
         $blog = blogs::find($request->id);
         $blog->delete();
         
+
         return redirect()->route('list.admin.blog');
+
     }
 
     public function saveImage(Request $request)
