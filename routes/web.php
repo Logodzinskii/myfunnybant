@@ -107,6 +107,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
     Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
     Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
+    Route::delete('/admin/delete/user/shop', [AdminUserController::class,'deleteUser'])->name('delete.user.shop');
 
     /**
      * Работа с товарами магазина
@@ -152,7 +153,7 @@ Route::controller(UserCartController::class)->group(function(){
     Route::get('/user/send/mailtest', 'sendMailTest');
 
     Route::post('/user/delete/offer','deleteOffer');
-    Route::get('/home','index');
+    Route::get('/home','index')->name('home');
 })->middleware('auth');
 
 /**

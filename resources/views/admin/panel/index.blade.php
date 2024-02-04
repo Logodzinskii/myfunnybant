@@ -1,5 +1,34 @@
 @extends('admin.layouts.adminHome')
 @section('content')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.users a').on('click', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            
+            $.ajax({
+                   url:'/admin/delete/user/shop',
+                       type:'post',
+                       headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                       data: {
+                           '_method': 'delete',
+                           id:id,
+                           },
+                   success: function(data){
+                    location.reload();
+                    
+                   },
+                    error:function (error) {
+                        alert('Error')
+                        console.log(error);
+                    }
+                   });
+        })
+        
+    })
+</script>
     <section class="container">
         <h2>Панель администратора сайта</h2>
         <div class="container d-flex justify-content-start flex-wrap" >
@@ -68,9 +97,9 @@
                     Список пользователей:
                 </div>
                 <div class="card-body">
-                    <ul>
+                    <ul class="users">
                         @foreach(\App\Models\User::all() as $email)
-                            <li>имя - {{$email->first_name.$email->name}}, email - {{$email->email}}, создан - {{$email->created_at}} <a href="#">del</a> </li>
+                            <li>имя - {{$email->first_name.$email->name}}, email - {{$email->email}}, создан - {{$email->created_at}} <a href="{{route('delete.user.shop')}}" data-id="{{$email->id}}">del</a> </li>
                         @endforeach
                     </ul>
                 </div>
