@@ -30,6 +30,7 @@ class BlogsController extends Controller
             'blog_header'=>$request->blog_header,
             'blog_desrypion'=>$request->blog_desrypion,
             'blog_content'=>$request->blog,
+            'blog_category'=>$request->blog_category,
         ]);
 
         return view('blog.blog',['data'=>blogs::all()]);
@@ -39,11 +40,28 @@ class BlogsController extends Controller
 
     public function delete(Request $request)
     {
+<
+        $content = blogs::select('blog_content')
+        ->where('id', '=', $request->id)
+        ->get();
+        $str = $content;
+        $isMatched = preg_match_all('/[a-z A-Z 0-9]+.(jpg|jpeg|png)/', $str, $matches);
+        
+        try{
+            foreach($matches[0] as $filename){
+                Storage::delete('blogs/'.$filename);
+            }
+        }catch(Exception $e)
+        {
+            return $e->getMessage();
+        }    
+
         $blog = blogs::find($request->id);
         $blog->delete();
         
-        return view('admin.adminblog.adminBlogList', ['blogs'=>DB::table('blogs')
-        ->paginate(20)]);
+
+        return redirect()->route('list.admin.blog');
+
 
     }
 

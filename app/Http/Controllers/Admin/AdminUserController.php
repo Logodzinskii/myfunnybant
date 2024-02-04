@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use App\Events\CartConfirmEvent;
+use App\Models\User;
+use Exception;
 
 class AdminUserController extends Controller
 {
@@ -96,5 +98,33 @@ class AdminUserController extends Controller
                 'error' => $exception->getMessage(),
             ]);
         }
+    }
+
+    public function deleteUser(Request $request)
+    {
+        if(Auth::user()->role == 1 && Auth::user()->id <> $request->id){
+            try{
+                //User::where('id', $request->id)
+                //->delete();
+
+                return response()->json([
+                    'message'=>'done',
+                    'success'=>true,
+                ],200);
+            }catch(Exception $e){
+                return response()->json([
+                    'message'=>$e->getMessage(),
+                    'success'=>false,
+                ],404);
+            }
+ 
+        }else{
+            return response()->json([
+                'message'=>'admin not deleted',
+                'success'=>false,
+            ],404);
+        }
+        
+        
     }
 }

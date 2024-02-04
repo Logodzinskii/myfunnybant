@@ -107,6 +107,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
     Route::post('/admin/view/offers/',[AdminUserController::class,'index']);
     Route::put('/admin/update/status/offers/',[AdminUserController::class, 'update']);
     Route::post('/admin/track/add', [AdminUserController::class, 'addTrack']);
+    Route::delete('/admin/delete/user/shop', [AdminUserController::class,'deleteUser'])->name('delete.user.shop');
 
     /**
      * Работа с товарами магазина
@@ -118,7 +119,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
      */
     Route::controller(BlogsController::class)->group(function(){
         Route::get('/admin/blog/maker', 'index');
-        Route::get('/admin/blog/maker/list', 'list');
+        Route::get('/admin/blog/maker/list', 'list')->name('list.admin.blog');
         Route::get('/admin/blog/maker/delete/{id}', 'delete')->name('delete.blog.post');
         Route::post('/admin/create/blog','create')->name('create.blog.post');
         Route::post('/admin/blog/save/image','saveImage')->name('blog.save.image');
@@ -152,7 +153,7 @@ Route::controller(UserCartController::class)->group(function(){
     Route::get('/user/send/mailtest', 'sendMailTest');
 
     Route::post('/user/delete/offer','deleteOffer');
-    Route::get('/home','index');
+    Route::get('/home','index')->name('home');
 })->middleware('auth');
 
 /**
@@ -185,7 +186,14 @@ Route::get('/privacy', function (){
 
 
  Route::get('/blogs', [PageContentController::class, 'index']);
- Route::get('/blog/{chpu}', [PageContentController::class, 'blog']);
+ Route::get('/blogs/{category}', [PageContentController::class, 'categoryView']);
+ Route::get('/blogs/{category}/{chpu}', [PageContentController::class, 'blog']);
+
+
+
+ /**
+  * Route::get('/vk/post/{count}/{startPosition}',[VkParserController::class, 'getVkPosts']);
+*/
 
 
 

@@ -162,6 +162,19 @@
             @csrf
         <div class="card text-start bg-light">
             <div class="card-body d-flex justyfy-content-center flex-wrap">
+                <div class="mb-3">
+                    <label for="blog_category" class="form-label">Категория</label>
+                    <select
+                        class="form-select form-select-lg"
+                        name="blog_category"
+                        id="blog_category"
+                    >
+                        <option selected>Выберите</option>
+                        <option value="творчество">творчество</option>
+                        <option value="события">события</option>
+                    </select>
+                </div>
+                
                 <div class="col-md-4 p-2">
                     <label for="" class="form-label">Author</label>
                     <input type="text" name="blog_author_name" class="form-control" value="" required />
