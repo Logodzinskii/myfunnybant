@@ -40,6 +40,7 @@ class BlogsController extends Controller
 
     public function delete(Request $request)
     {
+<
         $content = blogs::select('blog_content')
         ->where('id', '=', $request->id)
         ->get();
@@ -60,6 +61,7 @@ class BlogsController extends Controller
         
 
         return redirect()->route('list.admin.blog');
+
 
     }
 
