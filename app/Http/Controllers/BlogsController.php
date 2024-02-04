@@ -30,6 +30,7 @@ class BlogsController extends Controller
             'blog_header'=>$request->blog_header,
             'blog_desrypion'=>$request->blog_desrypion,
             'blog_content'=>$request->blog,
+            'blog_category'=>$request->blog_category,
         ]);
 
         return view('blog.blog',['data'=>blogs::all()]);

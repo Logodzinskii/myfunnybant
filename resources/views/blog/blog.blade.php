@@ -5,6 +5,9 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{{url('blogs')}}">Блоги</a></li>
+          @if(isset($category))
+            <li class="breadcrumb-item" aria-current="page"><a href="{{url('blogs/').'/'. $category['url']}}">{{$category['url_name']}}</a></li> 
+          @endif
           <li class="breadcrumb-item active" aria-current="page">{{$data[0]->blog_header}}</li>
         </ol>
       </nav>

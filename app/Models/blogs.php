@@ -16,5 +16,6 @@ class blogs extends Model
         'blog_header',
         'blog_desrypion',
         'blog_content',
+        'blog_category',
     ];
 }
