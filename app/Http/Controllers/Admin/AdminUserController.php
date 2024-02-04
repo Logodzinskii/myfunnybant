@@ -104,8 +104,9 @@ class AdminUserController extends Controller
     {
         if(Auth::user()->role == 1 && Auth::user()->id <> $request->id){
             try{
-                //User::where('id', $request->id)
-                //->delete();
+
+                User::where('id', $request->id)
+                ->delete();
 
                 return response()->json([
                     'message'=>'done',
