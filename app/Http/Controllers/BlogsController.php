@@ -40,7 +40,7 @@ class BlogsController extends Controller
 
     public function delete(Request $request)
     {
-<
+
         $content = blogs::select('blog_content')
         ->where('id', '=', $request->id)
         ->get();
