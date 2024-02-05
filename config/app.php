@@ -198,8 +198,8 @@ return [
         /*
          * https://packagist.org/packages/darryldecode/cart
          */
-        Darryldecode\Cart\CartServiceProvider::class
-
+        Darryldecode\Cart\CartServiceProvider::class,
+        peal\barcodegenerator\BarcodeServiceProvider::class,
     ],
 
     /*
@@ -215,7 +215,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Cart' => Darryldecode\Cart\Facades\CartFacade::class
+        'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
+        'BarCode' => peal\barcodegenerator\Facades\BarCode::class,
     ])->toArray(),
 
 ];
