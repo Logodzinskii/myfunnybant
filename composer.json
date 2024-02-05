@@ -17,6 +17,7 @@
         "laravel/ui": "4.2",
         "league/flysystem-path-prefixing": "^3.16",
         "nicolaslopezj/searchable": "^1.13",
+        "peal/laravel-barcode-generator": "*",
         "phpmailer/phpmailer": "^6.8",
         "twbs/bootstrap": "5.0.1",
         "twbs/bootstrap-icons": "^1.10",

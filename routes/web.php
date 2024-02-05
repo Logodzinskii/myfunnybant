@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\Pages\PageContentController;
 use App\Http\Controllers\VkParserController;
+use App\Http\Controllers\Admin\BarCodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ Route::middleware(['auth','isAdmin'])->group(function() {
      * Работа с товарами магазина
      */
     Route::get('/admin/show/all/products', [productsShopController::class,'index']);
-
+    Route::get('/admin/Barcod/create/{id}', [BarCodController::class,'index']);
     /**
      * создание блогов на сайте
      */

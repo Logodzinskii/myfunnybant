@@ -118,6 +118,8 @@
                     Обновлен - {{$product->updated_at->format('j F, Y')}}
                     <hr>
                     Создан - {{$product->created_at->format('j F, Y')}}
+                    <hr>
+                    <a href="/admin/Barcod/create/{{$product->ozon_id}}"> BarCod</a>
                 </td>
             </tr>
         @endforeach
