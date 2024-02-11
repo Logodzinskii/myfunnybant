@@ -200,6 +200,7 @@ return [
          */
         Darryldecode\Cart\CartServiceProvider::class,
         peal\barcodegenerator\BarcodeServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -217,6 +218,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
         'BarCode' => peal\barcodegenerator\Facades\BarCode::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ])->toArray(),
 
 ];

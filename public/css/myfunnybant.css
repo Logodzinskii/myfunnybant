@@ -118,3 +118,13 @@ img{
 a {
     color: #6f42c1 !important;
 }
+@media print {
+    html, body{
+    height: 40mm;
+    width: 58mm;
+    background-color: rgb(174, 36, 36);
+    }
+}
+@page {
+    margin: 0mm 0mm 0mm 0mm;
+}

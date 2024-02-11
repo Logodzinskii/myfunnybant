@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\StatGetOzon;
 use App\Models\OzonShopItem;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage as FacadesStorage;
+use VK\Actions\Storage as ActionsStorage;
 
 class BarCodController extends Controller
 {
@@ -30,7 +34,7 @@ $barcodes = [
                 'code_type' => 'code128',
                 'print' => true,
                 'sizefactor' => 1,
-                'filename' => 'image1.jpeg'
+                'filename' => '../barcode.png',
             ];
 $barcontent = $bar->barcodeFactory()->renderBarcode(
                                     $text=$barcodes["text"], 
@@ -52,8 +56,8 @@ $barcontent = $bar->barcodeFactory()->renderBarcode(
                 $materials .= $material . ', ';
             }
             $str = '';
-            $str .=  '<img alt="testing" src="/'.$barcontent.'"/><br/>';
-            $str .=  'СЗ Логодзинская В.Л.'. '<br/>';
+            //$str .=  '<img alt="testing" src="/'.$barcontent.'"/><br/>';
+            $str .=  'СЗ Логодзинская В.Л.'. ' ';
             $str .=  $squ[0]->name . '<br/>';
             $str .=  'Артикул: '. $barcod['result']['offer_id'] .' ';
             $str .=  'Цв.'.  $colors .' ';
@@ -61,6 +65,8 @@ $barcontent = $bar->barcodeFactory()->renderBarcode(
             $str .=  'Срок годности: 01.01.2035. ';
             $str .=  'Бренд: myfunnybant'. '<br/>';
             $str .=  'Состав: '. $materials ;
-            return view('admin.barcode.barcode',['data'=>$str]);
+            //$pdf = PDF::loadView('admin.barcode.barcode',['data'=>$str,'img'=>$barcontent]);    
+            //return $pdf->download('demo.pdf');
+            return view('admin.barcode.barcode',['data'=>$str, 'img'=>$barcontent]);
     }
 }
