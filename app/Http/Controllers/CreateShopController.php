@@ -148,7 +148,7 @@ class CreateShopController extends Controller
                     'ozon_id'=>$off['id'],
                     'status'=>'update',
                     'price'=>$price['price']['old_price'],
-                    'action_price'=>$price['price']['marketing_price'],
+                    'action_price'=>$price['price']['marketing_price']+$price['price']['marketing_price']*0.2,
                     'fbs'=>0,
                     'fbo'=>0,
                 ]);
