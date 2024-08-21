@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Charts;
-
+use App\Console\Commands\getOzonData;
 use App\Models\financeOzon;
 use App\Models\saleitems;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
@@ -22,18 +22,18 @@ class MonthlSellerChart
             ->setTitle('В '. $year)
             ->setSubtitle('Продажи на озон')
             ->addData('Продано ozon', [
-                $this->monthSum('Январь',$year),
-                $this->monthSum('Февраль',$year),
-                $this->monthSum('Март',$year),
-                $this->monthSum('апрель',$year),
-                $this->monthSum('Май',$year),
-                $this->monthSum('Июнь',$year),
-                $this->monthSum('Июль',$year),
-                $this->monthSum('Август',$year),
-                $this->monthSum('Сентябрь',$year),
-                $this->monthSum('Октябрь',$year),
-                $this->monthSum('Ноябрь',$year),
-                $this->monthSum('Декабрь',$year),
+                $this->monthSum('1',$year),
+                $this->monthSum('2',$year),
+                $this->monthSum('3',$year),
+                $this->monthSum('4',$year),
+                $this->monthSum('5',$year),
+                $this->monthSum('6',$year),
+                $this->monthSum('7',$year),
+                $this->monthSum('8',$year),
+                $this->monthSum('9',$year),
+                $this->monthSum('10',$year),
+                $this->monthSum('11',$year),
+                $this->monthSum('12',$year),
                 ])
             ->addData('Продано ярмарки', [
                 $this->monthSumSales('01',$year),
@@ -50,27 +50,45 @@ class MonthlSellerChart
                 $this->monthSumSales('12',$year),
             ])
             ->addData('Продано всего', [
-                $this->monthSum('Январь',$year) + $this->monthSumSales('01',$year),
-                $this->monthSum('Февраль',$year) + $this->monthSumSales('02',$year),
-                $this->monthSum('Март',$year) + $this->monthSumSales('03',$year),
-                $this->monthSum('Апрель',$year) + $this->monthSumSales('04',$year),
-                $this->monthSum('Май',$year) + $this->monthSumSales('05',$year),
-                $this->monthSum('Июнь',$year) + $this->monthSumSales('06',$year),
-                $this->monthSum('Июль',$year) + $this->monthSumSales('07',$year),
-                $this->monthSum('Август',$year) + $this->monthSumSales('08',$year),
-                $this->monthSum('Сентябрь',$year) + $this->monthSumSales('09',$year),
-                $this->monthSum('Октябрь',$year) + $this->monthSumSales('10',$year),
-                $this->monthSum('Ноябрь',$year) + $this->monthSumSales('11',$year),
-                $this->monthSum('Декабрь',$year) + $this->monthSumSales('12',$year),
+                $this->monthSum('1',$year) + $this->monthSumSales('01',$year),
+                $this->monthSum('2',$year) + $this->monthSumSales('02',$year),
+                $this->monthSum('3',$year) + $this->monthSumSales('03',$year),
+                $this->monthSum('4',$year) + $this->monthSumSales('04',$year),
+                $this->monthSum('5',$year) + $this->monthSumSales('05',$year),
+                $this->monthSum('6',$year) + $this->monthSumSales('06',$year),
+                $this->monthSum('7',$year) + $this->monthSumSales('07',$year),
+                $this->monthSum('8',$year) + $this->monthSumSales('08',$year),
+                $this->monthSum('9',$year) + $this->monthSumSales('09',$year),
+                $this->monthSum('10',$year) + $this->monthSumSales('10',$year),
+                $this->monthSum('11',$year) + $this->monthSumSales('11',$year),
+                $this->monthSum('12',$year) + $this->monthSumSales('12',$year),
             ])
             ->setXAxis(['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']);
     }
 
     private function monthSum($month, $year){
-        $month = financeOzon::select('sale_price')
-            ->where('month','=',$month)
-            ->where('year', '=', $year)
-            ->sum('sale_price');
+       // $month = financeOzon::select('sale_price')
+       //     ->where('month','=',$month)
+       //     ->where('year', '=', $year)
+       //     ->sum('sale_price');
+       
+       $data = '{
+        "month": "'. $month .'",
+        "year": "'. $year .'"
+        }';
+        //return var_dump($data);
+        $method = '/v2/finance/realization';
+        $financeReport = getOzonData::getResponseOzon($data,$method, '');
+        if(isset(json_decode($financeReport,true)['result'])){
+            
+            $month = intval(json_decode($financeReport,true)['result']['header']['doc_amount']);
+            //return  (json_decode($financeReport,true)['result']['header']['doc_amount']);
+            
+        }else
+        {
+           return 0;//$financeReport;
+        }
+       
         return $month;
     }
 

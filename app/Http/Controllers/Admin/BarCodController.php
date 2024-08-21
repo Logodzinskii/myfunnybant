@@ -52,8 +52,8 @@ $barcontent = $bar->barcodeFactory()->renderBarcode(
                 $materials .= $material . ', ';
             }
             $str = '';
-            $str .=  '<img alt="testing" src="/'.$barcontent.'"/><br/>';
-            $str .=  'СЗ Логодзинская В.Л.'. '<br/>';
+            $str .=  '<img alt="testing" src="/'.$barcontent.'" width="100"/>';
+            $str .=  'СЗ Логодзинская В.Л.'. ' ';
             $str .=  $squ[0]->name . '<br/>';
             $str .=  'Артикул: '. $barcod['result']['offer_id'] .' ';
             $str .=  'Цв.'.  $colors .' ';

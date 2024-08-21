@@ -16,58 +16,55 @@ class YandexYmlGenerator extends Controller
 {
     public function createYmlFile()
     {
+            $out ='<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+            $out .='<yml_catalog date="'.date('Y-m-d H:i').'">'."\r\n";
+            $out .='<shop>' . "\r\n";
 
-        try{
+            // Короткое название магазина, должно содержать не более 20 символов
+            $out .='<name>Myfunnybant</name>' . "\r\n";
 
-            $out = '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n";
-            $out .= '<yml_catalog date="' . date('Y-m-d H:i') . '">' . "\r\n";
-            $out .= '<shop>' . "\r\n";
+            // Полное наименование компании, владеющей магазином
+            $out .='<company>Myfunnybant</company>' . "\r\n";
 
-// Короткое название магазина, должно содержать не более 20 символов
-            $out .= '<name>Myfunnybant</name>' . "\r\n";
+            // URL главной страницы магазина
+            $out .='<url>https://myfunnybant.ru/</url>' . "\r\n";
 
-// Полное наименование компании, владеющей магазином
-            $out .= '<company>Myfunnybant</company>' . "\r\n";
+            // Список курсов валют магазина
+            $out .='<currencies>' . "\r\n";
+            $out .='<currency id="RUR" rate="1"/>' . "\r\n";
+            $out .='</currencies>' . "\r\n";
 
-// URL главной страницы магазина
-            $out .= '<url>https://myfunnybant.ru/</url>' . "\r\n";
-
-// Список курсов валют магазина
-            $out .= '<currencies>' . "\r\n";
-            $out .= '<currency id="RUR" rate="1"/>' . "\r\n";
-            $out .= '</currencies>' . "\r\n";
-
-// Список категорий магазина:
+            // Список категорий магазина:
 
             $category =OzonShopItem::where('id','>','0')
                 ->groupBy('type')
                 ->get();
 
-            $out .= '<categories>' . "\r\n";
+            $out .='<categories>' . "\r\n";
             foreach ($category as $key => $row) {
 
-                $out .= '<category id="' . $key . '">' . $row->type . '</category>' . "\r\n";
+                $out .='<category id="' . $key . '">' . $row->type . '</category>' . "\r\n";
 
             }
 
-            $out .= '</categories>' . "\r\n";
+            $out .='</categories>' . "\r\n";
 
-// Вывод товаров:
+            // Вывод товаров:
 
 
             $prods = OzonShopItem::where('id','>','0')
                 ->get();
 
-            $out .= '<offers>' . "\r\n";
+            $out .='<offers>' . "\r\n";
             foreach ($prods as $row) {
-                $out .= '<offer id="' . $row->id . '">' . "\r\n";
+                $out .='<offer id="' . $row->id . '">'."\r\n";
 
                 // URL страницы товара на сайте магазина
-                $out .= '<url>https://myfunnybant.ru/shop/' . OzonShop::select('url_chpu')->where('ozon_id','=',$row->ozon_id)->firstOrFail()->url_chpu . '</url>' . "\r\n";
+                $out .='<url>https://myfunnybant.ru/shop/' . OzonShop::select('url_chpu')->where('ozon_id','=',$row->ozon_id)->firstOrFail()->url_chpu . '</url>'."\r\n";
 
                 // Цена, предполагается что в БД хранится цена и цена со скидкой
 
-                $out .= '<price>' . StatusPriceShopItems::select('action_price')->where('ozon_id','=',$row->ozon_id)->first()->action_price . '</price>' . "\r\n";
+                $out .= '<price>' . StatusPriceShopItems::select('action_price')->where('ozon_id', '=' , $row->ozon_id )->first()->action_price . '</price>' . "\r\n";
                 $out .= '<oldprice>' . StatusPriceShopItems::select('price')->where('ozon_id','=',$row->ozon_id)->first()->price . '</oldprice>' . "\r\n";
 
 
@@ -93,21 +90,11 @@ class YandexYmlGenerator extends Controller
             $out .= '</shop>' . "\r\n";
             $out .= '</yml_catalog>' . "\r\n";
 
-            header('Content-Type: text/xml; charset=utf-8');
+            /*header('Content-Type: text/xml; charset=utf-8');*/
 
-            try {
+           
                 Storage::disk('yml')->put('/feed_01.yml', $out);
-                echo 'done';
-            }catch (Exception $exception)
-            {
-                echo 'error' . $exception->getMessage();
-            }
-
-        }catch (\Exception  $exeption)
-        {
-            return $exeption->getMessage();
-        }
-
+                echo $out;
     }
 
 }

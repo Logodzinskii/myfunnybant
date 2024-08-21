@@ -1,16 +1,16 @@
 <div class="col " id="{{$key}}">
-    <div class=" overflow-hidden eli" style="height: 75vh">
-        <div class="card-body side d-flex justify-content-center overflow-hidden flex-wrap" style="">
-            <div class="border-0">
-                <div class="position-relative" style=" height: 10vh">
+    <div class=" overflow-hidden eli">
+        <div class="card-body side d-flex justify-content-center overflow-hidden flex-wrap" style="width: 100%">
+            <div class="border-0 col-12">
+                <div class="position-relative" style="min-height: 100px">
                     <div class="card-gradient position-absolute top-0" style="width: 100%; height: 100%"></div>
-                    <h5 class="text-center position-absolute top-0" >{{$header}}</h5>
+                    <h5 class="text-center position-absolute top-0" >{{htmlspecialchars_decode($header, ENT_QUOTES)}}</h5>
                 </div>
-                <div class="p-0 m-0" style="height: 50vh; overflow: hidden">
-                    <img src="{{$img}}" class="mx-auto d-block img-fluid" alt="{{$header}}">
+                <div class="p-0 m-0" style="overflow: hidden; height:35vh;">
+                    <img src="{{$img}}" class="mx-auto" style="object-fit: cover; width: 100%;" alt="{{htmlspecialchars_decode($header, ENT_QUOTES)}}">
                 </div>
             </div>
-            <div class="d-flex flex-wrap justify-content-around bg-light rounded-2" style="height: 15vh">
+            <div class="d-flex flex-wrap justify-content-around bg-light rounded-2" >
                 <div class="w-100 d-flex justify-content-center">
                     <div class="d-flex flex-nowrap rounded-2" style="font-size: 2em">
                         <div class="price p-1  border-secondary">

@@ -63,6 +63,7 @@ class BlogsController extends Controller
         return redirect()->route('list.admin.blog');
 
 
+
     }
 
     public function saveImage(Request $request)

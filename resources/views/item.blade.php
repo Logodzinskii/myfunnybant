@@ -32,7 +32,6 @@
                             </div>
                             <div>
                                 <ul class="d-flex flex-wrap justify-content-between p-0 w-0">
-
                                     <li class="card p-3 text-center">
                                         <span class="badge bg-secondary">Описание: </span>
                                         {{ strip_tags($res->description) }}
@@ -56,10 +55,10 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="shadow bg-light d-flex flex-nowrap rounded-2">
+                            <div class="shadow bg-light d-flex justify-content-center flex-wrap rounded-2 display-2">
                                 <div class="price p-1 border-secondary"><s>{{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $res['ozon_id'])->first()->price}} &#8381;</s> </div>
-                                <div class="action-price p-1 h-2 border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $res['ozon_id'])->first()->action_price}} &#8381;</div>
-                                <div class="add-cart my-button btn btn-sm g-2 h-4 m-1 text-white" data-add-cart="{{$res['ozon_id']}}"><i class="bi-basket3"></i></div>
+                                <div class="action-price p-1  border-secondary"> {{\App\Models\StatusPriceShopItems::where('ozon_id', '=', $res['ozon_id'])->first()->action_price}} &#8381;</div>
+                                <div class="add-cart my-button btn g-2 px-5 m-1 text-white" data-add-cart="{{$res['ozon_id']}}"><i class="bi-basket" style="font-size: 48px"></i></div>
                             </div>
                         </div>
                         </div>

@@ -59,7 +59,7 @@ class DailyReportActionsOzon extends Command
             $str = '';
             foreach ($array['result'] as $action)
             {
-               $str .=' 📌 ' .$action['title'] . ', 🕐 - ' . date( 'd.m.Y', strtotime( $action['date_start'] ) ) . ' 🕙 - ' . date( 'd.m.Y', strtotime( $action['date_end'] ) ) . ', Количество товаров, доступных для акции - ' . $action['potential_products_count'] . ', Количество товаров, которые участвуют в акции - ' . $action['participating_products_count'];
+               $str .="\n".'📌 ' .$action['title'] . ', 🕐 - ' . date( 'd.m.Y', strtotime( $action['date_start'] ) ) . ' 🕙 - ' . date( 'd.m.Y', strtotime( $action['date_end'] ) ) . ', Количество товаров, доступных для акции - ' . $action['potential_products_count'] . ', Количество товаров, которые участвуют в акции - ' . $action['participating_products_count'];
             }
 
         }else{

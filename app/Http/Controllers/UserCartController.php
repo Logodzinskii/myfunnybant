@@ -20,11 +20,13 @@ class UserCartController extends Controller
 {
     public function index()
 
+
     { 
         $isAdmin = Auth::user()->role ?? 0;
 
         if($isAdmin === 1){
             
+
 
             return view('admin.panel.index');
         }

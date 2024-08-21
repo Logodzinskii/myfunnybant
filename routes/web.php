@@ -53,6 +53,7 @@ Route::get('/sell/{url}', function($url){
 
 })->name('seller.ozon');
 
+
 //Route::post('/seller/', [ozonController::class, 'showItem'])->name('seller.show');
 
 Route::get('my/like', [OzonShopController::class,'viewLike']);
@@ -61,6 +62,7 @@ Route::post('addlike',[OzonShopController::class, 'addLike']);
 Route::post('find', [OzonShopController::class, 'find'])->name('find');
 
 Route::get('/actions/', [ActionOzonController::class, 'getItemsInActions']);
+
 /**
  * Маршруты для панели администрирования
  */

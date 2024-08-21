@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\yandex\YandexYmlGenerator;
 use App\Models\Offers;
 use App\Models\OzonShop;
@@ -81,7 +80,8 @@ class CreateShopController extends Controller
         }
         $yml = New YandexYmlGenerator();
         $yml->createYmlFile();
-        return $offers;
+        
+        return ' Товары на сайте успешно обновлены';
 
     }
 
@@ -148,7 +148,7 @@ class CreateShopController extends Controller
                     'ozon_id'=>$off['id'],
                     'status'=>'update',
                     'price'=>$price['price']['old_price'],
-                    'action_price'=>$price['price']['marketing_price'],
+                    'action_price'=>$price['price']['marketing_price']+$price['price']['marketing_price']*0.2,
                     'fbs'=>0,
                     'fbo'=>0,
                 ]);
@@ -159,7 +159,7 @@ class CreateShopController extends Controller
                     'ozon_id'=>$off['id'],
                     'status'=>'create',
                     'price'=>$price['price']['old_price'],
-                    'action_price'=>$price['price']['price'],
+                    'action_price'=>$price['price']['marketing_price']+$price['price']['marketing_price']*0.2,
                     'fbs'=>0,
                     'fbo'=>0,
                 ]);

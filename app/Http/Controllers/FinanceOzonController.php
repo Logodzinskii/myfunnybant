@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Console\Commands\getOzonData;
 use App\Charts\MonthlSellerChart;
 use App\Models\financeOzon;
 use App\Models\saleitems;
@@ -68,7 +68,7 @@ class FinanceOzonController extends Controller
         $get_year = substr($request->dat, 0, 4);
         $today = new \DateTime('now');
 
-        $dat = strlen($get_year)>0?$get_year : $today->format("Y");
+        $dat = strlen($get_year)>0 ? $get_year : $today->format("Y");
         $yearOzon = financeOzon::select('sale_price')
             ->where('year','=',$dat)
             ->sum('sale_price');
@@ -82,9 +82,35 @@ class FinanceOzonController extends Controller
         {
             $sum+= $i['total'];
         }
+        
+        //
+        $arr = [1,2,3,4,5,6,7,8,9,10,11,12];
+        $ozonSummForEar = '';
+        foreach($arr as $month)
+        {
+             $data = '{
+            "month": "'. $month .'",
+            "year": "'. $dat .'"
+            }';
+            
+            $method = '/v2/finance/realization';
+            $financeReport = getOzonData::getResponseOzon($data,$method, '');
+            if(isset(json_decode($financeReport,true)['result'])){
+                
+                $ozonSummForEar = intval($ozonSummForEar) + intval(json_decode($financeReport,true)['result']['header']['doc_amount']);
+                //return  (json_decode($financeReport,true)['result']['header']['doc_amount']);
+                
+            }else
+            {
+               $ozonSummForEar = intval($ozonSummForEar) + 0;
+            }
+           
+        }
+       
+        //
 
         return view('admin.charts.main', ['chart' => $chart->build($dat),
-                                                'ozonYear'=>$yearOzon,
+                                                'ozonYear'=>$ozonSummForEar,
                                                 'salesYear'=>$sum]);
     }
 }

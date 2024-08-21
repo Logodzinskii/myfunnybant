@@ -42,6 +42,7 @@ class ozonController
         $arr = [];
 
         foreach ($colors as $color)
+
         {
             foreach (json_decode($color->colors,true) as $color1)
             {

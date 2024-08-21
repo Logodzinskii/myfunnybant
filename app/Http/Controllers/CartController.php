@@ -296,8 +296,9 @@ class CartController extends Controller
             $link .= 'https://myfunnybant.ru/security/?link='.$hash;
             $adminMessage = 'Новый заказ от: ' . $name .', номер: '.$offer_id.', дата оформления: '.OfferUser::where('id', $offer_id)->firstOrFail()->created_at. 'http://myfunnybant.locals/admin/view/offers';
 
-            //CartConfirmEvent::dispatch($message.$link, $email, $name);
-            //UserCreateOffer::dispatch($adminMessage);
+            CartConfirmEvent::dispatch($message.$link, $email, $name);
+            UserCreateOffer::dispatch($adminMessage);
+
             $res = UserCart::where('user_id', '=', $session_user)->sum('quantity');
 
             \Cart::session('_token');

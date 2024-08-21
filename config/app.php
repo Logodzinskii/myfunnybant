@@ -124,6 +124,9 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+    
+    'OZONTOKEN'=>env('OZON_APP_TOKEN'),
+    'CLIENT_ID'=>env('OZON_CLIENT_ID'),
 
     /*
     |--------------------------------------------------------------------------
@@ -142,7 +145,9 @@ return [
         'driver' => 'file',
         // 'store'  => 'redis',
     ],
-
+    
+    
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -153,6 +158,7 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
+    
 
 
     'providers' => [

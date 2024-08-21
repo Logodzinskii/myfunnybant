@@ -25,6 +25,8 @@
     </div>  
 
     @endforeach
+
+</div>
     <!-- Yandex.RTB R-A-2544919-2 -->
     <div id="yandex_rtb_R-A-2544919-2"></div>
     <script>
@@ -36,5 +38,4 @@
         })
     })
     </script>
-</div>
 @endsection
