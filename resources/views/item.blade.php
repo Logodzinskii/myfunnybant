@@ -1,7 +1,8 @@
  @extends('layouts.app')
  @section('content')
+ <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-md-2 g-2">
-                    <div class="col card">
+                    <div class="col ">
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 @foreach(json_decode($res->images,true) as $i=>$image)
@@ -25,15 +26,20 @@
                         </div>
                     </div>
                     <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-header">
-                                <h1>{{ $res->name }}</h1>
+                    <div class="p-3">
+                        <div class="card-body text-center">
+                            <div class="position-relative card-gradient-header">                    
+                                <div class="card-gradient position-absolute top-0 shadow" >
+                                    <div class="blur"></div>
+                                    <h1 class="h3 text-center text-white position-absolute top-0" style="min-height: 250px" >
+                                        {{ $res->name }}
+                                    </h1>
+                                </div>                    
+                               
                             </div>
                             <div>
                                 <ul class="d-flex flex-wrap justify-content-between p-0 w-0">
                                     <li class="card p-3 text-center">
-                                        <span class="badge bg-secondary">Описание: </span>
                                         {{ strip_tags($res->description) }}
                                     </li>
                                     <li class="card p-3 text-center">
@@ -65,4 +71,5 @@
                     </div>
                     </div>
             </div>
+ </div>
  @endsection

@@ -157,7 +157,7 @@
         })
     })
 </script>
-<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
+<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm" style="background-color: #fbc7d4 !important">
     <div class="container">
         <div class="col-2">
             <img src="{{asset('/images/logo/logo.png')}}" class="img-fluid" style="width: 8vw">

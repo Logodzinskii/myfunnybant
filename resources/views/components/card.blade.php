@@ -1,16 +1,20 @@
-<div class="col " id="{{$key}}">
-    <div class=" overflow-hidden eli">
-        <div class="card-body side d-flex justify-content-center overflow-hidden flex-wrap" style="width: 100%">
+<div class="col pb-5" id="{{$key}}">
+    <div class="overflow-hidden eli">
+        <div class="card-body rounded-4 side d-flex justify-content-center overflow-hidden flex-wrap" style="width: 100%">
             <div class="border-0 col-12">
-                <div class="position-relative" style="min-height: 100px">
-                    <div class="card-gradient position-absolute top-0" style="width: 100%; height: 100%"></div>
-                    <h5 class="text-center position-absolute top-0" >{{htmlspecialchars_decode($header, ENT_QUOTES)}}</h5>
+                <div class="position-relative card-gradient-header">                    
+                    <div class="card-gradient position-absolute top-0 shadow" >
+                        <div class="blur"></div>
+                    </div>                    
+                    <h5 class="text-center text-white position-absolute top-0" >
+                        {{htmlspecialchars_decode($header, ENT_QUOTES)}}
+                    </h5>
                 </div>
-                <div class="p-0 m-0" style="overflow: hidden; height:35vh;">
-                    <img src="{{$img}}" class="mx-auto" style="object-fit: cover; width: 100%;" alt="{{htmlspecialchars_decode($header, ENT_QUOTES)}}">
+                <div class="p-0 m-0 card-image-body">
+                    <img src="{{$img}}" class="mx-auto" alt="{{htmlspecialchars_decode($header, ENT_QUOTES)}}">
                 </div>
             </div>
-            <div class="d-flex flex-wrap justify-content-around bg-light rounded-2" >
+            <div class="d-flex flex-wrap justify-content-around bg-light rounded-2 card-info" >
                 <div class="w-100 d-flex justify-content-center">
                     <div class="d-flex flex-nowrap rounded-2" style="font-size: 2em">
                         <div class="price p-1  border-secondary">

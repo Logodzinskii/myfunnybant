@@ -19,8 +19,9 @@
     height: 300px;
 }
 
-footer a,p,h6{
-
+footer {
+background-color: #fbc7d4 !important;
+color: #FFFFFF;
 }
 
 #toTop {
@@ -107,14 +108,38 @@ img{
 
     color: mediumvioletred;
 }
-.card-gradient {
-    opacity: 0.7;
-    background: #9796f0;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #fbc7d4, #9796f0);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #fbc7d4, #9796f0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    z-index: -1;
+.card-gradient-header{
+    display: block;
+    min-height: 10vh;
 }
 
+.card-gradient{
+    background-image: url(/public/images/orig.webp);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 10vh;
+    width: 100%;
+}
+.blur {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px); 
+    min-height: 10vh;
+	width: 100%;
+}
+
+.card-image-body{
+    overflow: hidden;
+    height:35vh;
+}
+
+.card-image-body img{
+    object-fit: cover;
+    width: 100%;
+}
+.card-info{
+    background-color: #fbc7d4 !important;
+}
 a {
     color: #6f42c1 !important;
 }
