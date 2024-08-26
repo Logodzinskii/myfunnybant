@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use OzonConfiguration;
@@ -49,7 +48,7 @@ class Report extends Exception
     public function enotherDay()
         {
             $res=[];
-            $query = 'select place, date_sale as date, sum(sale_price*saleitems.count_items) as sumSale from saleitems where YEAR(date_sale) = YEAR(curdate()) group by date order by date DESC LIMIT 10';
+            $query = 'select place, date_sale as date, sum(sale_price*saleitems.count_items) as sumSale from saleitems where YEAR(date_sale) = YEAR(curdate()) group by date order by date DESC LIMIT 50';
             $stmt = $this->dbh->prepare($query);
             $stmt->execute();
             if($stmt->rowCount() > 0)
@@ -67,9 +66,10 @@ class Report extends Exception
         }
 
 
-    public function sumToDay($telegramm_id)
+    public function sumToDay($telegramm_id, $date=null)
     {
-            $date = new DateTime('NOW');
+            
+            $date = is_null($date) ? new DateTime('NOW') : new DateTime($date);
             $y = $date->format("Y");
             $m = $date->format("m");
             $d = $date->format("d");

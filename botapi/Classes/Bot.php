@@ -303,6 +303,9 @@ class Bot extends Exception
                         'reply_markup'=>$reply_markup,
                     ));
                 break;
+                 case(preg_match('/^(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}$/', $command, $output_array)? true : false):
+                   $this->reply($this->report->sumToDay($this->telegramm_id, $output_array[0]));
+                    break;
                 /*
                 case('Внести'):
                     $arr = new CreateCsv();
