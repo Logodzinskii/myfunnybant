@@ -130,7 +130,7 @@ class Report extends Exception
             }
         return $unswer;
     }
-    public function sumAllSellerByMonth($date=null)
+    public function sumAllSellerByMonth($month=null, $year=null)
     {
         $today = $date;
         $dates = new DateTime('NOW');
@@ -138,47 +138,10 @@ class Report extends Exception
 
         $str = '';
         $params = [
-            'date'=> $today,
-            'year'=> $y,
+            'date'=> $month,
+            'year'=> $year,
         ];
 
-        /*$clientId = env('OZON_CLIENT_ID'); //айди шопа
-
-        $apiKey = env('OZON_APP_TOKEN'); // ключ апи
-
-        $method = '/v1/finance/realization'; //метод запроса
-
-        $url = 'https://api-seller.ozon.ru/v1/finance/realization';
-        $headers = array(
-            'Content-Type: application/json',
-            'Host: api-seller.ozon.ru',
-            'Client-Id: '.$clientId,
-            'Api-Key: '.$apiKey
-        ) ;
-        $ch = curl_init();
-        $month = substr($today, 0, 2);
-        if(strlen($month) < 1){
-            $month = '0'.$month;
-        }
-
-            $dateOzon = $y.'-'. $month;
-        $data = '{
-            "date": "'. $dateOzon .'"
-        }';
-
-        $options = array(
-            CURLOPT_URL => $url,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS => $data,
-            CURLOPT_HTTPHEADER => $headers
-        );
-        curl_setopt_array($ch, $options);
-        $html = curl_exec($ch);
-        curl_close($ch);
-        //return $html;
-        $arr = (json_decode($html, true));
-        file_put_contents('ozon.txt', $today);*/
         $query = 'SELECT MONTH(date_sale) as month_sale, SUM(count_items * sale_price) as total FROM `saleitems` WHERE MONTH(date_sale) = :date AND YEAR(date_sale) = :year';
         $stmt = $this->dbh->prepare($query);
         $stmt->execute($params);
@@ -190,10 +153,18 @@ class Report extends Exception
                 $s = $row->total;
             }
             $totals = intval($s) ;
-            $unswer = 'всего: ' .$totals;
+    
+            $unswer = 'За '. $this->monthInRu($month-1) .' в '. $year .' году '.'продано всего: ' .$totals . ' руб.';
+        
         }else{
             $unswer = 'Ещё ничего не продано';
         }
         return $unswer;
+    }
+    
+    protected function monthInRu($monthNumber){
+        $monthArr = [
+            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            return $monthArr[$monthNumber];
     }
 }

@@ -267,7 +267,7 @@ class Bot extends Exception
                     }
 
                 break;
-            case ('За месяц'):
+            case ('За месяц1'):
                 $keyboard = [
                     'inline_keyboard' =>
                         [
@@ -303,6 +303,29 @@ class Bot extends Exception
                         'reply_markup'=>$reply_markup,
                     ));
                 break;
+                case('За месяц'):
+                    $date = new \DateTime('now');
+                    $date->format("Y");
+                    $arrYear = [];
+                    for ($i=2021; $i<= $date->format("Y"); $i++){
+                        
+                        $arrYear[]=['text'=>$i, 'callback_data' => 'setYear#'.$i.'|0'];
+                        
+                    }
+                    
+                    $keyboard = [
+                        'inline_keyboard' => [$arrYear]
+                    ];
+                    
+                    $reply_markup = json_encode($keyboard);
+                    $this->sendTelegram(
+                        'sendMessage',
+                        array(
+                            'chat_id' => $this->telegramm_id,
+                            'text' => 'Выберите год для отчета',
+                            'reply_markup'=>$reply_markup,
+                        ));
+                    break;
                  case(preg_match('/^(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}$/', $command, $output_array)? true : false):
                    $this->reply($this->report->sumToDay($this->telegramm_id, $output_array[0]));
                     break;

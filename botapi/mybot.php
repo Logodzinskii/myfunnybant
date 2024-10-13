@@ -157,11 +157,47 @@ if(!empty($arr['callback_query']['data'])){
                     $bot->reply($report->sumAllSeller($arr['callback_query']['message']['chat']['id'], $metodParametrs[1]),$arr['callback_query']['message']['chat']['id']);
                     break;
         case('sumAllSellerByMonth'):
+            
             $parametrForMetod = explode('|', $metodParametrs[0]);
+            $date = explode('|', $metodParametrs[1]);
+            $year = $date[1];
+            $month = $date[0];
             $report = new Report();
-            $bot->reply($report->sumAllSellerByMonth($metodParametrs[1]),$arr['callback_query']['message']['chat']['id']);
-            break;
+            $bot->reply($report->sumAllSellerByMonth($month, $year),$arr['callback_query']['message']['chat']['id']);
 
+
+            break;
+        case('setYear'):
+                $year = explode('|', $metodParametrs[1]);
+                $keyboard = [
+                    'inline_keyboard' =>
+                        [
+                            [
+                                ['text'=> 'Январь', 'callback_data' => 'sumAllSellerByMonth#'.'1|'.$metodParametrs[1]],
+                                ['text'=> 'Февраль', 'callback_data' => 'sumAllSellerByMonth#'.'2|'.$metodParametrs[1]],
+                                ['text'=> 'Март', 'callback_data' => 'sumAllSellerByMonth#'.'3|'.$metodParametrs[1]],
+                            ],
+                            [
+                                ['text'=> 'Апрель', 'callback_data' => 'sumAllSellerByMonth#'.'4|'.$metodParametrs[1]],
+                                ['text'=> 'Май', 'callback_data' => 'sumAllSellerByMonth#'.'5|'.$metodParametrs[1]],
+                                ['text'=> 'Июнь', 'callback_data' => 'sumAllSellerByMonth#'.'6|'.$metodParametrs[1]],
+                            ],
+                            [
+                                ['text'=> 'Июль', 'callback_data' => 'sumAllSellerByMonth#'.'7|'.$metodParametrs[1]],
+                                ['text'=> 'Август', 'callback_data' => 'sumAllSellerByMonth#'.'8|'.$metodParametrs[1]],
+                                ['text'=> 'Сентябрь', 'callback_data' => 'sumAllSellerByMonth#'.'9|'.$metodParametrs[1]],
+                            ],
+                            [
+                                ['text'=> 'Октябрь', 'callback_data' => 'sumAllSellerByMonth#'.'10|'.$metodParametrs[1]],
+                                ['text'=> 'Ноябрь', 'callback_data' => 'sumAllSellerByMonth#'.'11|'.$metodParametrs[1]],
+                                ['text'=> 'Декабрь', 'callback_data' => 'sumAllSellerByMonth#'.'12|'.$metodParametrs[1]],
+                            ],
+                        ],
+                ];
+                
+                $bot->sendButtons($arr['callback_query']['message']['chat']['id'], $keyboard, 'Выберите месяц для отчета за ' . $year[0] . ' год' );
+                
+                break;
     }
     exit();
 

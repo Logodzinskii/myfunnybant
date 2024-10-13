@@ -8,6 +8,7 @@ use App\View\Components\funnel;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ozonController
 {
@@ -15,6 +16,16 @@ class ozonController
 
     public function index( $funnel = null)
     {
+
+        $fullUrl = \Illuminate\Support\Facades\Request::userAgent();
+        $ipVisitor = \Illuminate\Support\Facades\Request::ip();
+        $path = \Illuminate\Support\Facades\Request::path();
+        $fullUrl = \Illuminate\Support\Facades\Request::fullUrl();
+        $header = \Illuminate\Support\Facades\Request::header('X-Header-Name');
+        $userAgent = \Illuminate\Support\Facades\Request::server('HTTP_USER_AGENT');
+
+        Log::debug('fulUrl' . $fullUrl . 'ipVisitor' . $ipVisitor . 'UserAgent' . $userAgent);
+        
         if(($funnel != null))
         {
             $data  = [DB::table('ozon_shop_items')
